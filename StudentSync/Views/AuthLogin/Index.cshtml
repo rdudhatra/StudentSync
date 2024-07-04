@@ -1,0 +1,62 @@
+﻿@model StudentSync.Data.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
+}
+
+<body class="authentication-bg">
+    <div class="account-pages my-5 pt-sm-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="text-center">
+                    <a href="@Url.Action("Index", "Home")" class="mb-5 d-block auth-logo">
+                        <h2>Student Sync</h2>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-4">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <div class="text-center mt-2">
+                                <h5 class="text-primary">Welcome Back!</h5>
+                                <p class="text-muted">Sign in to continue to StudentSync.</p>
+                            </div>
+                            <div class="p-2 mt-4">
+                                <form method="post" asp-controller="Auth">
+                                    <div asp-validation-summary="All" class="text-danger"></div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="Email" placeholder="Enter email" value="@Model?.Email">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="password">Password</label>
+                                        <input type="password" class="form-control" id="password" name="Password" placeholder="Enter password" value="@Model?.Password">
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+                                    <div class="mt-3 text-end">
+                                        <button class="btn btn-primary w-sm waves-effect waves-light" type="submit">Log In</button>
+                                    </div>
+                                    <div class="mt-4 text-center">
+                                        <p class="text-muted mb-0">Don't have an account? <a href="@Url.Action("Register", "Auth")" class="fw-medium text-primary"> Register</a></p>
+                                    </div>
+                                 
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 text-center">
+                        <p>
+                            ©
+                            <script>document.write(new Date().getFullYear())</script> Student Sync</i> 
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

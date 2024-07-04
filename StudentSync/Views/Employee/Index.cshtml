@@ -1,0 +1,734 @@
+﻿
+
+@* 
+
+
+@{
+    ViewData["Title"] = "Employees";
+}
+<!-- Include necessary CSS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+<div class="container">
+    <h2>Add Employee</h2>
+
+    <button type="button" class="btn btn-primary mb-3" onclick="onAddEmployeeClick()">Add New Employee</button>
+
+    <div class="form-group">
+        <label for="searchName">Search by Name:</label>
+        <div class="row">
+            <div class="col-4">
+                <input type="text" class="form-control" id="searchName" placeholder="Enter name" required>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" onclick="searchByName()">Search</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">Clear</button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-6 offset-md-3">
+            <div id="searchMessage" class="text-danger"></div>
+        </div>
+    </div>
+    <br />
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>Qualification</th>
+                <th>Designation</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+            <!-- Employee records will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Add/Edit Employee Modal -->
+<div class="modal fade" id="addEditEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="addEditEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEditEmployeeModalLabel">Add/Edit Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm">
+                    <input type="hidden" id="Id" name="Id" />
+                    <div class="form-group">
+                        <label for="FirstName">First Name:</label>
+                        <input type="text" class="form-control" id="FirstName" placeholder="Enter first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="LastName">Last Name:</label>
+                        <input type="text" class="form-control" id="LastName" placeholder="Enter last name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Gender">Gender:</label>
+                        <select class="form-control" id="Gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="DoB">Date of Birth:</label>
+                        <input type="date" class="form-control" id="DoB">
+                    </div>
+                    <div class="form-group">
+                        <label for="Qualification">Qualification:</label>
+                        <input type="text" class="form-control" id="Qualification">
+                    </div>
+                    <div class="form-group">
+                        <label for="Designation">Designation:</label>
+                        <input type="text" class="form-control" id="Designation">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="saveEmployee()">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this employee?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteEmployee()">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        $(document).ready(function () {
+            loadData();
+        });
+
+        function loadData() {
+            $.ajax({
+                url: '/Employee/GetAll',
+                type: 'GET',
+                success: function (result) {
+                    console.log("Data loaded successfully:", result);
+                    var html = '';
+                    $.each(result.data, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.id + '</td>';
+                        html += '<td>' + item.firstName + '</td>';
+                        html += '<td>' + item.lastName + '</td>';
+                        html += '<td>' + item.gender + '</td>';
+                        html += '<td>' + (item.doB ? new Date(item.doB).toLocaleDateString() : '') + '</td>';
+                        html += '<td>' + item.qualification + '</td>';
+                        html += '<td>' + item.designation + '</td>';
+                        html += '<td> <a href="#" class="btn btn-primary" onclick="editEmployee(' + item.id + ')"> Edit </a> ' +
+                            '<a href="#" class="btn btn-danger" onclick="confirmDelete(' + item.id + ')"> Delete </a> ' +
+                            '</td>';
+                        html += '</tr>';
+                    });
+                    $('#employeeTableBody').html(html);
+                },
+                error: function (errormessage) {
+                    console.error("Error loading data:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        function editEmployee(id) {
+            $.ajax({
+                url: '/Employee/GetById/' + id,
+                type: 'GET',
+                success: function (result) {
+                    console.log("Employee data retrieved:", result);
+                    $('#Id').val(result.data.id);
+                    $('#FirstName').val(result.data.firstName);
+                    $('#LastName').val(result.data.lastName);
+                    $('#Gender').val(result.data.gender);
+                    $('#DoB').val(result.data.doB ? result.data.doB.slice(0, 10) : '');
+                    $('#Qualification').val(result.data.qualification);
+                    $('#Designation').val(result.data.designation);
+
+                    $('#addEditEmployeeModal').modal('show');
+
+                    $('#addEditEmployeeModalLabel').text('Edit Employee');
+                },
+                error: function (errormessage) {
+                    console.error("Error retrieving employee:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+       function saveEmployee() {
+            var employee = {
+                id: $('#Id').val() ? parseInt($('#Id').val()) : 0,  // Convert ID to integer
+                firstName: $('#FirstName').val(),
+                lastName: $('#LastName').val(),
+                gender: $('#Gender').val(),
+                doB: $('#DoB').val(),
+                qualification: $('#Qualification').val(),
+                designation: $('#Designation').val()
+            };
+
+            var url = employee.id ? '/Employee/UpdateEmployee' : '/Employee/AddEmployee';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(employee),
+                success: function (result) {
+                    console.log("Employee saved successfully:", result);
+                    $('#addEditEmployeeModal').modal('hide');
+                    if (employee.id) {
+                        toastr.success('Employee updated successfully.');
+                    } else {
+                        toastr.success('Employee added successfully.');
+                    } loadData(); // Reload data after save
+                },
+                error: function (errormessage) {
+                    console.error("Error saving employee:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+
+        function deleteEmployee() {
+            var id = $('#Id').val();
+
+            $.ajax({
+                url: '/Employee/DeleteEmployee/' + id,
+                type: 'POST',
+                success: function (result) {
+                    console.log("Employee deleted successfully:", result);
+                    $('#deleteConfirmationModal').modal('hide');
+                    toastr.success('Employee deleted successfully.');
+                    loadData(); // Reload data after delete
+                },
+                error: function (errormessage) {
+                    console.error("Error deleting employee:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        function searchByName() {
+            var searchQuery = $('#searchName').val().trim();
+
+            if (searchQuery === '') {
+                $('#searchMessage').text("Please enter a name to search.");
+                return;
+            } else {
+                $('#searchMessage').text("");
+            }
+
+            $.ajax({
+                url: '/Employee/SearchByName',
+                type: 'GET',
+                data: { name: searchQuery },
+                success: function (result) {
+                    console.log("Search results:", result);
+                    var html = '';
+                    if (result.data.length === 0) {
+                        html += '<tr><td colspan="8">"Please Enter A Valid Name No, Results Found.</td></tr>';
+                    } else {
+                        $.each(result.data, function (key, item) {
+                            html += '<tr>';
+                            html += '<td>' + item.id + '</td>';
+                            html += '<td>' + item.firstName + '</td>';
+                            html += '<td>' + item.lastName + '</td>';
+                            html += '<td>' + item.gender + '</td>';
+                            html += '<td>' + (item.doB ? new Date(item.doB).toLocaleDateString() : '') + '</td>';
+                            html += '<td>' + item.qualification + '</td>';
+                            html += '<td>' + item.designation + '</td>';
+                            html += '<td> <a href="#" class="btn btn-primary" onclick="editEmployee(' + item.id + ')"> Edit </a> ' +
+                                '<a href="#" class="btn btn-danger" onclick="confirmDelete(' + item.id + ')"> Delete </a> ' +
+                                '</td>';
+                            html += '</tr>';
+                        });
+                    }
+                    $('#employeeTableBody').html(html);
+                },
+                error: function (errormessage) {
+                    console.error("Error searching employees:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+        function clearSearch() {
+            document.getElementById('searchName').value = '';
+            document.getElementById('searchMessage').innerText = ''; // Clear any search messages
+            loadData(); // Function to load all data again
+           
+
+        }
+
+        function confirmDelete(id) {
+            $('#Id').val(id);
+            $('#deleteConfirmationModal').modal('show');
+        }
+
+        function onAddEmployeeClick() {
+            $('#Id').val('');
+            $('#FirstName').val('');
+            $('#LastName').val('');
+            $('#Gender').val('Male');
+            $('#DoB').val('');
+            $('#Qualification').val('');
+            $('#Designation').val('');
+
+            $('#addEditEmployeeModal').modal('show');
+            $('#addEditEmployeeModalLabel').text('Add New Employee');
+        }
+    </script>
+}
+
+ *@
+
+
+
+
+
+
+@* 
+
+@{
+    ViewData["Title"] = "Employees";
+}
+<!-- Include necessary CSS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+
+<div class="container">
+    <h2>Add Employee</h2>
+
+    <button type="button" class="btn btn-primary mb-3" onclick="onAddEmployeeClick()">Add New Employee</button>
+
+    <div class="form-group">
+        <label for="searchName">Search by Name:</label>
+        <div class="row">
+            <div class="col-4">
+                <input type="text" class="form-control" id="searchName" placeholder="Enter name" required>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" onclick="searchByName()">Search</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="clearSearch()">Clear</button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-6 offset-md-3">
+            <div id="searchMessage" class="text-danger"></div>
+        </div>
+    </div>
+    <br />
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>Qualification</th>
+                <th>Designation</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+            <!-- Employee records will be populated here -->
+        </tbody>
+    </table>
+    <!-- Pagination controls -->
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-md-6 offset-md-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add/Edit Employee Modal -->
+<div class="modal fade" id="addEditEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="addEditEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEditEmployeeModalLabel">Add/Edit Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm">
+                    <input type="hidden" id="Id" name="Id" />
+                    <div class="form-group">
+                        <label for="FirstName">First Name:</label>
+                        <input type="text" class="form-control" id="FirstName" placeholder="Enter first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="LastName">Last Name:</label>
+                        <input type="text" class="form-control" id="LastName" placeholder="Enter last name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Gender">Gender:</label>
+                        <select class="form-control" id="Gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="DoB">Date of Birth:</label>
+                        <input type="date" class="form-control" id="DoB">
+                    </div>
+                    <div class="form-group">
+                        <label for="Qualification">Qualification:</label>
+                        <input type="text" class="form-control" id="Qualification">
+                    </div>
+                    <div class="form-group">
+                        <label for="Designation">Designation:</label>
+                        <input type="text" class="form-control" id="Designation">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="saveEmployee()">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this employee?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteEmployee()">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        var currentPage = 1;
+        var pageSize = 5; // Set your desired page s
+
+        $(document).ready(function () {
+            loadData(currentPage, pageSize);
+        });
+
+        function loadData(pageIndex, pageSize) {
+
+
+            $.ajax({
+                url: '/Employee/GetAll',
+                type: 'GET',
+                data: { pageIndex: pageIndex, pageSize: pageSize },
+
+                success: function (result) {
+                    console.log("Data loaded successfully:", result);
+                    var html = '';
+                    $.each(result.data, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.id + '</td>';
+                        html += '<td>' + item.firstName + '</td>';
+                        html += '<td>' + item.lastName + '</td>';
+                        html += '<td>' + item.gender + '</td>';
+                        html += '<td>' + (item.doB ? new Date(item.doB).toLocaleDateString() : '') + '</td>';
+                        html += '<td>' + item.qualification + '</td>';
+                        html += '<td>' + item.designation + '</td>';
+                        html += '<td> <a href="#" class="btn btn-primary" onclick="editEmployee(' + item.id + ')"> Edit </a> ' +
+                            '<a href="#" class="btn btn-danger" onclick="confirmDelete(' + item.id + ')"> Delete </a> ' +
+                            '</td>';
+                        html += '</tr>';
+                    });
+
+
+                    $('#employeeTableBody').html(html);
+
+                    // Generate pagination controls
+                    updatePaginationControls(result.currentPage, result.pageSize, result.totalCount);
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error loading data:", error);
+                        alert("Error loading data: " + error);
+                    }
+            });
+        }
+
+        // Update pagination controls
+        function updatePaginationControls(pageIndex, pageSize, totalRecords) {
+            var totalPages = Math.ceil(totalRecords / pageSize);
+
+            var paginationHtml = '';
+            for (var i = 1; i <= totalPages; i++) {
+                paginationHtml += `<li class="page-item ${i === pageIndex ? 'active' : ''}">
+                                            <a class="page-link" href="#" onclick="loadData(${i}, ${pageSize})">${i}</a>
+                                           </li>`;
+            }
+
+            $('.pagination').html(paginationHtml);
+        }
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadData(currentPage, pageSize);
+            }
+        }
+
+        function nextPage() {
+            var totalRecords = parseInt($('#totalRecords').val());
+
+            if (currentPage * pageSize < totalRecords) {
+                currentPage++;
+                loadData(currentPage, pageSize);
+            }
+        }
+
+
+        function editEmployee(id) {
+            $.ajax({
+                url: '/Employee/GetById/' + id,
+                type: 'GET',
+                success: function (result) {
+                    console.log("Employee data retrieved:", result);
+                    $('#Id').val(result.data.id);
+                    $('#FirstName').val(result.data.firstName);
+                    $('#LastName').val(result.data.lastName);
+                    $('#Gender').val(result.data.gender);
+                    $('#DoB').val(result.data.doB ? result.data.doB.slice(0, 10) : '');
+                    $('#Qualification').val(result.data.qualification);
+                    $('#Designation').val(result.data.designation);
+
+                    $('#addEditEmployeeModal').modal('show');
+
+                    $('#addEditEmployeeModalLabel').text('Edit Employee');
+                },
+                error: function (errormessage) {
+                    console.error("Error retrieving employee:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        function saveEmployee() {
+            var employee = {
+                id: $('#Id').val() ? parseInt($('#Id').val()) : 0,  // Convert ID to integer
+                firstName: $('#FirstName').val(),
+                lastName: $('#LastName').val(),
+                gender: $('#Gender').val(),
+                doB: $('#DoB').val(),
+                qualification: $('#Qualification').val(),
+                designation: $('#Designation').val()
+            };
+
+            var url = employee.id ? '/Employee/UpdateEmployee' : '/Employee/AddEmployee';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(employee),
+                success: function (result) {
+                    console.log("Employee saved successfully:", result);
+                    $('#addEditEmployeeModal').modal('hide');
+                    if (employee.id) {
+                        toastr.success('Employee updated successfully.');
+                    } else {
+                        toastr.success('Employee added successfully.');
+                    }
+                    loadData(currentPage, pageSize);
+                     // Reload data after save
+                },
+                error: function (errormessage) {
+                    console.error("Error saving employee:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+
+        function deleteEmployee() {
+            var id = $('#Id').val();
+
+            $.ajax({
+                url: '/Employee/DeleteEmployee/' + id,
+                type: 'POST',
+                success: function (result) {
+                    console.log("Employee deleted successfully:", result);
+                    $('#deleteConfirmationModal').modal('hide');
+                    toastr.success('Employee deleted successfully.');
+                    loadData(currentPage, pageSize);
+                },
+                error: function (errormessage) {
+                    console.error("Error deleting employee:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+        function searchByName() {
+            var searchQuery = $('#searchName').val().trim();
+
+            if (searchQuery === '') {
+                $('#searchMessage').text("Please enter a name to search.");
+                return;
+            } else {
+                $('#searchMessage').text("");
+            }
+
+            $.ajax({
+                url: '/Employee/SearchByName',
+                type: 'GET',
+                data: { name: searchQuery },
+                success: function (result) {
+                    console.log("Search results:", result);
+                    var html = '';
+                    if (result.data.length === 0) {
+                        html += '<tr><td colspan="8">"Please Enter A Valid Name No, Results Found.</td></tr>';
+                    } else {
+                        $.each(result.data, function (key, item) {
+                            html += '<tr>';
+                            html += '<td>' + item.id + '</td>';
+                            html += '<td>' + item.firstName + '</td>';
+                            html += '<td>' + item.lastName + '</td>';
+                            html += '<td>' + item.gender + '</td>';
+                            html += '<td>' + (item.doB ? new Date(item.doB).toLocaleDateString() : '') + '</td>';
+                            html += '<td>' + item.qualification + '</td>';
+                            html += '<td>' + item.designation + '</td>';
+                            html += '<td> <a href="#" class="btn btn-primary" onclick="editEmployee(' + item.id + ')"> Edit </a> ' +
+                                '<a href="#" class="btn btn-danger" onclick="confirmDelete(' + item.id + ')"> Delete </a> ' +
+                                '</td>';
+                            html += '</tr>';
+                        });
+                    }
+                    $('#employeeTableBody').html(html);
+                },
+                error: function (errormessage) {
+                    console.error("Error searching employees:", errormessage.responseText);
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+        function clearSearch() {
+            document.getElementById('searchName').value = '';
+            document.getElementById('searchMessage').innerText = ''; // Clear any search messages
+            loadData(currentPage, pageSize);
+
+
+        }
+
+        function confirmDelete(id) {
+            $('#Id').val(id);
+            $('#deleteConfirmationModal').modal('show');
+        }
+
+        function onAddEmployeeClick() {
+            $('#Id').val('');
+            $('#FirstName').val('');
+            $('#LastName').val('');
+            $('#Gender').val('Male');
+            $('#DoB').val('');
+            $('#Qualification').val('');
+            $('#Designation').val('');
+
+            $('#addEditEmployeeModal').modal('show');
+            $('#addEditEmployeeModalLabel').text('Add New Employee');
+        }
+    </script>
+}
+ *@
