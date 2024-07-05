@@ -5,14 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- DataTables CSS -->
-<link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-<link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-<link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
-<!-- Include necessary CSS -->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
 
 <div class="row">
     <div class="col-12">
@@ -113,6 +107,8 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -128,11 +124,30 @@
 
 
 
-
     <script>
-        
+     
+
         $(document).ready(function () {
-            $('#EmployeeTable').DataTable({
+            // Configure Toastr notifications
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-center",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            var table = $('#EmployeeTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -161,78 +176,27 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            return '<button type="button" class="btn btn-info" onclick="editEmployee(' + row.id + ')">Edit</button>' +  
-                                '<button type="button" class="btn btn-danger" onclick="confirmDelete(' + row.id + ')">Delete</button>';
-                        }
+                            return `<button type="button" class="btn btn-info" onclick="editEmployee(' + row.id + ')">Edit</button>
+                                        <button type="button" class="btn btn-danger" onclick="confirmDelete(' + row.id + ')">Delete</button>
+                                        `;
+                        }, "autoWidth": true
+
                     }
                 ],
                          error: function (xhr, error, thrown) {
                     console.log('Error occurred: ' + error);
                 }
 
-            });
-
-
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": true,
-                "positionClass": "toast-bottom-center",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            };
+            }); 
         });
+       
+       
 
-        function loadData() {
-            $.ajax({
-                url: '/Employee/GetAll',
-                type: 'GET',
-                success: function (result) {
-                    console.log("Data loaded successfully:", result);
-                    if (result && result.succeeded) {
-                        var html = '';
-                        $.each(result.data, function (key, item) {
-                            html += '<tr>';
-                            html += '<td>' + item.id + '</td>';
-                            html += '<td>' + item.firstName + '</td>';
-                            html += '<td>' + item.lastName + '</td>';
-                            html += '<td>' + item.gender + '</td>';
-                            html += '<td>' + item.doB + '</td>';
-                            html += '<td>' + item.qualification + '</td>';
-                            html += '<td>' + item.designation + '</td>';
-                            html += '<td><button type="button" class="btn btn-info mr-2"  onclick="editEmployee(' + item.id + ')">Edit</button> ';
-                            html += '<button type="button" class="btn btn-danger" onclick="confirmDelete(' + item.id + ')">Delete</button></td>';
-                            html += '</tr>';
-                        });
-                        $('#employeeTableBody').html(html);
-
-                        // Destroy and reinitialize DataTable
-                        $('#EmployeeTable').DataTable().ajax.reload();
-                        $('#EmployeeTable').DataTable();
-                    } else {
-                        var errorMessage = "Failed to load data";
-                        if (result && result.messages) {
-                            errorMessage += ": " + result.messages.join(", ");
-                        }
-                        console.error("Data loading failed:", errorMessage);
-                        toastr.error(errorMessage);
-                    }
-                },
-                error: function (error) {
-                    console.error("Error loading data:", error);
-                    toastr.error("Error loading data. Please try again later.");
-                }
-            });
+        // Function to reload DataTable
+        function reloadData() {
+            $('#EmployeeTable').DataTable().ajax.reload();
         }
+
 
         function editEmployee(id) {
             $.ajax({
@@ -280,7 +244,7 @@
                 success: function (result) {
                     toastr.success(result.message);
                     $('#addEditEmployeeModal').modal('hide');
-                    loadData();
+                    reloadData(); // Reload data after save
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = xhr.status + ': ' + xhr.statusText;
@@ -326,7 +290,7 @@
                     console.log("Employee deleted successfully:", result);
                     $('#deleteConfirmationModal').modal('hide');
                     toastr.success('Employee deleted successfully.');
-                    loadData();
+                    reloadData(); // Reload data after delete
                 },
                 error: function (errormessage) {
                     console.error("Error deleting employee:", errormessage.responseText);
@@ -334,8 +298,7 @@
                 }
             });
         }
-
-
+       
 
     </script>
 }

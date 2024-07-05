@@ -176,7 +176,11 @@ namespace StudentSync.WebAPI.Controllers
                             break;
                     }
                 }
-
+                // Check if employeeData is null or empty before counting
+                if (employeeData == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { succeeded = false, messages = new[] { "Employee data is null." } });
+                }
                 // Get total records count
                 var recordsTotal = employeeData.Count();
 

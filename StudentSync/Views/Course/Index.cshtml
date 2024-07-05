@@ -1,314 +1,10 @@
-﻿    @* 
-        @{
-            ViewBag.Title = "Datatables";
-            ViewBag.pTitle = "Datatables";
-            ViewBag.pageTitle = "Tables";
-            Layout = "~/Views/Shared/_Layout.cshtml";
-        }
-
-        <!-- DataTables CSS -->
-        <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-        <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-        <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-
-        <!-- Include necessary CSS -->
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-
-                        <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseClick()">Add Course</button>
-                        <table id="CourseTable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Duration</th>
-                                    <th>Prerequisite</th>
-                                    <th>Remarks</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="courseTableBody">
-                            </tbody>
-                        </table>
-
-                        <!-- Add/Edit Course Modal -->
-                        <div class="modal fade" id="addEditCourseModal" tabindex="-1" role="dialog" aria-labelledby="addEditCourseModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="addEditCourseModalLabel">Add/Edit Course</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="CourseForm">
-                                            <input type="hidden" id="Id" name="Id" />
-                                            <div class="form-group">
-                                                <label for="Name">Name:</label>
-                                                <input type="text" class="form-control" id="Name" placeholder="Enter name" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="Duration">Duration:</label>
-                                                <input type="text" class="form-control" id="Duration" placeholder="Enter duration">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="Prerequisite">Prerequisite:</label>
-                                                <input type="text" class="form-control" id="Prerequisite" placeholder="Enter prerequisite">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="Remarks">Remarks:</label>
-                                                <input type="text" class="form-control" id="Remarks" placeholder="Enter remarks">
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="saveCourse()">Save</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Delete Confirmation Modal -->
-                        <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure you want to delete this Course?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" onclick="deleteCourse()">Delete</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @section Scripts {
-            <!-- jQuery -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-            <!-- Bootstrap JS -->
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-            <!-- Toastr JS -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-            <!-- DataTables JS -->
-            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-            <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
-
-            <!-- Custom script -->
-            <script>
-                // Define your functions here
-                function onAddCourseClick() {
-                    $('#Id').val('');
-                    $('#Name').val('');
-                    $('#Duration').val('');
-                    $('#Prerequisite').val('');
-                    $('#Remarks').val('');
-
-                    $('#addEditCourseModal').modal('show');
-                    $('#addEditCourseModalLabel').text('Add New Course');
-                }
-
-                // Other functions like editCourse, saveCourse, confirmDelete, etc.
-
-                $(document).ready(function () {
-                    $('#CourseTable').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        ajax: {
-                            url: '/Course/GetAll',
-                            type: 'GET',
-                            data: function (d) {
-                                return {
-                                    draw: d.draw,
-                                    start: d.start,
-                                    length: d.length,
-                                    searchValue: d.search.value,
-                                    sortColumn: d.columns[d.order[0].column].data,
-                                    sortColumnDirection: d.order[0].dir
-                                };
-                            },
-                            dataSrc: 'data'
-                        },
-                        columns: [
-                            { data: 'courseId', title: 'ID' },
-                            { data: 'courseName', title: 'Name' },
-                            { data: 'duration', title: 'Duration' },
-                            { data: 'preRequisite', title: 'Prerequisite' },
-                            { data: 'remarks', title: 'Remarks' },
-                            {
-                                data: null,
-                                render: function (data, type, row) {
-                                    return '<button type="button" class="btn btn-info" onclick="editCourse(' + row.courseId + ')">Edit</button>' +
-                                        '<button type="button" class="btn btn-danger" onclick="confirmDelete(' + row.courseId + ')">Delete</button>';
-                                }
-                            }
-                        ],
-                        error: function (xhr, error, thrown) {
-                            console.log('Error occurred: ' + error);
-                        }
-                    });
-
-                    function loadData() {
-                        $.ajax({
-                            url: '/Course/GetAll',
-                            type: 'GET',
-                            success: function (result) {
-                                console.log("Data loaded successfully:", result);
-                                if (result && result.succeeded) {
-                                    var html = '';
-                                    $.each(result.data, function (key, item) {
-                                        html += '<tr>';
-                                        html += '<td>' + item.courseId + '</td>';
-                                        html += '<td>' + item.courseName + '</td>';
-                                        html += '<td>' + item.duration + '</td>';
-                                        html += '<td>' + item.preRequisite + '</td>';
-                                        html += '<td>' + item.remarks + '</td>';
-                                        html += '<td><button type="button" class="btn btn-info mr-2"  onclick="editCourse(' + item.courseId + ')">Edit</button> ';
-                                        html += '<button type="button" class="btn btn-danger" onclick="confirmDelete(' + item.courseId + ')">Delete</button></td>';
-                                        html += '</tr>';
-                                    });
-                                    $('#courseTableBody').html(html);
-
-                                    // Destroy and reinitialize DataTable
-                                    $('#CourseTable').DataTable().ajax.reload();
-                                    $('#CourseTable').DataTable();
-                                } else {
-                                    var errorMessage = "Failed to load data";
-                                    if (result && result.messages) {
-                                        errorMessage += ": " + result.messages.join(", ");
-                                    }
-                                    console.error("Data loading failed:", errorMessage);
-                                    toastr.error(errorMessage);
-                                }
-                            },
-                            error: function (error) {
-                                console.error("Error loading data:", error);
-                                toastr.error("Error loading data. Please try again later.");
-                            }
-                        });
-                    }
-
-                    function editCourse(id) {
-                        $.ajax({
-                            url: '/Course/GetById/' + id,
-                            type: 'GET',
-                            success: function (result) {
-                                console.log("Course data retrieved:", result);
-                                $('#CourseId').val(result.data.courseId);
-                                $('#CourseName').val(result.data.courseName);
-                                $('#Duration').val(result.data.duration);
-                                $('#PreRequisite').val(result.data.preRequisite);
-                                $('#Remarks').val(result.data.remarks);
-
-                                $('#addEditCourseModal').modal('show');
-                                $('#addEditCourseModalLabel').text('Edit Course');
-                            },
-                            error: function (errormessage) {
-                                console.error("Error retrieving Course:", errormessage.responseText);
-                                alert(errormessage.responseText);
-                            }
-                        });
-                    }
-
-                    function saveCourse() {
-                        var Course = {
-                            CourseId: $('#CourseId').val() ? parseInt($('#Id').val()) : 0,
-                            CourseName: $('#CourseName').val(),
-                            Duration: $('#Duration').val(),
-                            PreRequisite: $('#PreRequisite').val(),
-                            Remarks: $('#Remarks').val()
-                        };
-
-                        var url = Course.Id ? '/Course/UpdateCourse' : '/Course/AddCourse';
-
-                        $.ajax({
-                            url: url,
-                            type: 'POST',
-                            data: JSON.stringify(Course),
-                            contentType: 'application/json; charset=utf-8',
-                            success: function (result) {
-                                toastr.success(result.message);
-                                $('#addEditCourseModal').modal('hide');
-                                loadData();
-                            },
-                            error: function (xhr, status, error) {
-                                var errorMessage = xhr.status + ': ' + xhr.statusText;
-                                console.error('Error - ' + errorMessage);
-                                if (xhr.responseJSON && xhr.responseJSON.message) {
-                                    console.error('Server error message: ' + xhr.responseJSON.message);
-                                    toastr.error('Error saving Course: ' + xhr.responseJSON.message);
-                                } else {
-                                    toastr.error('Error saving Course. Please check the console for more details.');
-                                }
-                            }
-                        });
-                    }
-
-                    function confirmDelete(id) {
-                        $('#Id').val(id);
-                        $('#deleteConfirmationModal').modal('show');
-                    }
-
-                    function deleteCourse() {
-                        var id = $('#Id').val();
-
-                        $.ajax({
-                            url: '/Course/DeleteCourse/' + id,
-                            type: 'POST',
-                            success: function (result) {
-                                console.log("Course deleted successfully:", result);
-                                $('#deleteConfirmationModal').modal('hide');      
-                                toastr.success('Course deleted successfully.');
-                                loadData();
-                            },
-                            error: function (errormessage) {
-                                console.error("Error deleting Course:", errormessage.responseText);
-                                alert(errormessage.responseText);
-                            }
-                        });
-                    }
-                });
-            </script>
-        }
-
-     *@
-
-
+﻿
 
     @{
-        ViewBag.Title = "Datatables";
-        ViewBag.pTitle = "Datatables";
-        ViewBag.pageTitle = "Tables";
+    ViewBag.Title = "Course";
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
 
-    <!-- DataTables CSS -->
-    <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- Include necessary CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
     <div class="row">
         <div class="col-12">
@@ -332,43 +28,47 @@
                     </table>
 
                     <!-- Add/Edit Course Modal -->
-                    <div class="modal fade" id="addEditCourseModal" tabindex="-1" role="dialog" aria-labelledby="addEditCourseModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="addEditCourseModalLabel">Add/Edit Course</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="CourseForm">
-                                        <input type="hidden" id="Id" name="Id" />
-                                        <div class="form-group">
-                                            <label for="Name">Name:</label>
-                                            <input type="text" class="form-control" id="Name" placeholder="Enter name" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Duration">Duration:</label>
-                                            <input type="text" class="form-control" id="Duration" placeholder="Enter duration">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Prerequisite">Prerequisite:</label>
-                                            <input type="text" class="form-control" id="Prerequisite" placeholder="Enter prerequisite">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Remarks">Remarks:</label>
-                                            <input type="text" class="form-control" id="Remarks" placeholder="Enter remarks">
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" onclick="saveCourse()">Save</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
+                <div class="modal fade" id="addEditCourseModal" tabindex="-1" role="dialog" aria-labelledby="addEditCourseModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addEditCourseModalLabel">Add/Edit Course</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="CourseForm">
+                                    <input type="hidden" id="Id" name="Id" />
+                                    <div class="form-group">
+                                        <label for="Name">Name:</label>
+                                        <input type="text" class="form-control" id="Name" placeholder="Enter name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Duration">Duration:</label>
+                                        <input type="text" class="form-control" id="Duration" placeholder="Enter duration">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Prerequisite">Prerequisite:</label>
+                                        <input type="text" class="form-control" id="Prerequisite" placeholder="Enter prerequisite">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Remarks">Remarks:</label>
+                                        <input type="text" class="form-control" id="Remarks" placeholder="Enter remarks">
+                                    </div>
+                                    <!-- Hidden fields for CreatedBy and UpdatedBy -->
+                                    <input type="hidden" id="CreatedBy" name="CreatedBy" value="defaultUser" />
+                                    <input type="hidden" id="UpdatedBy" name="UpdatedBy" value="defaultUser" />
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="saveCourse()">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+                </div>
+
 
                     <!-- Delete Confirmation Modal -->
                     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
@@ -395,22 +95,40 @@
         </div>
     </div>
     @section Scripts {
-        <!-- jQuery -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-        <!-- Bootstrap JS -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-        <!-- Toastr JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-        <!-- DataTables JS -->
-        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 
         <!-- Custom script -->
         <script>
-
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
         // Function to handle "Add Course" button click
         function onAddCourseClick() {
             $('#Id').val('');
@@ -425,20 +143,28 @@
 
         // Function to save a course
         function saveCourse() {
-            var Course = {
+            var createdBy = 'defaultUser'; // Replace with logic to get the actual user
+            var updatedBy = 'defaultUser'; // Replace with logic to get the actual user
+
+            var course = {
                 CourseId: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                 CourseName: $('#Name').val(),
                 Duration: $('#Duration').val(),
                 PreRequisite: $('#Prerequisite').val(),
-                Remarks: $('#Remarks').val()
+                Remarks: $('#Remarks').val(),
+                CreatedBy: createdBy,
+                UpdatedBy: updatedBy
             };
 
-            var url = Course.CourseId ? '/Course/UpdateCourse' : '/Course/AddCourse';
+            // Log the course object to ensure it is as expected
+            console.log('Course Payload:', JSON.stringify(course));
+
+            var url = course.CourseId ? '/Course/UpdateCourse' : '/Course/AddCourse';
 
             $.ajax({
                 url: url,
                 type: 'POST',
-                data: JSON.stringify(Course),
+                data: JSON.stringify(course),
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
                     toastr.success(result.message);
@@ -447,6 +173,8 @@
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = xhr.status + ': ' + xhr.statusText;
+                    console.error('Error - ' + errorMessage);
+                    console.error('Response:', xhr.responseText);
                     toastr.error('Error - ' + errorMessage);
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         toastr.error('Error saving Course: ' + xhr.responseJSON.message);
@@ -456,6 +184,58 @@
                 }
             });
         }
+        // Function to edit a course
+        function editCourse(id) {
+            $.ajax({
+                url: '/Course/GetById/' + id,
+                type: 'GET',
+                success: function (result) {
+                    $('#Id').val(result.data.courseId);
+                    $('#Name').val(result.data.courseName);
+                    $('#Duration').val(result.data.duration);
+                    $('#Prerequisite').val(result.data.preRequisite);
+                    $('#Remarks').val(result.data.remarks);
+
+                    $('#addEditCourseModal').modal('show');
+                    $('#addEditCourseModalLabel').text('Edit Course');
+                },
+                error: function (errormessage) {
+                    toastr.error('Error retrieving Course: ' + errormessage.responseText);
+                }
+            });
+        }
+
+
+
+        // Function to confirm course deletion
+        function confirmDelete(id) {
+            $('#Id').val(id);
+            $('#deleteConfirmationModal').modal('show');
+        }
+
+        // Function to delete a course
+        function deleteCourse() {
+            var id = $('#Id').val();
+
+            $.ajax({
+                url: '/Course/DeleteCourse/' + id,
+                type: 'POST',
+                success: function (result) {
+                    toastr.success('Course deleted successfully.');
+                    $('#deleteConfirmationModal').modal('hide');
+                    reloadTable();
+                },
+                error: function (errormessage) {
+                    toastr.error('Error deleting Course: ' + errormessage.responseText);
+                }
+            });
+        }
+        // Function to reload DataTable
+        function reloadTable() {
+            $('#CourseTable').DataTable().ajax.reload();
+        }
+
+
             // Document ready function
             $(document).ready(function () {
                 // DataTable initialization
@@ -477,74 +257,29 @@
                         },
                         dataSrc: 'data'
                     },
-                    columns: [
-                        { data: 'courseId' },
-                        { data: 'courseName' },
-                        { data: 'duration' },
-                        { data: 'prerequisite' },
-                        { data: 'remarks' },
+                "columns": [
+                    { "data": "courseId", "title": "ID" },
+                    { "data": "courseName", "title": "Name" },
+                    { "data": "duration", "title": "Duration" },
+                    { "data": "preRequisite", "title": "PreRequisite" },
+                    { "data": "remarks", "title": "Remarks" },
                         {
                             data: null,
                             render: function (data, type, row) {
-                                return '<button type="button" class="btn btn-info" onclick="editCourse(' + row.courseId + ')">Edit</button>' +
-                                    '<button type="button" class="btn btn-danger" onclick="confirmDelete(' + row.courseId + ')">Delete</button>';
-                            }
+                            return `
+                                                <button type="button" class="btn btn-info" onclick="editCourse(' + row.courseId + ')">Edit</button>
+                                                 <button type="button" class="btn btn-danger" onclick="confirmDelete(' + row.courseId + ')">Delete</button>
+                                          `;
+                        }, "autoWidth": true
+
                         }
                     ]
 
                 });
 
-                // Function to reload DataTable
-                function reloadTable() {
-                    $('#CourseTable').DataTable().ajax.reload();
-                }
+              
 
-                // Function to edit a course
-                function editCourse(id) {
-                    $.ajax({
-                        url: '/Course/GetById/' + id,
-                        type: 'GET',
-                        success: function (result) {
-                            $('#Id').val(result.data.courseId);
-                            $('#Name').val(result.data.courseName);
-                            $('#Duration').val(result.data.duration);
-                            $('#Prerequisite').val(result.data.preRequisite);
-                            $('#Remarks').val(result.data.remarks);
-
-                            $('#addEditCourseModal').modal('show');
-                            $('#addEditCourseModalLabel').text('Edit Course');
-                        },
-                        error: function (errormessage) {
-                            toastr.error('Error retrieving Course: ' + errormessage.responseText);
-                        }
-                    });
-                }
-
-          
-
-                // Function to confirm course deletion
-                function confirmDelete(id) {
-                    $('#Id').val(id);
-                    $('#deleteConfirmationModal').modal('show');
-                }
-
-                // Function to delete a course
-                function deleteCourse() {
-                    var id = $('#Id').val();
-
-                    $.ajax({
-                        url: '/Course/DeleteCourse/' + id,
-                        type: 'POST',
-                        success: function (result) {
-                            toastr.success('Course deleted successfully.');
-                            $('#deleteConfirmationModal').modal('hide');
-                            reloadTable();
-                        },
-                        error: function (errormessage) {
-                            toastr.error('Error deleting Course: ' + errormessage.responseText);
-                        }
-                    });
-                }
+                
             });
 
      

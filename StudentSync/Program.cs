@@ -28,6 +28,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ICourseServices, CourseServices>();
+builder.Services.AddScoped<ICourseFeeService, CourseFeeService>();
+builder.Services.AddScoped<ICourseExamServices, CourseExamServices>();
+
+
 
 
 builder.Services.AddCors(options =>

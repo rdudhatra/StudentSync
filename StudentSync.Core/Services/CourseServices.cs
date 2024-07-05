@@ -25,10 +25,7 @@ namespace StudentSync.Core.Services
             var courses = await _context.Courses.ToListAsync();
             return Result<IEnumerable<Course>>.Success(courses);
         }
-        //public async Task<List<Course>> GetAllCourseAsync()
-        //{
-        //    return await _context.Courses.ToListAsync();
-        //}
+
 
         public async Task<IResult<Course>> GetCoursesByIdAsync(int id)
         {

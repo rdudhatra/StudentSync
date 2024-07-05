@@ -1,0 +1,433 @@
+﻿@model IEnumerable<StudentSync.Data.Models.CourseFee>
+
+@{
+    ViewBag.Title = "Course Fees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- DataTables CSS and JavaScript are already included -->
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseFeeClick()">Add Course Fee</button>
+                <table id="CourseFeeTable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Course ID</th>
+                            <th>Total Fees</th>
+                            <th>Down Payment</th>
+                            <th>No. of Installments</th>
+                            <th>Installment Amount</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courseFeeTableBody">
+                    </tbody>
+                </table>
+
+                <!-- Add/Edit Course Fee Modal -->
+                <div class="modal fade" id="addEditCourseFeeModal" tabindex="-1" role="dialog" aria-labelledby="addEditCourseFeeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addEditCourseFeeModalLabel">Add/Edit Course Fee</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="CourseFeeForm">
+                                    <input type="hidden" id="Id" name="Id" />
+                                    <div class="form-group">
+                                        <label for="CourseId">Course ID:</label>
+                                        <input type="number" class="form-control" id="CourseId" placeholder="Enter course ID" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TotalFees">Total Fees:</label>
+                                        <input type="number" class="form-control" id="TotalFees" placeholder="Enter total fees">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="DownPayment">Down Payment:</label>
+                                        <input type="number" class="form-control" id="DownPayment" placeholder="Enter down payment">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="NoofInstallment">No. of Installments:</label>
+                                        <input type="number" class="form-control" id="NoofInstallment" placeholder="Enter number of installments">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="InstallmentAmount">Installment Amount:</label>
+                                        <input type="number" class="form-control" id="InstallmentAmount" placeholder="Enter installment amount">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Remarks">Remarks:</label>
+                                        <input type="text" class="form-control" id="Remarks" placeholder="Enter remarks">
+                                    </div>
+                                    <!-- Hidden fields for CreatedBy and UpdatedBy -->
+                                    <input type="hidden" id="CreatedBy" name="CreatedBy" value="defaultUser" />
+                                    <input type="hidden" id="UpdatedBy" name="UpdatedBy" value="defaultUser" />
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="saveCourseFee()">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this Course Fee?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" onclick="deleteCourseFee()">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        // Function to save CourseFee data via AJAX
+        function saveCourseFee() {
+            var formData = {
+                Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
+                CourseId: $('#CourseId').val(),
+                TotalFees: $('#TotalFees').val(),
+                DownPayment: $('#DownPayment').val(),
+                NoofInstallment: $('#NoofInstallment').val(),
+                InstallmentAmount: $('#InstallmentAmount').val(),
+                Remarks: $('#Remarks').val(),
+                CreatedBy: $('#CreatedBy').val(),
+                UpdatedBy: $('#UpdatedBy').val()
+            };
+
+            var url = (formData.Id == 0 || formData.Id == "") ? "/CourseFee/AddCourseFee" : "/CourseFee/UpdateCourseFee";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    $('#addEditCourseFeeModal').modal('hide');
+                    if (formData.Id === 0 || formData.Id === "") {
+                        toastr.success('Course fee added successfully.');
+                    } else {
+                        toastr.success('Course fee updated successfully.');
+                    } dataTable.ajax.reload();
+                },
+                error: function (response) {
+                    toastr.error('Error saving course fee.');
+                }
+            });
+        }
+
+        // Function to delete CourseFee via AJAX
+        function onDeleteCourseFeeClick(id) {
+            $('#deleteConfirmationModal').modal('show');
+
+            $('#deleteConfirmationModal').on('click', '.btn-danger', function () {
+                $.ajax({
+                    url: "/CourseFee/Delete/" + id,
+                    type: "POST",
+                    success: function (response) {
+                        $('#deleteConfirmationModal').modal('hide');
+                        toastr.success('Course fee deleted successfully.');
+                        dataTable.ajax.reload();
+                    },
+                    error: function (response) {
+                        toastr.error('Error deleting course fee.');
+                    }
+                });
+            });
+        }
+
+        // Function to populate data in the modal for editing
+        function onEditCourseFeeClick(id) {
+            $.ajax({
+                url: "/CourseFee/GetById/" + id,
+                type: "GET",
+                success: function (data) {
+                    $('#Id').val(data.id);
+                    $('#CourseId').val(data.courseId);
+                    $('#TotalFees').val(data.totalFees);
+                    $('#DownPayment').val(data.downPayment);
+                    $('#NoofInstallment').val(data.noofInstallment);
+                    $('#InstallmentAmount').val(data.installmentAmount);
+                    $('#Remarks').val(data.remarks);
+
+                    $('#addEditCourseFeeModal').modal('show');
+                },
+                error: function (response) {
+                    toastr.error('Error retrieving data.');
+                }
+            });
+        }
+
+         toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-center",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+        // Function to handle delete confirmation modal
+        function onDeleteCourseFeeClick(id) {
+               $('#Id').val(id);
+
+            $('#deleteConfirmationModal').modal('show');
+
+           
+        }
+        function deleteCourseFee() {
+            var id = $('#Id').val();
+            $.ajax({
+                url: "/CourseFee/Delete/" + id,
+                type: "POST",
+                success: function (response) {
+                    toastr.success(response.message);
+                    $('#deleteConfirmationModal').modal('hide');
+                    dataTable.ajax.reload();
+                },
+                error: function (response) {
+                    toastr.error('Error deleting data.');
+                }
+            });
+        }
+        
+
+        // Ensure jQuery and other dependencies are loaded before this script executes
+        function onAddCourseFeeClick() {
+            $('#addEditCourseFeeModal').modal('show');
+            $('#CourseFeeForm')[0].reset(); // Reset form on open
+        }
+
+        // DataTable initialization and configuration
+        var dataTable;
+
+        $(document).ready(function () {
+            loadCourseFeeTable();
+        });
+
+        function loadCourseFeeTable() {
+            dataTable = $('#CourseFeeTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "orderMulti": false,
+                "ajax": {
+                    "url": "/CourseFee/GetAll",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "id", "name": "Id", "autoWidth": true },
+                    { "data": "courseId", "name": "CourseId", "autoWidth": true },
+                    { "data": "totalFees", "name": "TotalFees", "autoWidth": true },
+                    { "data": "downPayment", "name": "DownPayment", "autoWidth": true },
+                    { "data": "noofInstallment", "name": "NoofInstallment", "autoWidth": true },
+                    { "data": "installmentAmount", "name": "InstallmentAmount", "autoWidth": true },
+                    { "data": "remarks", "name": "Remarks", "autoWidth": true },
+                    {
+                        "data": "id",
+                        "render": function (data, type, row) {
+                            return `
+                                    <div class="text-center">
+                                        <a href="#" onclick="onEditCourseFeeClick(${data})" class="btn btn-primary btn-sm">Edit</a>
+                                        <a href="#" onclick="onDeleteCourseFeeClick(${row.id})" class="btn btn-danger btn-sm">Delete</a>
+                                    </div>
+                                `;
+                        },
+                        "autoWidth": true
+                    }
+                ]
+            });
+        }
+    </script>
+}
+@* @section Scripts {
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <!-- Custom script -->
+    <script>
+        toastr.options = {
+            "positionClass": "toast-bottom-right"
+        };
+
+        var dataTable;
+
+        $(document).ready(function () {
+            loadCourseFeeTable();
+        });
+
+        function loadCourseFeeTable() {
+            dataTable = $('#CourseFeeTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "orderMulti": false,
+                "ajax": {
+                    "url": "/CourseFee/GetAll",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "id", "name": "Id", "autoWidth": true },
+                    { "data": "courseId", "name": "CourseId", "autoWidth": true },
+                    { "data": "totalFees", "name": "TotalFees", "autoWidth": true },
+                    { "data": "downPayment", "name": "DownPayment", "autoWidth": true },
+                    { "data": "noofInstallment", "name": "NoofInstallment", "autoWidth": true },
+                    { "data": "installmentAmount", "name": "InstallmentAmount", "autoWidth": true },
+                    { "data": "remarks", "name": "Remarks", "autoWidth": true },
+                    {
+                        "data": "id",
+                        "render": function (data) {
+                            return `
+                                            <div class="text-center">
+                                                <a href="#" onclick="onEditCourseFeeClick(${data})" class="btn btn-primary btn-sm">Edit</a>
+                                                <a href="#" onclick="onDeleteCourseFeeClick(${data})" class="btn btn-danger btn-sm">Delete</a>
+                                            </div>
+                                        `;
+                        },
+                        "autoWidth": true
+                    }
+                ]
+            });
+        }
+
+        function onAddCourseFeeClick() {
+            $('#addEditCourseFeeModal').modal('show');
+            $('#CourseFeeForm')[0].reset(); // Reset form on open
+        }
+
+        function onEditCourseFeeClick(id) {
+            $.ajax({
+                url: "/CourseFee/GetById/" + id,
+                type: "GET",
+                success: function (data) {
+                    $('#Id').val(data.data.id);
+                    $('#CourseId').val(data.data.courseId);
+                    $('#TotalFees').val(data.data.totalFees);
+                    $('#DownPayment').val(data.data.downPayment);
+                    $('#NoofInstallment').val(data.data.noofInstallment);
+                    $('#InstallmentAmount').val(data.data.installmentAmount);
+                    $('#Remarks').val(data.data.remarks);
+
+                    $('#addEditCourseFeeModal').modal('show');
+                },
+                error: function (response) {
+                    toastr.error('Error retrieving data.');
+                }
+            });
+        }                                                                                                                                           
+
+        function saveCourseFee() {
+            var formData = {
+                Id: $('#Id').val(),
+                CourseId: $('#CourseId').val(),
+                TotalFees: $('#TotalFees').val(),
+                DownPayment: $('#DownPayment').val(),
+                NoofInstallment: $('#NoofInstallment').val(),
+                InstallmentAmount: $('#InstallmentAmount').val(),
+                Remarks: $('#Remarks').val(),
+                CreatedBy: $('#CreatedBy').val(),
+                UpdatedBy: $('#UpdatedBy').val()
+            };
+
+            var url = (formData.Id === "") ? "/CourseFee/AddCourseFee" : "/CourseFee/UpdateCourseFee";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    $('#addEditCourseFeeModal').modal('hide');
+                    toastr.success(response.message);
+                    dataTable.ajax.reload();
+                },
+                error: function (response) {
+                    toastr.error('Error saving data.');
+                }
+            });
+        }
+
+        function onDeleteCourseFeeClick(id) {
+            $('#deleteConfirmationModal').modal('show');
+
+            $('#deleteConfirmationModal').on('click', '.btn-danger', function () {
+                $.ajax({
+                    url: "/CourseFee/DeleteCourseFee/" + id,
+                    type: "POST",
+                    success: function (response) {
+                        $('#deleteConfirmationModal').modal('hide');
+                        toastr.success(response.message);
+                        dataTable.ajax.reload();
+                    },
+                    error: function (response) {
+                        toastr.error('Error deleting data.');
+                    }
+                });
+            });
+        }
+    </script>
+} *@
+
+

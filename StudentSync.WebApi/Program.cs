@@ -37,6 +37,10 @@ builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ICourseServices,CourseServices>();
+builder.Services.AddScoped<ICourseFeeService, CourseFeeService>();
+
+
 
 
 
