@@ -8,9 +8,9 @@ namespace StudentSync.Core.Services.Interface
     public interface ICourseExamServices
     {
         Task<IResult<IEnumerable<CourseExam>>> GetAllCourseExamsAsync();
-        Task<IResult<CourseExam>> GetCourseExamByIdAsync(int id);
+        Task<CourseExam> GetCourseExamByIdAsync(int id);
         Task<IResult> AddCourseExamAsync(CourseExam courseExam);
-        Task<IResult> UpdateCourseExamAsync(CourseExam courseExam);
+        Task<int> UpdateCourseExamAsync(CourseExam courseExam);
         Task<IResult> DeleteCourseExamAsync(int id);
         Task<IResult<IEnumerable<CourseExam>>> SearchCourseExamByCourseIdAsync(int courseId);
         Task<IResult<IEnumerable<CourseExam>>> SearchCourseExamByExamTitleAsync(string examTitle);

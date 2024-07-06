@@ -6,6 +6,7 @@ using StudentSync.Data.Data;
 using StudentSync.Data.Models;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace StudentSync.Controllers
@@ -110,27 +111,31 @@ namespace StudentSync.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var courseExam = await _courseExamServices.GetCourseExamByIdAsync(id);
-            if (courseExam != null)
+            if (courseExam == null)
             {
-                return Ok(courseExam);
+                return NotFound();
             }
-            return NotFound();
+            return Ok(courseExam);
+
+
         }
 
-        [HttpPost("Edit")]
-        public async Task<IActionResult> Edit([FromBody] CourseExam courseExam)
-        {
-            if (ModelState.IsValid)
+        [HttpPost("UpdateCourseExam")]
+        public async Task<IActionResult> UpdateCourseExam([FromBody] CourseExam courseExam)
             {
-                var result = await _courseExamServices.UpdateCourseExamAsync(courseExam);
-                if (result.Succeeded)
-                {
-                    return Json(new { success = true, message = result.Messages });
-                }
-                return BadRequest(result.Messages);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+                
             }
-            return BadRequest(ModelState);
+            await _courseExamServices.UpdateCourseExamAsync(courseExam);
+          
+            return Ok(new { message = "Course Exam updated successfully." });
+
         }
+
+      
+
 
         [HttpPost("DeleteConfirmed/{id}")]
         public async Task<IActionResult> DeleteConfirmed(int id)

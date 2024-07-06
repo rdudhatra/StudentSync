@@ -1,0 +1,228 @@
+﻿@model IEnumerable<StudentSync.Data.Models.CourseSyllabus>
+
+@{
+    ViewBag.Title = "Course Syllabus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseSyllabusClick()">Add Course Syllabus</button>
+                <table id="CourseSyllabusTable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Course ID</th>
+                            <th>Chapter Name</th>
+                            <th>Topic Name</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table body will be populated dynamically -->
+                    </tbody>
+                </table>
+
+                <!-- Add/Edit Course Syllabus Modal -->
+                <div class="modal fade" id="addEditCourseSyllabusModal" tabindex="-1" role="dialog" aria-labelledby="addEditCourseSyllabusModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addEditCourseSyllabusModalLabel">Add/Edit Course Syllabus</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="CourseSyllabusForm">
+                                    <input type="hidden" id="Id" name="Id" />
+                                    <div class="form-group">
+                                        <label for="CourseId">Course ID:</label>
+                                        <input type="number" class="form-control" id="CourseId" placeholder="Enter course ID" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ChapterName">Chapter Name:</label>
+                                        <input type="text" class="form-control" id="ChapterName" placeholder="Enter chapter name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TopicName">Topic Name:</label>
+                                        <input type="text" class="form-control" id="TopicName" placeholder="Enter topic name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Remarks">Remarks:</label>
+                                        <input type="text" class="form-control" id="Remarks" placeholder="Enter remarks">
+                                    </div>
+                                    <!-- Hidden fields for CreatedBy and UpdatedBy -->
+                                    <input type="hidden" id="CreatedBy" name="CreatedBy" value="defaultUser" />
+                                    <input type="hidden" id="UpdatedBy" name="UpdatedBy" value="defaultUser" />
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="saveCourseSyllabus()">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this Course Syllabus?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" onclick="deleteCourseSyllabus()">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        // Function to save CourseSyllabus data via AJAX
+        function saveCourseSyllabus() {
+            var formData = {
+                Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
+                CourseId: $('#CourseId').val(),
+                ChapterName: $('#ChapterName').val(),
+                TopicName: $('#TopicName').val(),
+                Remarks: $('#Remarks').val(),
+                CreatedBy: $('#CreatedBy').val(),
+                UpdatedBy: $('#UpdatedBy').val()
+            };
+
+            var url = (formData.Id === 0 || formData.Id === "") ? "/CourseSyllabus/Create" : "/CourseSyllabus/UpdateCourseSyllabus";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    $('#addEditCourseSyllabusModal').modal('hide');
+                    if (formData.Id === 0 || formData.Id === "") {
+                        toastr.success('Course syllabus added successfully.');
+                    } else {
+                        toastr.success('Course syllabus updated successfully.');
+                    }
+                    dataTable.ajax.reload();
+                },
+                error: function (response) {
+                    toastr.error('Error saving course syllabus.');
+                }
+            });
+        }
+
+        // Function to delete CourseSyllabus via AJAX
+        function onDeleteCourseSyllabusClick(id) {
+            $('#Id').val(id);
+            $('#deleteConfirmationModal').modal('show');
+        }
+
+        function deleteCourseSyllabus() {
+            var id = $('#Id').val();
+            $.ajax({
+                url: "/CourseSyllabus/DeleteConfirmed/" + id,
+                type: "POST",
+                success: function (response) {
+                    $('#deleteConfirmationModal').modal('hide');
+                    toastr.success('Course syllabus deleted successfully.');
+                    dataTable.ajax.reload();
+                },
+                error: function (response) {
+                    toastr.error('Error deleting course syllabus.');
+                }
+            });
+        }
+
+        // Function to populate data in the modal for editing
+        function onEditCourseSyllabusClick(id) {
+            $.ajax({
+                url: "/CourseSyllabus/Edit/" + id,
+                type: "GET",
+                success: function (data) {
+                    $('#Id').val(data.id);
+                    $('#CourseId').val(data.courseId);
+                    $('#ChapterName').val(data.chapterName);
+                    $('#TopicName').val(data.topicName);
+                    $('#Remarks').val(data.remarks);
+
+                    $('#addEditCourseSyllabusModal').modal('show');
+                    $('#addEditCourseSyllabusModalLabel').text('Edit Course Syllabus');
+                },
+                error: function (response) {
+                    toastr.error('Error fetching course syllabus data.');
+                }
+            });
+        }
+
+        // Function to open modal for adding a new CourseSyllabus
+        function onAddCourseSyllabusClick() {
+            $('#Id').val("");
+            $('#CourseId').val("");
+            $('#ChapterName').val("");
+            $('#TopicName').val("");
+            $('#Remarks').val("");
+
+            $('#addEditCourseSyllabusModal').modal('show');
+        }
+
+        // DataTable initialization
+        var dataTable = $('#CourseSyllabusTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "filter": true,
+            "orderMulti": false,
+            "ajax": {
+                "url": "/CourseSyllabus/GetAll",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "id", "name": "Id", "autoWidth": true },
+                { "data": "courseId", "name": "CourseId", "autoWidth": true },
+                { "data": "chapterName", "name": "ChapterName", "autoWidth": true },
+                { "data": "topicName", "name": "TopicName", "autoWidth": true },
+                { "data": "remarks", "name": "Remarks", "autoWidth": true },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<a class="btn btn-info btn-sm" href="#" onclick="onEditCourseSyllabusClick(' + full.id + ')">Edit</a>' +
+                            ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteCourseSyllabusClick(' + full.id + ')">Delete</a>';
+                    }
+                }
+            ]
+        });
+    </script>
+}

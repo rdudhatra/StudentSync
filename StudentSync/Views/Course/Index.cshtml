@@ -230,6 +230,9 @@
                 }
             });
         }
+
+
+
         // Function to reload DataTable
         function reloadTable() {
             $('#CourseTable').DataTable().ajax.reload();
@@ -267,8 +270,8 @@
                             data: null,
                             render: function (data, type, row) {
                             return `
-                                                <button type="button" class="btn btn-info" onclick="editCourse(' + row.courseId + ')">Edit</button>
-                                                 <button type="button" class="btn btn-danger" onclick="confirmDelete(' + row.courseId + ')">Delete</button>
+                                                <button type="button" class="btn btn-info" onclick="editCourse(${ row.courseId })">Edit</button>
+                                                 <button type="button" class="btn btn-danger" onclick="confirmDelete(${ row.courseId })">Delete</button>
                                           `;
                         }, "autoWidth": true
 

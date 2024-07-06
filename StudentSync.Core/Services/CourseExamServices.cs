@@ -24,14 +24,10 @@ namespace StudentSync.Core.Services
             return Result<IEnumerable<CourseExam>>.Success(courseExams);
         }
 
-        public async Task<IResult<CourseExam>> GetCourseExamByIdAsync(int id)
+        public async Task<CourseExam> GetCourseExamByIdAsync(int id)
         {
-            var courseExam = await _context.CourseExams.FindAsync(id);
-            if (courseExam == null)
-            {
-                return Result<CourseExam>.Fail("Course exam not found");
-            }
-            return Result<CourseExam>.Success(courseExam);
+           return await _context.CourseExams.FindAsync(id);
+           
         }
 
         public async Task<IResult> AddCourseExamAsync(CourseExam courseExam)
@@ -41,12 +37,12 @@ namespace StudentSync.Core.Services
             return Result.Success("Course exam added successfully");
         }
 
-        public async Task<IResult> UpdateCourseExamAsync(CourseExam courseExam)
+        public async Task<int> UpdateCourseExamAsync(CourseExam courseExam)
         {
             var existingCourseExam = await _context.CourseExams.FindAsync(courseExam.Id);
             if (existingCourseExam == null)
             {
-                return Result.Fail("Course exam not found");
+                    throw new ArgumentException("Course Fee not found");
             }
 
             existingCourseExam.CourseId = courseExam.CourseId;
@@ -55,11 +51,14 @@ namespace StudentSync.Core.Services
             existingCourseExam.TotalMarks = courseExam.TotalMarks;
             existingCourseExam.PassingMarks = courseExam.PassingMarks;
             existingCourseExam.Remarks = courseExam.Remarks;
+            existingCourseExam.UpdatedBy = courseExam.UpdatedBy;
+            existingCourseExam.UpdatedDate = DateTime.UtcNow;
 
             _context.CourseExams.Update(existingCourseExam);
             await _context.SaveChangesAsync();
-            return Result.Success("Course exam updated successfully");
+            return existingCourseExam.Id;
         }
+
 
         public async Task<IResult> DeleteCourseExamAsync(int id)
         {
