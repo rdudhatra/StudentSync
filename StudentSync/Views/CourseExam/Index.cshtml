@@ -481,7 +481,13 @@
             "ajax": {
                 "url": "/CourseExam/GetAll",
                 "type": "POST",
-                "datatype": "json"
+                "datatype": "json",
+                    "data": function (d) {
+                // Custom parameters to send along with the request
+                d.searchValue = d.search.value;
+                d.sortColumn = d.columns[d.order[0].column].data;
+                d.sortColumnDirection = d.order[0].dir;
+            }
             },
             "columns": [
                 { "data": "id", "name": "Id", "autoWidth": true },

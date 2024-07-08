@@ -144,7 +144,23 @@
                 }
             });
         }
-
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
         // Function to delete CourseSyllabus via AJAX
         function onDeleteCourseSyllabusClick(id) {
             $('#Id').val(id);
@@ -207,7 +223,7 @@
             "orderMulti": false,
             "ajax": {
                 "url": "/CourseSyllabus/GetAll",
-                "type": "POST",
+                "type": "GET",
                 "datatype": "json"
             },
             "columns": [

@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
             builder.AllowAnyOrigin()
                    .AllowAnyMethod()
                    .AllowAnyHeader();
-        });
+        }); 
 });
 builder.Services.AddHttpContextAccessor();
 
@@ -40,8 +40,8 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ICourseServices,CourseServices>();
 builder.Services.AddScoped<ICourseFeeService, CourseFeeService>();
 builder.Services.AddScoped<ICourseExamServices, CourseExamServices>();
-
-
+builder.Services.AddScoped<ICourseSyllabusService, CourseSyllabusService>();
+builder.Services.AddScoped<IBatchService, BatchService>();
 
 builder.Services.AddDbContext<StudentSyncDbContext>(options =>
        options.UseSqlServer(builder.Configuration.GetConnectionString("StudentSyncCon"),

@@ -41,50 +41,64 @@
                     </a>
                 </li>
 
-           
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="uil-store"></i>
+                        <span>Courses</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="@Url.Action("Index", "Course")">
+                                <i class="uil-book-open"></i> <!-- Icon for Course -->
+                                <span>Course</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "CourseFee")">
+                                <i class="uil-dollar-sign"></i> <!-- Icon for CourseFee -->
+                                <span>CourseFee</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "CourseExam")">
+                                <i class="uil-clipboard-notes"></i> <!-- Icon for CourseExam -->
+                                <span>CourseExam</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "CourseSyllabus")">
+                                <i class="uil-file-alt"></i> <!-- Icon for CourseSyllabus -->
+                                <span>CourseSyllabus</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
                 <li>
                     <a href=@Url.Action("Index", "Employees")>
-                        <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end"></span>
+                        <i class="uil uil-user"></i><span class="badge rounded-pill bg-primary float-end"></span>
                         <span>Employee</span>
                     </a>
 
                 </li>
-
                 <li>
-                    <a href=@Url.Action("Index", "Course")>
-                        <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end"></span>
-                        <span>Course</span>
+                    <a href=@Url.Action("Index", "Batch")>
+                        <i class="uil-books"></i><span class="badge rounded-pill bg-primary float-end"></span>
+                        <span>Batch</span>
                     </a>
 
-                </li>
-
-                <li>
-                    <a href=@Url.Action("Index", "CourseFee")>
-                        <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end"></span>
-                        <span>CourseFee</span>
-                    </a>
 
                 </li>
                 <li>
-                    <a href=@Url.Action("Index", "CourseExam")>
+                    <a href=@Url.Action("Index", "Enrollment")>
                         <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end"></span>
-                        <span>CourseExam</span>
+                        <span>Enrollment</span>
                     </a>
-
                 </li>
 
-                <li>
-                    <a href=@Url.Action("Index", "CourseSyllabus")>
-                        <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end"></span>
-                        <span>CourseSyllabus</span>
-                    </a>
-
-                </li>
-
-
-
-
-
+             
 
 
             </ul>
@@ -93,3 +107,13 @@
     </div>
 </div>
 <!-- Left Sidebar End -->
+<!-- JAVASCRIPT -->
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+<script src="~/assets/libs/waypoints/lib/jquery.waypoints.min.js"></script>
+<script src="~/assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
+
+<script src="~/assets/js/app.js"></script>

@@ -54,13 +54,44 @@ public partial class StudentSyncDbContext : DbContext
 
     }
 
+    //Enrollments Crud Operation 
+    public async Task<List<Enrollment>> GetAllEnrollmentsAsync()
+    {
+        return await Enrollments.FromSqlRaw("EXEC GetAllEnrollments").ToListAsync();
+    }
+
+    public async Task<Enrollment> GetEnrollmentByIdAsync(string enrollmentNo)
+    {
+        return await Enrollments.FromSqlRaw("EXEC GetEnrollmentById @p0", enrollmentNo).FirstOrDefaultAsync();
+    }
+
+    public async Task CreateEnrollmentAsync(Enrollment enrollment)
+    {
+        await Database.ExecuteSqlRawAsync("EXEC CreateEnrollment @p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9",
+            enrollment.EnrollmentNo, enrollment.EnrollmentDate, enrollment.BatchId, enrollment.CourseId,
+            enrollment.CourseFeeId, enrollment.InquiryNo, enrollment.IsActive, enrollment.Remarks,
+            enrollment.CreatedBy, enrollment.CreatedDate);
+    }
+
+    public async Task UpdateEnrollmentAsync(Enrollment enrollment)
+    {
+        await Database.ExecuteSqlRawAsync("EXEC UpdateEnrollment @p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9",
+            enrollment.EnrollmentNo, enrollment.EnrollmentDate, enrollment.BatchId, enrollment.CourseId,
+            enrollment.CourseFeeId, enrollment.InquiryNo, enrollment.IsActive, enrollment.Remarks,
+            enrollment.UpdatedBy, enrollment.UpdatedDate);
+    }
+
+    public async Task DeleteEnrollmentAsync(string enrollmentNo)
+    {
+        await Database.ExecuteSqlRawAsync("EXEC DeleteEnrollment @p0", enrollmentNo);
+    }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-KIC018L;Initial Catalog=StudentSyncDb;User ID=sa;Password=saadmin;TrustServerCertificate=True");
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+            => optionsBuilder.UseSqlServer("Data Source=DESKTOP-KIC018L;Initial Catalog=StudentSyncDb;User ID=sa;Password=saadmin;TrustServerCertificate=True");
 
     
 }

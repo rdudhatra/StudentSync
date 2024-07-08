@@ -8,44 +8,18 @@ using System.Threading.Tasks;
 
 namespace StudentSync.Controllers
 {
-    [Route("CourseSyllabus")] 
-    public class CourseSyllabusController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CourseSyllabusApiController : ControllerBase
     {
         private readonly ICourseSyllabusService _courseSyllabusService;
 
-        public CourseSyllabusController(ICourseSyllabusService courseSyllabusService)
+        public CourseSyllabusApiController(ICourseSyllabusService courseSyllabusService)
         {
             _courseSyllabusService = courseSyllabusService;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        //[HttpGet("GetAll")]
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    try
-        //    {
-        //        var courseSyllabuses = await _courseSyllabusService.GetAllCourseSyllabusesAsync();
-        //        var dataTableResponse = new
-        //        {
-        //            draw = Request.Query["draw"],
-        //            recordsTotal = courseSyllabuses.Count(),
-        //            recordsFiltered = courseSyllabuses.Count(),
-        //            data = courseSyllabuses
-        //        };
-
-        //        return Ok(dataTableResponse);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Exception occurred: {ex.Message}");
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //}
-        [HttpGet("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -78,8 +52,7 @@ namespace StudentSync.Controllers
             }
         }
 
-
-        [HttpGet("Edit/{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var courseSyllabus = await _courseSyllabusService.GetCourseSyllabusByIdAsync(id);
@@ -119,8 +92,8 @@ namespace StudentSync.Controllers
             }
         }
 
-        [HttpPost("UpdateCourseSyllabus")]
-        public async Task<IActionResult> UpdateCourseSyllabus([FromBody] CourseSyllabus courseSyllabus)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] CourseSyllabus courseSyllabus)
         {
             if (!ModelState.IsValid)
             {
@@ -143,8 +116,8 @@ namespace StudentSync.Controllers
             }
         }
 
-        [HttpPost("DeleteConfirmed/{id}")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
