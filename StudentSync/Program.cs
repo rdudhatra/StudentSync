@@ -33,6 +33,8 @@ builder.Services.AddScoped<ICourseExamServices, CourseExamServices>();
 builder.Services.AddScoped<ICourseSyllabusService, CourseSyllabusService>();
 builder.Services.AddScoped<IBatchService, BatchService>();
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+builder.Services.AddScoped<IStudentAssessmentService, StudentAssessmentService>();
+
 
 builder.Services.AddCors(options =>
 {

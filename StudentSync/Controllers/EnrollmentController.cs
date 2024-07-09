@@ -81,10 +81,23 @@ namespace StudentSync.Controllers
 
 
         [HttpGet("Edit/{id}")]
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var enrollment = await _enrollmentService.GetEnrollmentByIdAsync(id);
-            return Json(enrollment);
+            try
+            {
+                var enrollment = await _enrollmentService.GetEnrollmentByIdAsync(id);
+            if (enrollment == null)
+        {
+            return NotFound(); // Handle case where enrollment with given ID isn't found
+        }
+        
+        return Ok(enrollment); // Return enrollment details as JSON
+    }
+    catch (Exception ex)
+    {
+        // Log the exception
+        return StatusCode(500, new { message = "Internal server error" });
+    }
         }
 
         [HttpPost("Update")]

@@ -7,6 +7,7 @@ namespace StudentSync.Data.Models;
 public partial class Enrollment
 {
     [Key]
+
     public string EnrollmentNo { get; set; } = null!;
 
     public DateTime? EnrollmentDate { get; set; }

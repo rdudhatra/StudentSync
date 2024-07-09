@@ -23,7 +23,7 @@ namespace StudentSync.Core.Services
             return await _context.GetAllEnrollmentsAsync();
         }
 
-        public async Task<Enrollment> GetEnrollmentByIdAsync(string enrollmentNo)
+        public async Task<Enrollment> GetEnrollmentByIdAsync(int enrollmentNo)
         {
             return await _context.GetEnrollmentByIdAsync(enrollmentNo);
         }

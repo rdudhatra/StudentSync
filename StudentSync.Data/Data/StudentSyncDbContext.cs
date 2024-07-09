@@ -52,6 +52,7 @@ public partial class StudentSyncDbContext : DbContext
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
 
+
     }
 
     //Enrollments Crud Operation 
@@ -60,9 +61,17 @@ public partial class StudentSyncDbContext : DbContext
         return await Enrollments.FromSqlRaw("EXEC GetAllEnrollments").ToListAsync();
     }
 
-    public async Task<Enrollment> GetEnrollmentByIdAsync(string enrollmentNo)
+    //public async Task<Enrollment> GetEnrollmentByIdAsync(int id)
+    //{
+    //    return await Enrollments.FromSqlRaw("EXEC GetEnrollmentById @p0", id).FirstOrDefaultAsync();
+    //}
+    public async Task<Enrollment> GetEnrollmentByIdAsync(int enrollmentId)
     {
-        return await Enrollments.FromSqlRaw("EXEC GetEnrollmentById @p0", enrollmentNo).FirstOrDefaultAsync();
+        // Example using FromSqlRaw, adjust as per your actual query
+        return await Enrollments
+            .FromSqlRaw("SELECT * FROM Enrollments WHERE Id = {0}", enrollmentId)
+            .AsNoTracking()
+            .SingleOrDefaultAsync();
     }
 
     public async Task CreateEnrollmentAsync(Enrollment enrollment)
@@ -85,6 +94,61 @@ public partial class StudentSyncDbContext : DbContext
     {
         await Database.ExecuteSqlRawAsync("EXEC DeleteEnrollment @p0", enrollmentNo);
     }
+
+    //Student Assessment sp
+
+    // Save method
+    public async Task SaveStudentAssessment(StudentAssessment studentAssessment)
+    {
+        try
+        {
+            await Database.ExecuteSqlRawAsync(
+                "EXEC dbo.CreateStudentAssessments @p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8",
+                studentAssessment.AssessmentDate, studentAssessment.EnrollmentNo, studentAssessment.CourseExamId,
+                studentAssessment.ObtainedMarks, studentAssessment.Remarks, studentAssessment.CreatedBy,
+                studentAssessment.CreatedDate, studentAssessment.UpdatedBy, studentAssessment.UpdatedDate);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            throw new Exception("Error saving student assessment.", ex);
+        }
+    }
+    // Update method
+    public async Task UpdateStudentAssessment(StudentAssessment studentAssessment)
+    {
+        await Database.ExecuteSqlRawAsync(
+                "EXEC dbo.UpdateStudentAssessments @p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8",
+                studentAssessment.AssessmentDate, studentAssessment.EnrollmentNo, studentAssessment.CourseExamId,
+                studentAssessment.ObtainedMarks, studentAssessment.Remarks, studentAssessment.CreatedBy,
+                studentAssessment.CreatedDate, studentAssessment.UpdatedBy, studentAssessment.UpdatedDate);
+        //await Database.ExecuteSqlRawAsync($"EXEC dbo.UpdateStudentAssessments {studentAssessment.Id}, {studentAssessment.AssessmentDate}, {studentAssessment.EnrollmentNo}, {studentAssessment.CourseExamId}, {studentAssessment.ObtainedMarks}, {studentAssessment.Remarks}, {studentAssessment.CreatedBy}, {studentAssessment.CreatedDate}, {studentAssessment.UpdatedBy}, {studentAssessment.UpdatedDate}");
+    }
+
+    // Delete method
+    public async Task DeleteStudentAssessment(int studentAssessmentId)
+    {
+        await Database.ExecuteSqlRawAsync($"EXEC dbo.DeleteStudentAssessments {studentAssessmentId}");
+    }
+
+    // GetAll method
+    public async Task<List<StudentAssessment>> GetAllStudentAssessments()
+    {
+        return await StudentAssessments.ToListAsync(); // Ensure this returns data correctly
+    }
+    // GetById method
+    public async Task<StudentAssessment> GetStudentAssessmentById(int id)
+    {
+        var studentAssessments = await StudentAssessments
+            .FromSqlRaw("EXEC dbo.GetStudentAssessmentsById @p0", id)
+            .AsNoTracking()
+            .ToListAsync();
+
+        return studentAssessments.FirstOrDefault();
+    }
+
+  
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 

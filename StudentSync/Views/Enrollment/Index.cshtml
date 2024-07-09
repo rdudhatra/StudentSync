@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StudentSync.Data.Models.Enrollment>
+﻿@* @model IEnumerable<StudentSync.Data.Models.Enrollment>
 
 @{
     ViewBag.Title = "Enrollment Management";
@@ -238,4 +238,242 @@
             $('#addEditEnrollmentModal').modal('show');
         }
     </script>
+}
+ *@
+
+
+
+ @model IEnumerable<StudentSync.Data.Models.Enrollment>
+
+@{
+    ViewData["Title"] = "Enrollments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <button id="btnAddEnrollment" class="btn btn-primary mb-2">Add Enrollment</button>
+                <table id="enrollmentTable" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Enrollment No</th>
+                            <th>Enrollment Date</th>
+                            <th>Batch ID</th>
+                            <th>Course ID</th>
+                            <th>Course Fee ID</th>
+                            <th>Inquiry No</th>
+                            <th>Is Active</th>
+                            <th>Remarks</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for Adding/Editing Enrollment -->
+<div class="modal fade" id="addEditEnrollmentModal" tabindex="-1" aria-labelledby="addEditEnrollmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEditEnrollmentModalLabel">Add Enrollment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="enrollmentForm">
+                  <input type="hidden" id="Id" name="Id" />
+
+                    <div class="form-group">
+                        <label for="EnrollmentNo">Enrollment Number:</label>
+                        <input type="text" class="form-control" id="EnrollmentNo" name="EnrollmentNo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="EnrollmentDate">Enrollment Date:</label>
+                        <input type="date" class="form-control" id="EnrollmentDate" name="EnrollmentDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="EnrollmentBatchId">Batch ID:</label>
+                        <input type="number" class="form-control" id="EnrollmentBatchId" name="EnrollmentBatchId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="EnrollmentCourseId">Course ID:</label>
+                        <input type="number" class="form-control" id="EnrollmentCourseId" name="EnrollmentCourseId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="EnrollmentCourseFeeId">Course Fee ID:</label>
+                        <input type="number" class="form-control" id="EnrollmentCourseFeeId" name="EnrollmentCourseFeeId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="InquiryNo">Inquiry Number:</label>
+                        <input type="number" class="form-control" id="InquiryNo" name="InquiryNo">
+                    </div>
+                    <div class="form-group">
+                        <label for="EnrollmentIsActive">Is Active:</label>
+                        <input type="checkbox" id="EnrollmentIsActive" name="EnrollmentIsActive">
+                    </div>
+                    <div class="form-group">
+                        <label for="EnrollmentRemarks">Remarks:</label>
+                        <textarea class="form-control" id="EnrollmentRemarks" name="EnrollmentRemarks" rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Enrollment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+@section Scripts {
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+<script>
+    $(document).ready(function () {
+        var enrollmentTable = $('#enrollmentTable').DataTable({
+            ajax: {
+                url: '/Enrollment/GetAll',
+                dataSrc: 'data'
+            },
+            columns: [
+                { data: 'enrollmentNo' },
+                { data: 'enrollmentDate' },
+                { data: 'batchId' },
+                { data: 'courseId' },
+                { data: 'courseFeeId' },
+                { data: 'inquiryNo' },
+                { data: 'isActive' },
+                { data: 'remarks' },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `
+                                <button class="btn btn-sm btn-primary edit-enrollment" data-id="${row.enrollmentNo}">Edit</button>
+                                <button class="btn btn-sm btn-danger delete-enrollment" data-id="${row.enrollmentNo}">Delete</button>
+                            `;
+                    }
+                }
+            ]
+        });
+
+        $('#btnAddEnrollment').click(function () {
+            clearForm();
+            $('#addEditEnrollmentModalLabel').text('Add Enrollment');
+            $('#addEditEnrollmentModal').modal('show');
+        });
+
+        $(document).on('click', '.edit-enrollment', function () {
+            var enrollmentNo = $(this).data('id');
+            $.ajax({
+                url: '/Enrollment/Edit/' + enrollmentNo,
+                type: 'GET',
+                success: function (response) {
+                        $('#Id').val(response.id);
+                    $('#EnrollmentNo').val(response.enrollmentNo);
+                    $('#EnrollmentDate').val(response.enrollmentDate.split('T')[0]);
+                    $('#EnrollmentBatchId').val(response.batchId);
+                    $('#EnrollmentCourseId').val(response.courseId);
+                    $('#EnrollmentCourseFeeId').val(response.courseFeeId);
+                    $('#InquiryNo').val(response.inquiryNo);
+                    $('#EnrollmentIsActive').prop('checked', response.isActive);
+                    $('#EnrollmentRemarks').val(response.remarks);
+                    $('#addEditEnrollmentModalLabel').text('Edit Enrollment');
+                    $('#addEditEnrollmentModal').modal('show');
+                },
+                error: function () {
+                    toastr.error('Error fetching enrollment details.');
+                }
+            });
+        });
+
+        $(document).on('click', '.delete-enrollment', function () {
+            var enrollmentNo = $(this).data('id');
+            if (confirm('Are you sure you want to delete this enrollment?')) {
+                $.ajax({
+                    url: '/Enrollment/Delete/' + enrollmentNo,
+                    type: 'POST',
+                    success: function (response) {
+                        toastr.success(response.message);
+                        enrollmentTable.ajax.reload();
+                    },
+                    error: function () {
+                        toastr.error('Error deleting enrollment.');
+                    }   
+                });
+            }
+        });
+
+        $('#enrollmentForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = {
+                    Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
+                EnrollmentNo: $('#EnrollmentNo').val(),
+                EnrollmentDate: $('#EnrollmentDate').val(),
+                BatchId: parseInt($('#EnrollmentBatchId').val()),
+                CourseId: parseInt($('#EnrollmentCourseId').val()),
+                CourseFeeId: parseInt($('#EnrollmentCourseFeeId').val()),
+                InquiryNo: parseInt($('#InquiryNo').val()) || 0,
+                IsActive: $('#EnrollmentIsActive').prop('checked'),
+                Remarks: $('#EnrollmentRemarks').val()
+            };
+
+                var url = formData.Id ? "/Enrollment/Update" : "/Enrollment/Create";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    $('#addEditEnrollmentModal').modal('hide');
+                    toastr.success(response.message);
+                    enrollmentTable.ajax.reload();
+                },
+                error: function (xhr) {
+                    if (xhr.status === 400) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function (key, value) {
+                            toastr.error(value);
+                        });
+                    } else {
+                        toastr.error('Error saving enrollment.');
+                    }
+                }
+            });
+        });
+
+        function clearForm() {
+            $('#Id').val('');
+            $('#EnrollmentNo').val('');
+            $('#EnrollmentDate').val('');
+            $('#EnrollmentBatchId').val('');
+            $('#EnrollmentCourseId').val('');
+            $('#EnrollmentCourseFeeId').val('');
+            $('#InquiryNo').val('');
+            $('#EnrollmentIsActive').prop('checked', false);
+            $('#EnrollmentRemarks').val('');
+        }
+    });
+</script>
 }
