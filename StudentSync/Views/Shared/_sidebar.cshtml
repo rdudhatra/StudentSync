@@ -3,7 +3,7 @@
 
     <!-- LOGO -->
     <div class="navbar-brand-box">
-        <a href=@Url.Action("Index", "index") class="logo logo-dark">
+        <a href=@Url.Action("Index", "Home") class="logo logo-dark">
             <span class="logo-sm">
                 <img src="~/assets/images/logo-sm.png" alt="" height="22">
             </span>
@@ -12,7 +12,7 @@
             </span>
         </a>
 
-        <a href=@Url.Action("Index", "index") class="logo logo-light">
+        <a href=@Url.Action("Index", "Home") class="logo logo-light">
             <span class="logo-sm">
                 <img src="~/assets/images/logo-sm.png" alt="" height="22">
             </span>
@@ -36,15 +36,14 @@
 
                 <li>
                     <a href=@Url.Action("Index", "Home")>
-                        <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end"></span>
+                        <i class="uil-home-alt"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
-
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="uil-store"></i>
+                        <i class="uil-books"></i>
                         <span>Courses</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -75,41 +74,57 @@
                     </ul>
                 </li>
 
-
                 <li>
                     <a href=@Url.Action("Index", "Employees")>
-                        <i class="uil uil-user"></i><span class="badge rounded-pill bg-primary float-end"></span>
+                        <i class="uil-user"></i>
                         <span>Employee</span>
                     </a>
-
                 </li>
                 <li>
                     <a href=@Url.Action("Index", "Batch")>
-                        <i class="uil-books"></i><span class="badge rounded-pill bg-primary float-end"></span>
+                        <i class="uil-books"></i>
                         <span>Batch</span>
                     </a>
-
-
                 </li>
                 <li>
                     <a href=@Url.Action("Index", "Enrollment")>
-                        <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end"></span>
+                        <i class="uil-user-check"></i>
                         <span>Enrollment</span>
                     </a>
                 </li>
+
                 <li>
-                    <a href=@Url.Action("Index", "StudentAssessment")>
-                        <i class="uil-home-alt"></i><span class="badge rounded-pill bg-primary float-end"></span>
-                        <span>StudentAssessment</span>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Students</span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="@Url.Action("Index", "StudentAssessment")">
+                                <i class="fas fa-clipboard"></i> <!-- Icon for StudentAssessment -->
+                                <span>Student Assessment</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "StudentAttendance")">
+                                <i class="far fa-calendar-alt"></i> <!-- Icon for StudentAttendance -->
+                                <span>Student Attendance</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "StudentInstallment")">
+                                <i class="fas fa-money-check-alt"></i> <!-- Payment (installment) icon -->
+                                <span>Student Installment</span>
+                            </a>
+                        </li>
+                    </ul>
+
+
+                    </ul>
                 </li>
-
-
-             
-
-
             </ul>
         </div>
+
         <!-- Sidebar -->
     </div>
 </div>
@@ -124,3 +139,4 @@
 <script src="~/assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
 
 <script src="~/assets/js/app.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-MYSP4VQ/BL4GtCK7JhH/4Q4ZIK7t5rj5+6u0HldRfgrF+e3+UOG/UHQ4gLeU9bgyMjCRDw4kM3Rq9y2X9NvEjQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />

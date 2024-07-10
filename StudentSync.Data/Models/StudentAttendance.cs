@@ -26,3 +26,5 @@ public partial class StudentAttendance
 
     public DateTime? UpdatedDate { get; set; }
 }
+
+

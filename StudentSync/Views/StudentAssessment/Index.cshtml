@@ -1,262 +1,4 @@
-﻿@* @model IEnumerable<StudentSync.Data.Models.StudentAssessment>
-
-@{
-    ViewData["Title"] = "Student Assessment Management";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddStudentAssessmentClick()">Add Student Assessment</button>
-                <table id="StudentAssessmentTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Assessment Date</th>
-                            <th>Enrollment No</th>
-                            <th>Course Exam ID</th>
-                            <th>Obtained Marks</th>
-                            <th>Remarks</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var assessment in Model)
-                        {
-                            <tr>
-                                <td>@assessment.Id</td>
-                                <td>@(assessment.AssessmentDate.HasValue ? assessment.AssessmentDate.Value.ToShortDateString() : "")</td>
-                                <td>@assessment.EnrollmentNo</td>
-                                <td>@assessment.CourseExamId</td>
-                                <td>@assessment.ObtainedMarks</td>
-                                <td>@assessment.Remarks</td>
-                                <td>
-                                    <a class="btn btn-info btn-sm" href="#" onclick="onEditStudentAssessmentClick('@assessment.Id')">Edit</a>
-                                    <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteStudentAssessmentClick('@assessment.Id')">Delete</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add/Edit Student Assessment Modal -->
-<div class="modal fade" id="addEditStudentAssessmentModal" tabindex="-1" aria-labelledby="addEditStudentAssessmentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addEditStudentAssessmentModalLabel">Add/Edit Student Assessment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="StudentAssessmentForm">
-                    <input type="hidden" id="Id" />
-                    <div class="form-group">
-                        <label for="AssessmentDate">Assessment Date</label>
-                        <input type="date" class="form-control" id="AssessmentDate" />
-                    </div>
-                    <div class="form-group">
-                        <label for="EnrollmentNo">Enrollment No</label>
-                        <input type="text" class="form-control" id="EnrollmentNo" />
-                    </div>
-                    <div class="form-group">
-                        <label for="CourseExamId">Course Exam ID</label>
-                        <input type="text" class="form-control" id="CourseExamId" />
-                    </div>
-                    <div class="form-group">
-                        <label for="ObtainedMarks">Obtained Marks</label>
-                        <input type="text" class="form-control" id="ObtainedMarks" />
-                    </div>
-                    <div class="form-group">
-                        <label for="Remarks">Remarks</label>
-                        <textarea class="form-control" id="Remarks"></textarea>
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="saveStudentAssessment()">Save</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalLabel">Delete Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this student assessment?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" onclick="confirmDeleteStudentAssessment()">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-
-    <script>
-        var dataTable;
-
-        toastr.options = {
-            "closeButton": true,
-            "debug": false,
-            "newestOnTop": false,
-            "progressBar": true,
-            "positionClass": "toast-bottom-center",
-            "preventDuplicates": false,
-            "onclick": null,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        };
-
-        $(document).ready(function () {
-            dataTable = $('#StudentAssessmentTable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    "url": "/api/StudentAssessment",
-                    "type": "GET",
-                    "dataType": "json"
-                },
-                "columns": [
-                    { "data": "id", "name": "Id" },
-                    { "data": "assessmentDate", "name": "AssessmentDate" },
-                    { "data": "enrollmentNo", "name": "EnrollmentNo" },
-                    { "data": "courseExamId", "name": "CourseExamId" },
-                    { "data": "obtainedMarks", "name": "ObtainedMarks" },
-                    { "data": "remarks", "name": "Remarks" },
-                    {
-                        "render": function (data, type, full, meta) {
-                            return '<a class="btn btn-info btn-sm" href="#" onclick="onEditStudentAssessmentClick(' + full.id + ')">Edit</a>' +
-                                ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteStudentAssessmentClick(' + full.id + ')">Delete</a>';
-                        }
-                    }
-                ]
-            });
-        });
-
-        function saveStudentAssessment() {
-            var formData = {
-                Id: $('#Id').val(),
-                AssessmentDate: $('#AssessmentDate').val(),
-                EnrollmentNo: $('#EnrollmentNo').val(),
-                CourseExamId: $('#CourseExamId').val(),
-                ObtainedMarks: $('#ObtainedMarks').val(),
-                Remarks: $('#Remarks').val()
-            };
-
-            var url = (formData.Id && formData.Id !== "") ? "/api/StudentAssessment/" + formData.Id : "/api/StudentAssessment";
-
-            var method = (formData.Id && formData.Id !== "") ? "PUT" : "POST";
-
-            $.ajax({
-                url: url,
-                type: method,
-                contentType: "application/json",
-                data: JSON.stringify(formData),
-                success: function (response) {
-                    $('#addEditStudentAssessmentModal').modal('hide');
-                    if (formData.Id && formData.Id !== "") {
-                        toastr.success('Student assessment updated successfully.');
-                    } else {
-                        toastr.success('Student assessment added successfully.');
-                    }
-                    dataTable.ajax.reload();
-                },
-                error: function (response) {
-                    toastr.error('Error saving student assessment.');
-                }
-            });
-        }
-
-        function onDeleteStudentAssessmentClick(id) {
-            $('#Id').val(id);
-            $('#deleteConfirmationModal').modal('show');
-        }
-
-        function confirmDeleteStudentAssessment() {
-            var id = $('#Id').val();
-            $.ajax({
-                url: "/api/StudentAssessment/" + id,
-                type: "DELETE",
-                success: function (response) {
-                    $('#deleteConfirmationModal').modal('hide');
-                    toastr.success('Student assessment deleted successfully.');
-                    dataTable.ajax.reload();
-                },
-                error: function (response) {
-                    toastr.error('Error deleting student assessment.');
-                }
-            });
-        }
-
-        function onAddStudentAssessmentClick() {
-            $('#Id').val('');
-            $('#AssessmentDate').val('');
-            $('#EnrollmentNo').val('');
-            $('#CourseExamId').val('');
-            $('#ObtainedMarks').val('');
-            $('#Remarks').val('');
-            $('#addEditStudentAssessmentModal').modal('show');
-        }
-
-        function onEditStudentAssessmentClick(id) {
-            $.ajax({
-                url: "/api/StudentAssessment/" + id,
-                type: "GET",
-                success: function (response) {
-                    $('#Id').val(response.id);
-                    $('#AssessmentDate').val(response.assessmentDate);
-                    $('#EnrollmentNo').val(response.enrollmentNo);
-                    $('#CourseExamId').val(response.courseExamId);
-                    $('#ObtainedMarks').val(response.obtainedMarks);
-                    $('#Remarks').val(response.remarks);
-                    $('#addEditStudentAssessmentModal').modal('show');
-                },
-                error: function (response) {
-                    toastr.error('Error retrieving student assessment.');
-                }
-            });
-        }
-    </script>
-}
- *@
-
-
-
+﻿
  @model IEnumerable<StudentSync.Data.Models.StudentAssessment>
 
 @{
@@ -296,7 +38,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addEditStudentAssessmentModalLabel">Add/Edit Student Assessment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -338,7 +80,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteConfirmationModalLabel">Delete Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" onclick="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -346,7 +88,7 @@
                 Are you sure you want to delete this student assessment?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-danger" onclick="confirmDeleteStudentAssessment()">Delete</button>
             </div>
         </div>
@@ -388,7 +130,10 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         };
-
+        function closeModal() {
+            $('#addEditStudentAssessmentModal').modal('hide'); // Hide the modal using jQuery
+            $('#deleteConfirmationModal').modal('hide');
+        }
         $(document).ready(function () {
             dataTable = $('#StudentAssessmentTable').DataTable({
                 "processing": true,
@@ -415,43 +160,41 @@
             });
         });
 
-        function saveStudentAssessment() {
-            var formData = {
-                Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
-                AssessmentDate: $('#AssessmentDate').val(),
-                EnrollmentNo: $('#EnrollmentNo').val(),
-                CourseExamId: $('#CourseExamId').val(),
-                ObtainedMarks: $('#ObtainedMarks').val(),
-                Remarks: $('#Remarks').val()
-            };
+                function saveStudentAssessment() {
+                    var formData = {
+                        Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
+                        AssessmentDate: $('#AssessmentDate').val(),
+                        EnrollmentNo: $('#EnrollmentNo').val(),
+                        CourseExamId: $('#CourseExamId').val(),
+                        ObtainedMarks: $('#ObtainedMarks').val(),
+                        Remarks: $('#Remarks').val()
+                    };
 
-            var url = (formData.Id && formData.Id !== "") ? "/StudentAssessment/Update" : "/StudentAssessment/Create";
+                    // var url = (formData.Id && formData.Id !== "") ? "/StudentAssessment/Update" : "/StudentAssessment/Create";
+             var url = formData.Id ? "/StudentAssessment/Update" : "/StudentAssessment/Create";
 
-           // var method = (formData.Id && formData.Id !== "") ? "POST" : "PUT";
-
-            $.ajax({
-                url: url,
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(formData),
-                success: function (response) {
-                    $('#addEditStudentAssessmentModal').modal('hide');
-                    if (formData.Id && formData.Id !== "") {
-                        toastr.success('Student assessment updated successfully.');
-                    } else {
-                        toastr.success('Student assessment added successfully.');
-                    }
-                    dataTable.ajax.reload();
-                },
-                error: function (response) {
-                    toastr.error('Error saving student assessment.');
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(formData),
+                        success: function (response) {
+                            $('#addEditStudentAssessmentModal').modal('hide');
+                            if (formData.Id && formData.Id !== "") {
+                                toastr.success('Student assessment updated successfully.');
+                            } else {
+                                toastr.success('Student assessment added successfully.');
+                            }
+                            dataTable.ajax.reload();
+                        },
+                        error: function (response) {
+                            var errorMessage = xhr.status + ': ' + xhr.statusText;
+                            toastr.error('Error saving student assessment: ' + errorMessage);
                 }
-            });
-        }
-   
+                    });
+                }
 
        
-
         function onDeleteStudentAssessmentClick(id) {
             $('#Id').val(id);
             $('#deleteConfirmationModal').modal('show');
@@ -493,7 +236,7 @@
                    
 
                     $('#Id').val(response.id);
-                    $('#AssessmentDate').val(response.assessmentDate);
+                    $('#AssessmentDate').val(response.assessmentDate.split('T')[0]);
                     $('#EnrollmentNo').val(response.enrollmentNo);
                     $('#CourseExamId').val(response.courseExamId);
                     $('#ObtainedMarks').val(response.obtainedMarks);

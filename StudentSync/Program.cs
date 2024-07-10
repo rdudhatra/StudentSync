@@ -4,6 +4,7 @@ using StudentSync.Core.Services.Interface;
 using StudentSync.Core.Services;
 using StudentSync.Data.Data;
 using System.Configuration;
+using StudentSync.Core.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,8 @@ builder.Services.AddScoped<ICourseSyllabusService, CourseSyllabusService>();
 builder.Services.AddScoped<IBatchService, BatchService>();
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 builder.Services.AddScoped<IStudentAssessmentService, StudentAssessmentService>();
+builder.Services.AddScoped<IStudentAttendanceService, StudentAttendanceService>();
+builder.Services.AddScoped<IStudentInstallmentService, StudentInstallmentService>();
 
 
 builder.Services.AddCors(options =>

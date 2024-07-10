@@ -115,14 +115,22 @@ public partial class StudentSyncDbContext : DbContext
         }
     }
     // Update method
+
     public async Task UpdateStudentAssessment(StudentAssessment studentAssessment)
     {
-        await Database.ExecuteSqlRawAsync(
-                "EXEC dbo.UpdateStudentAssessments @p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8",
-                studentAssessment.AssessmentDate, studentAssessment.EnrollmentNo, studentAssessment.CourseExamId,
-                studentAssessment.ObtainedMarks, studentAssessment.Remarks, studentAssessment.CreatedBy,
-                studentAssessment.CreatedDate, studentAssessment.UpdatedBy, studentAssessment.UpdatedDate);
-        //await Database.ExecuteSqlRawAsync($"EXEC dbo.UpdateStudentAssessments {studentAssessment.Id}, {studentAssessment.AssessmentDate}, {studentAssessment.EnrollmentNo}, {studentAssessment.CourseExamId}, {studentAssessment.ObtainedMarks}, {studentAssessment.Remarks}, {studentAssessment.CreatedBy}, {studentAssessment.CreatedDate}, {studentAssessment.UpdatedBy}, {studentAssessment.UpdatedDate}");
+        try
+        {
+      
+            await Database.ExecuteSqlRawAsync("EXEC dbo.UpdateStudentAssessment @p0, @p1, @p2, @p3, @p4, @p5, @p6 , @p7",
+                   studentAssessment.Id,studentAssessment.AssessmentDate, studentAssessment.EnrollmentNo, studentAssessment.CourseExamId,
+                    studentAssessment.ObtainedMarks, studentAssessment.Remarks,  studentAssessment?.UpdatedBy, studentAssessment?.UpdatedDate);
+
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error saving update assessment.", ex);
+
+        }
     }
 
     // Delete method

@@ -6,6 +6,8 @@
     @await Html.PartialAsync("~/Views/Shared/_title_meta.cshtml")
     @RenderSection("styles", false)
     @await Html.PartialAsync("~/Views/Shared/_head_css.cshtml")
+
+
 </head>
 
 <body>
@@ -42,7 +44,9 @@
     @*@await Html.PartialAsync("~/Views/_Shared/_vendor_scripts.cshtml")*@
 
     @RenderSection("scripts", required: false)
+    
 
 </body>
+
 
 </html>

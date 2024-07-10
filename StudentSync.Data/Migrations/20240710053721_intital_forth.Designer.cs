@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentSync.Data.Data;
 
@@ -11,9 +12,11 @@ using StudentSync.Data.Data;
 namespace StudentSync.Data.Migrations
 {
     [DbContext(typeof(StudentSyncDbContext))]
-    partial class StudentSyncDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240710053721_intital_forth")]
+    partial class intital_forth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -456,7 +459,7 @@ namespace StudentSync.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("AssessmentDate")
+                    b.Property<DateTime>("AssessmentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("CourseExamId")
@@ -465,7 +468,7 @@ namespace StudentSync.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EnrollmentNo")
@@ -480,7 +483,7 @@ namespace StudentSync.Data.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");

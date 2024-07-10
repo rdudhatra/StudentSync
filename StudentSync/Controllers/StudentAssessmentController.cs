@@ -9,10 +9,12 @@ namespace StudentSync.Controllers
     public class StudentAssessmentController : Controller
     {
         private readonly IStudentAssessmentService _studentAssessmentService;
+        private readonly ILogger<StudentAssessmentController> _logger;
 
-        public StudentAssessmentController(IStudentAssessmentService studentAssessmentService)
+        public StudentAssessmentController(IStudentAssessmentService studentAssessmentService, ILogger<StudentAssessmentController> logger)
         {
             _studentAssessmentService = studentAssessmentService;
+            _logger = logger;
         }
 
         // GET: StudentAssessment
@@ -96,16 +98,30 @@ namespace StudentSync.Controllers
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] StudentAssessment studentAssessment)
         {
-            if (ModelState.IsValid)
+            try
             {
-                await _studentAssessmentService.UpdateStudentAssessment(studentAssessment);
-                return Json(new { success = true, message = "Student assessment updated successfully." });
-            }
+                if (ModelState.IsValid)
+                {
+                    await _studentAssessmentService.UpdateStudentAssessment(studentAssessment);
+                    return Json(new { success = true, message = "Student assessment updated successfully." });
+                   
+                }
+                // If ModelState is invalid, collect error messages
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, errors });
 
-            // If ModelState is invalid, collect error messages
-            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-            return Json(new { success = false, errors });
+
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                _logger.LogError(ex, "Error occurred while updating student assessment.");
+
+                // Return a generic error message
+                return Json(new { success = false, message = "An unexpected error occurred while updating the student assessment." });
+            }
         }
+
 
         // POST: StudentAssessment/Delete/5
         [HttpPost("Delete/{id}")]

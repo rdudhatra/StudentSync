@@ -36,7 +36,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addEditCourseFeeModalLabel">Add/Edit Course Fee</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-dismiss="modal" onclick="closeModal()">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -86,7 +86,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-dismiss="modal" onclick="closeModal()">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" onclick="deleteCourseFee()">Delete</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary"   onclick="closeModal()" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -177,7 +177,10 @@
                 });
             });
         }
-
+        function closeModal() {
+            $('#addEditCourseFeeModal').modal('hide'); // Hide the modal using jQuery
+            $('#deleteConfirmationModal').modal('hide');
+        }
         // Function to populate data in the modal for editing
         function onEditCourseFeeClick(id) {
             $.ajax({

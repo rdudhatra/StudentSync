@@ -33,7 +33,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addEditCourseModalLabel">Add/Edit Course</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-dismiss="modal" onclick="closeModal()" ">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -63,8 +63,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" onclick="saveCourse()">Save</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
+@*                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+ *@                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-dismiss="modal" onclick="closeModal()">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" onclick="deleteCourse()">Delete</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeModal()" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +140,10 @@
             $('#addEditCourseModal').modal('show');
             $('#addEditCourseModalLabel').text('Add New Course');
         }
-
+        function closeModal() {
+            $('#addEditCourseModal').modal('hide'); // Hide the modal using jQuery
+            $('#deleteConfirmationModal').modal('hide');
+        }
         // Function to save a course
         function saveCourse() {
             var createdBy = 'defaultUser'; // Replace with logic to get the actual user
