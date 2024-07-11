@@ -13,17 +13,19 @@ public partial class Inquiry
 
     public string? Title { get; set; }
 
-    public string FirstName { get; set; } = null!;
+    [Required]
+    public string FirstName { get; set; }
 
     public string? MiddleName { get; set; }
 
-    public string LastName { get; set; } = null!;
+    [Required]
+    public string LastName { get; set; }
 
     public string? ContactNo { get; set; }
 
     public string? EmailId { get; set; }
 
-    public DateTime Dob { get; set; }
+    public DateTime? Dob { get; set; }
 
     public string? Address { get; set; }
 

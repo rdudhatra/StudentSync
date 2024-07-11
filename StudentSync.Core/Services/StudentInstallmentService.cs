@@ -23,14 +23,7 @@ namespace StudentSync.Core.Services
             return await _context.StudentInstallments.ToListAsync();
         }
 
-        //public async Task<StudentInstallment> GetStudentInstallmentByIdAsync(int id)
-        //{
-        //    var parameters = new[]
-        //    {
-        //        new SqlParameter("@Id", SqlDbType.Int) { Value = id }
-        //    };
-        //    return await _context.StudentInstallments.FromSqlRaw("EXEC GetStudentInstallmentById @Id", parameters).FirstOrDefaultAsync();
-        //}
+    
         public async Task<StudentInstallment> GetStudentInstallmentByIdAsync(int id)
         {
 
@@ -52,15 +45,6 @@ namespace StudentSync.Core.Services
             return result;
         }
 
-        //public async Task<int> DeleteStudentInstallmentAsync(int id)
-        //{
-        //    var parameters = new[]
-        //    {
-        //        new SqlParameter("@Id", SqlDbType.Int) { Value = id }
-        //    };
-        //    var result = await _context.Database.ExecuteSqlRawAsync("EXEC DeleteStudentInstallment @Id", parameters);
-        //    return result;
-        //}
         public async Task DeleteStudentInstallmentAsync(int id)
         {
            
@@ -68,11 +52,7 @@ namespace StudentSync.Core.Services
             
         }
 
-        //public async Task DeleteStudentAttendance(int id)
-        //{
-        //    await _context.Database.ExecuteSqlRawAsync("EXEC DeleteStudentAttendance @Id = {0}", id);
-        //}
-
+        
         private SqlParameter[] GetParameters(StudentInstallment studentInstallment)
         {
             return new[]

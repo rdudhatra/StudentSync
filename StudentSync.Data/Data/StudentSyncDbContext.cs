@@ -55,46 +55,7 @@ public partial class StudentSyncDbContext : DbContext
 
     }
 
-    //Enrollments Crud Operation 
-    public async Task<List<Enrollment>> GetAllEnrollmentsAsync()
-    {
-        return await Enrollments.FromSqlRaw("EXEC GetAllEnrollments").ToListAsync();
-    }
-
-    //public async Task<Enrollment> GetEnrollmentByIdAsync(int id)
-    //{
-    //    return await Enrollments.FromSqlRaw("EXEC GetEnrollmentById @p0", id).FirstOrDefaultAsync();
-    //}
-    public async Task<Enrollment> GetEnrollmentByIdAsync(int enrollmentId)
-    {
-        // Example using FromSqlRaw, adjust as per your actual query
-        return await Enrollments
-            .FromSqlRaw("SELECT * FROM Enrollments WHERE Id = {0}", enrollmentId)
-            .AsNoTracking()
-            .SingleOrDefaultAsync();
-    }
-
-    public async Task CreateEnrollmentAsync(Enrollment enrollment)
-    {
-        await Database.ExecuteSqlRawAsync("EXEC CreateEnrollment @p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9",
-            enrollment.EnrollmentNo, enrollment.EnrollmentDate, enrollment.BatchId, enrollment.CourseId,
-            enrollment.CourseFeeId, enrollment.InquiryNo, enrollment.IsActive, enrollment.Remarks,
-            enrollment.CreatedBy, enrollment.CreatedDate);
-    }
-
-    public async Task UpdateEnrollmentAsync(Enrollment enrollment)
-    {
-        await Database.ExecuteSqlRawAsync("EXEC UpdateEnrollment @p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9",
-            enrollment.EnrollmentNo, enrollment.EnrollmentDate, enrollment.BatchId, enrollment.CourseId,
-            enrollment.CourseFeeId, enrollment.InquiryNo, enrollment.IsActive, enrollment.Remarks,
-            enrollment.UpdatedBy, enrollment.UpdatedDate);
-    }
-
-    public async Task DeleteEnrollmentAsync(string enrollmentNo)
-    {
-        await Database.ExecuteSqlRawAsync("EXEC DeleteEnrollment @p0", enrollmentNo);
-    }
-
+   
     //Student Assessment sp
 
     // Save method

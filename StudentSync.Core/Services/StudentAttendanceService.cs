@@ -26,7 +26,7 @@ namespace StudentSync.Core.Services
 
         public async Task<StudentAttendance> GetStudentAttendanceById(int id)
         {
-            var result = await _context.StudentAttendances.FromSqlRaw("EXEC GetStudentAttendanceById @Id = {0}", id).ToListAsync();
+            var result = await _context.StudentAttendances.FromSqlRaw("EXEC GetStudentAttendanceById @InquiryNo = {0}", id).ToListAsync();
             return result.Count > 0 ? result[0] : null;
         }
 

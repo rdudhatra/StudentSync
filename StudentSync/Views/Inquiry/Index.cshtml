@@ -1,0 +1,411 @@
+﻿@model IEnumerable<StudentSync.Data.Models.Inquiry>
+
+@{
+    ViewData["Title"] = "Inquiry Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddInquiryClick()">Add Inquiry</button>
+                <table id="InquiryTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Inquiry No</th>
+                            <th>Inquiry Date</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Contact No</th>
+                            <th>Email Id</th>
+                           @*  <th>Date of Birth</th>
+                            <th>Address</th>
+                            <th>Reference</th> *@
+                           @*  <th>Job</th>
+                            <th>Business</th>
+                            <th>Study</th> *@
+@*                             <th>Other</th>
+ *@                          @*   <th>Previous Completed Course</th>
+                            <th>Previous Course Details</th> *@
+                            <th>Course ID</th>
+                            @* <th>Note</th> *@
+@*                             <th>Enquiry Type</th>
+ *@                            <th>Status</th>
+                            <th>Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addEditInquiryModal" tabindex="-1" aria-labelledby="addEditInquiryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEditInquiryModalLabel">Add/Edit Inquiry</h5>
+                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="InquiryForm">
+                    <input type="hidden" id="Id" name="Id" />
+                    <input type="hidden" id="InquiryNo" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="InquiryDate">Inquiry Date</label>
+                                <input type="date" class="form-control" id="InquiryDate" />
+                            </div>
+                            <div class="form-group">
+                                <label for="FirstName">First Name</label>
+                                <input type="text" class="form-control" id="FirstName" />
+                            </div>
+                         @*    <div class="form-group">
+                                <label for="LastName">Last Name</label>
+                                <input type="text" class="form-control" id="LastName" />
+                            </div> *@
+                            <div class="form-group">
+                                <label for="ContactNo">Contact No</label>
+                                <input type="text" class="form-control" id="ContactNo" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Address">Address</label>
+                                <input type="text" class="form-control" id="Address" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Reference">Reference</label>
+                                <input type="text" class="form-control" id="Reference" />
+                            </div>
+                     @*        <div class="form-group">
+                                <label for="EmailId">Email Id</label>
+                                <input type="email" class="form-control" id="EmailId" />
+                            </div> *@
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Dob">Date of Birth</label>
+                                <input type="date" class="form-control" id="Dob" />
+                            </div>
+                            <div class="form-group">
+                                <label for="LastName">Last Name</label>
+                                <input type="text" class="form-control" id="LastName" />
+                            </div>
+                            <div class="form-group">
+                                <label for="EmailId">Email Id</label>
+                                <input type="email" class="form-control" id="EmailId" />
+                            </div>
+                       @*      <div class="form-group">
+                                <label for="Address">Address</label>
+                                <input type="text" class="form-control" id="Address" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Reference">Reference</label>
+                                <input type="text" class="form-control" id="Reference" />
+                            </div> *@
+                            <div class="form-group">
+                                <label for="Job">Job</label>
+                                <input type="checkbox" id="Job" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Business">Business</label>
+                                <input type="checkbox" id="Business" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Study">Study</label>
+                                <input type="checkbox" id="Study" />
+
+                            </div>
+                            <div class="form-group">
+                                <label for="PrevCompCourse">Previous Completed Course</label>
+                                <input type="checkbox" id="PrevCompCourse" />
+                            </div>
+                            <div class="form-group">
+                                <label for="IsActive">Active</label>
+                                <input type="checkbox" id="IsActive" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                           
+                            <div class="form-group">
+                                <label for="Other">Other</label>
+                                <input type="text" class="form-control" id="Other" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Status">Status</label>
+                                <input type="text" class="form-control" id="Status" />
+                            </div>
+                            <div class="form-group">
+                                <label for="PrevCompCourseDetails">Previous Course Details</label>
+                                <input type="text" class="form-control" id="PrevCompCourseDetails" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="CourseId">Course ID</label>
+                                <input type="text" class="form-control" id="CourseId" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Note">Note</label>
+                                <input type="text" class="form-control" id="Note" />
+                            </div>
+                            <div class="form-group">
+                                <label for="EnquiryType">Enquiry Type</label>
+                                <input type="text" class="form-control" id="EnquiryType" />
+                            </div>
+                          
+                        
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="saveInquiry()">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Delete Confirmation</h5>
+                <button type="button" class="close" onclick="closeModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this inquiry?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteInquiry()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        $(document).ready(function () {
+            loadDataTable();
+        });
+
+        function loadDataTable() {
+            $('#InquiryTable').DataTable({
+                "ajax": {
+                    "url": "/Inquiry/GetAll",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "inquiryNo" },
+                    {
+                        "data": "inquiryDate",
+                        "render": function (data) {
+                            return data ? new Date(data).toLocaleDateString() : '';
+                        }
+                    },
+                    { "data": "firstName" },
+                    { "data": "lastName" },
+                    { "data": "contactNo" },
+                    { "data": "emailId" },
+                    // {
+                    //     "data": "dob",
+                    //     "render": function (data) {
+                    //         return data ? new Date(data).toLocaleDateString() : '';
+                    //     }
+                    // },
+                    // { "data": "address" },
+                    // { "data": "reference" },
+                    // { "data": "job" },
+                    // { "data": "business" },
+                    // { "data": "study" },
+                   // { "data": "other" },
+                    // { "data": "prevCompCourse" },
+                    // { "data": "prevCompCourseDetails" },
+                    { "data": "courseId" },
+                   // { "data": "note" },
+                   // { "data": "enquiryType" },
+                    { "data": "status" },
+                    {
+                        "data": "isActive",
+                        "render": function (data) {
+                            return data ? '<i class="fa fa-check-circle text-success"></i>' : '<i class="fa fa-times-circle text-danger"></i>';
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data) {
+                            return `
+                                                <div class="text-center">
+                                                    <button type="button" class="btn btn-warning btn-sm" onclick="onEditInquiryClick(${data.inquiryNo})">Edit</button>
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="onDeleteInquiryClick(${data.inquiryNo})">Delete</button>
+                                                </div>
+                                            `;
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No data available in table"
+                }
+            });
+        }
+
+        function onAddInquiryClick() {
+            $('#InquiryForm')[0].reset();
+            $('#addEditInquiryModal').modal('show');
+        }
+
+        function onEditInquiryClick(inquiryNo) {
+            $.ajax({
+                url: `/Inquiry/Edit/${inquiryNo}`,
+                type: 'GET',
+                success: function (data) {
+                    $('#InquiryNo').val(data.inquiryNo);
+                    $('#InquiryDate').val(data.inquiryDate.substring(0, 10));
+                    $('#FirstName').val(data.firstName);
+                    $('#LastName').val(data.lastName);
+                    $('#ContactNo').val(data.contactNo);
+                    $('#EmailId').val(data.emailId);
+                    $('#Dob').val(data.dob.substring(0, 10));
+                    $('#Address').val(data.address);
+                    $('#Reference').val(data.reference);
+                    $('#Job').val(data.job);
+                    $('#Business').val(data.business);
+                    $('#Study').val(data.study);
+                    $('#Other').val(data.other);
+                    $('#PrevCompCourse').val(data.prevCompCourse);
+                    $('#PrevCompCourseDetails').val(data.prevCompCourseDetails);
+                    $('#CourseId').val(data.courseId);
+                    $('#Note').val(data.note);
+                    $('#EnquiryType').val(data.enquiryType);
+                    $('#Status').val(data.status);
+                    $('#IsActive').prop('checked', data.isActive);
+                    $('#addEditInquiryModal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Failed to fetch inquiry details.');
+                }
+            });
+        }
+
+        function saveInquiry() {
+            var formData = {
+
+                InquiryNo: $('#InquiryNo').val() ? parseInt($('#InquiryNo').val()) : 0,
+                InquiryDate: $('#InquiryDate').val(),
+                FirstName: $('#FirstName').val(),
+                LastName: $('#LastName').val(),
+                ContactNo: $('#ContactNo').val(),
+                EmailId: $('#EmailId').val(),
+                Dob: $('#Dob').val(),
+                Address: $('#Address').val(),
+                Reference: $('#Reference').val(),
+                Job: $('#Job').prop('checked'),
+                Business: $('#Business').prop('checked'),
+                Study: $('#Study').prop('checked'),
+                Other: $('#Other').val(),
+                PrevCompCourse: $('#PrevCompCourse').prop('checked'),
+                PrevCompCourseDetails: $('#PrevCompCourseDetails').val(),
+                CourseId: $('#CourseId').val(),
+                Note: $('#Note').val(),
+                EnquiryType: $('#EnquiryType').val(),
+                Status: $('#Status').val(),
+                IsActive: $('#IsActive').prop('checked')
+            };
+
+            var url = formData.InquiryNo ? '/Inquiry/Update' : '/Inquiry/Create';
+            debugger
+            $.ajax({
+                url: '@Url.Action("Create", "Inquiry")',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: "json",
+                data: JSON.stringify(formData),
+                success: function () {
+                    debugger
+
+                    $('#addEditInquiryModal').modal('hide');
+                    $('#InquiryTable').DataTable().ajax.reload();
+                    toastr.success('Inquiry saved successfully.');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error creating inquiry:', error);
+                    toastr.error('Failed to save inquiry.');
+                }
+            });
+        }
+
+        function onDeleteInquiryClick(inquiryNo) {
+            $('#InquiryNo').val(inquiryNo);
+            $('#deleteConfirmationModal').modal('show');
+        }
+
+        function confirmDeleteInquiry() {
+            var inquiryNo = $('#InquiryNo').val();
+
+            $.ajax({
+                url: `/Inquiry/Delete/${inquiryNo}`,
+                type: 'POST',
+                success: function () {
+                    $('#deleteConfirmationModal').modal('hide');
+                    $('#InquiryTable').DataTable().ajax.reload();
+                    toastr.success('Inquiry deleted successfully.');
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Failed to delete inquiry.');
+                }
+            });
+        }
+
+        function closeModal() {
+            $('#addEditInquiryModal').modal('hide');
+            $('#deleteConfirmationModal').modal('hide');
+        }
+    </script>
+}
+

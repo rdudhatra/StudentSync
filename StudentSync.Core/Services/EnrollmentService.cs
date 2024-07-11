@@ -1,10 +1,9 @@
-﻿using StudentSync.Core.Services.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentSync.Core.Services.Interface;
+using StudentSync.Data;
 using StudentSync.Data.Data;
 using StudentSync.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StudentSync.Core.Services
@@ -18,29 +17,37 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
-        public async Task<List<Enrollment>> GetAllEnrollmentsAsync()
+        public async Task<IEnumerable<Enrollment>> GetAllEnrollments()
         {
-            return await _context.GetAllEnrollmentsAsync();
+            return await _context.Enrollments.ToListAsync();
+        }
+       
+        public async Task<Enrollment> GetEnrollmentById(int id)
+        {
+            var result = await _context.Enrollments.FromSqlRaw("EXEC GetEnrollmentById @Id = {0}", id).FirstOrDefaultAsync();
+            return result;
+        }
+        //public async Task<StudentInstallment> GetStudentInstallmentByIdAsync(int id)
+        //{
+
+        //    var result = await _context.StudentInstallments.FromSqlRaw("EXEC GetStudentInstallmentById @Id = {0}", id).ToListAsync();
+        //    return result.Count > 0 ? result[0] : null;
+        //}
+        public async Task AddEnrollment(Enrollment enrollment)
+        {
+            await _context.Database.ExecuteSqlRawAsync("EXEC CreateEnrollment @EnrollmentNo = {0}, @EnrollmentDate = {1}, @BatchId = {2}, @CourseId = {3}, @CourseFeeId = {4}, @InquiryNo = {5}, @IsActive = {6}, @Remarks = {7}, @CreatedBy = {8}, @CreatedDate = {9}",
+                enrollment.EnrollmentNo, enrollment.EnrollmentDate, enrollment.BatchId, enrollment.CourseId, enrollment.CourseFeeId, enrollment.InquiryNo, enrollment.IsActive, enrollment.Remarks, enrollment.CreatedBy, enrollment.CreatedDate);
         }
 
-        public async Task<Enrollment> GetEnrollmentByIdAsync(int enrollmentNo)
+        public async Task UpdateEnrollment(Enrollment enrollment)
         {
-            return await _context.GetEnrollmentByIdAsync(enrollmentNo);
+            await _context.Database.ExecuteSqlRawAsync("EXEC UpdateEnrollment @Id = {0}, @EnrollmentNo = {1}, @EnrollmentDate = {2}, @BatchId = {3}, @CourseId = {4}, @CourseFeeId = {5}, @InquiryNo = {6}, @IsActive = {7}, @Remarks = {8}, @UpdatedBy = {9}, @UpdatedDate = {10}",
+                enrollment.Id, enrollment.EnrollmentNo, enrollment.EnrollmentDate, enrollment.BatchId, enrollment.CourseId, enrollment.CourseFeeId, enrollment.InquiryNo, enrollment.IsActive, enrollment.Remarks, enrollment.UpdatedBy, enrollment.UpdatedDate);
         }
 
-        public async Task CreateEnrollmentAsync(Enrollment enrollment)
+        public async Task DeleteEnrollment(int id)
         {
-            await _context.CreateEnrollmentAsync(enrollment);
-        }
-
-        public async Task UpdateEnrollmentAsync(Enrollment enrollment)
-        {
-            await _context.UpdateEnrollmentAsync(enrollment);
-        }
-
-        public async Task DeleteEnrollmentAsync(string enrollmentNo)
-        {
-            await _context.DeleteEnrollmentAsync(enrollmentNo);
+            await _context.Database.ExecuteSqlRawAsync("EXEC DeleteEnrollment @Id = {0}", id);
         }
     }
 }

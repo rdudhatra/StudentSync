@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StudentSync.Controllers
+namespace StudentSync.Web.Controllers
 {
     [Route("Enrollment")]
     public class EnrollmentController : Controller
@@ -27,20 +27,7 @@ namespace StudentSync.Controllers
         {
             try
             {
-                var searchValue = Request.Query["search[value]"].FirstOrDefault();
-                var enrollments = await _enrollmentService.GetAllEnrollmentsAsync();
-
-                if (!string.IsNullOrEmpty(searchValue))
-                {
-                    enrollments = enrollments
-                        .Where(e => e.EnrollmentNo.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                                    e.BatchId.ToString().Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                                    e.CourseId.ToString().Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                                    e.CourseFeeId.ToString().Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                                    e.InquiryNo.ToString().Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                                    e.Remarks.Contains(searchValue, StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                }
+                var enrollments = await _enrollmentService.GetAllEnrollments();
 
                 var dataTableResponse = new
                 {
@@ -58,6 +45,8 @@ namespace StudentSync.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+    
+
         [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] Enrollment enrollment)
         {
@@ -65,39 +54,27 @@ namespace StudentSync.Controllers
             {
                 try
                 {
-                    enrollment.CreatedDate = DateTime.Now;
-                    await _enrollmentService.CreateEnrollmentAsync(enrollment);
-                    return Ok(new { success = true, message = "Enrollment added successfully." });
+                    await _enrollmentService.AddEnrollment(enrollment);
+                    return Ok(new { success = true });
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception or handle it appropriately
-                    return StatusCode(500, new { success = false, message = "Error saving enrollment." });
+                    Console.WriteLine($"Exception occurred: {ex.Message}");
+                    return StatusCode(500, "Internal server error");
                 }
             }
-            // If ModelState is invalid, return BadRequest with ModelState errors
             return BadRequest(ModelState);
         }
-
 
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            try
-            {
-                var enrollment = await _enrollmentService.GetEnrollmentByIdAsync(id);
+            var enrollment = await _enrollmentService.GetEnrollmentById(id);
             if (enrollment == null)
-        {
-            return NotFound(); // Handle case where enrollment with given ID isn't found
-        }
-        
-        return Ok(enrollment); // Return enrollment details as JSON
-    }
-    catch (Exception ex)
-    {
-        // Log the exception
-        return StatusCode(500, new { message = "Internal server error" });
-    }
+            {
+                return NotFound();
+            }
+            return Ok(enrollment);
         }
 
         [HttpPost("Update")]
@@ -105,18 +82,40 @@ namespace StudentSync.Controllers
         {
             if (ModelState.IsValid)
             {
-                enrollment.UpdatedDate = DateTime.Now;
-                await _enrollmentService.UpdateEnrollmentAsync(enrollment);
-                return Json(new { success = true, message = "Enrollment updated successfully." });
+                try
+                {
+                    await _enrollmentService.UpdateEnrollment(enrollment);
+                    return Ok(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exception occurred: {ex.Message}");
+                    return StatusCode(500, "Internal server error");
+                }
             }
-            return Json(new { success = false, message = "Invalid model state." });
+            return BadRequest(ModelState);
         }
 
         [HttpPost("Delete/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _enrollmentService.DeleteEnrollmentAsync(id);
-            return Json(new { success = true, message = "Enrollment deleted successfully." });
+            var enrollment = await _enrollmentService.GetEnrollmentById(id);
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _enrollmentService.DeleteEnrollment(id);
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }
+
