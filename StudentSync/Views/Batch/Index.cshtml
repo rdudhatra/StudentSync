@@ -12,7 +12,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddBatchClick()">Add Batch</button>
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddBatchClick()">+</button>
                 <table id="BatchTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
                     <thead>
                         <tr>
@@ -20,7 +20,7 @@
                             <th>Batch Code</th>
                             <th>Batch Time</th>
                             <th>Faculty Name</th>
-                            <th>Course ID</th> <!-- Added Course ID column -->
+                            <th>Course Name</th> <!-- Added Course ID column -->
                             <th>Is Active</th>
                             <th>Remarks</th>
                             <th>Action</th>
@@ -50,29 +50,53 @@
                     <input type="hidden" id="Id" />
                     <div class="form-group">
                         <label for="BatchCode">Batch Code</label>
-                        <input type="text" class="form-control" id="BatchCode" />
+                        <input type="text" class="form-control" id="BatchCode" name="BatchCode" required maxlength="50" />
+                        <div class="invalid-feedback">Please enter Batch Code.</div>
                     </div>
                     <div class="form-group">
                         <label for="BatchTime">Batch Time</label>
-                        <input type="text" class="form-control" id="BatchTime" />
+                        <input type="text" class="form-control" id="BatchTime" name="BatchTime" required />
+                        <div class="invalid-feedback">Please enter Batch Time.</div>
                     </div>
                     <div class="form-group">
                         <label for="FacultyName">Faculty Name</label>
-                        <input type="text" class="form-control" id="FacultyName" />
+                        <input type="text" class="form-control" id="FacultyName" name="FacultyName" required />
+                        <div class="invalid-feedback">Please enter Faculty Name.</div>
                     </div>
+                    @* <div class="form-group">
+                        <label for="BatchCourseId">Course ID</label>
+                        <input type="text" class="form-control" id="BatchCourseId" name="BatchCourseId" required />
+                        <div class="invalid-feedback">Please enter Course ID.</div>
+                    </div> *@
+
+                   @*  <div class="form-group">
+                        <label for="BatchCourseId">Course ID</label>
+                        <select class="form-control" id="BatchCourseId" name="BatchCourseId" required>
+                            <option value="">Select Course ID</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <div class="invalid-feedback">Please select a Course ID.</div>
+                    </div> *@
+
                     <div class="form-group">
-                        <label for="CourseId">Course ID</label>
-                        <input type="text" class="form-control" id="BatchCourseId" />
+                        <label for="BatchCourseId">Course:</label>
+                        <select class="form-control" id="BatchCourseId" required>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <div class="invalid-feedback">Course is required.</div>
                     </div>
+
                     <div class="form-group">
                         <label for="IsActive">Is Active</label>
-                        <input type="checkbox" id="IsActive" />
+                        <input type="checkbox"  id="IsActive" name="IsActive" />
                     </div>
                     <div class="form-group">
                         <label for="Remarks">Remarks</label>
-                        <textarea class="form-control" id="Remarks"></textarea>
+                        <textarea class="form-control" id="Remarks" name="Remarks"></textarea>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="saveBatch()">Save</button>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" onclick="saveBatch()">Save</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -137,6 +161,7 @@
             "hideMethod": "fadeOut"
         };
         $(document).ready(function () {
+            // Initialize DataTable
             dataTable = $('#BatchTable').DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -150,32 +175,167 @@
                     { "data": "batchCode", "name": "BatchCode" },
                     { "data": "batchTime", "name": "BatchTime" },
                     { "data": "facultyName", "name": "FacultyName" },
-                    { "data": "batchCourseId", "name": "BatchCourseId" }, // Ensure this matches the property name returned by API
+                    {
+                        "data": "courseId", // Use courseId to fetch courseName dynamically
+                        "render": function (data, type, row) {
+                            return getCourseName(row.courseId); // Fetch courseName dynamically
+                        }
+                    },
+                    // {
+                    //     "data": "batchCourseId",
+                    //     "name": "BatchCourseId",
+                    //     "render": function (data, type, row, meta) {
+                    //         return row.course ? row.course.courseName : ''; // Assuming row.course has the course object with courseName property
+                    //     }
+                    // },
+                   // { "data": "batchCourseId", "name": "BatchCourseId" }, // Ensure this matches the property name returned by API
                     { "data": "isActive", "name": "IsActive" },
                     { "data": "remarks", "name": "Remarks" },
                     {
                         "render": function (data, type, full, meta) {
-                            return '<a class="btn btn-info btn-sm" href="#" onclick="onEditBatchClick(' + full.id + ')">Edit</a>' +
-                                ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteBatchClick(' + full.id + ')">Delete</a>';
+                             return '<a class="btn btn-info btn-sm" href="#" onclick="onEditBatchClick(' + full.id + ')"><i class="fas fa-edit"></i> </a>' +
+                                 ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteBatchClick(' + full.id + ')"><i class="fas fa-trash-alt"></i> </a>';
+                            
                         }
                     }
                 ]
             });
+
+            // getAllBatchesIds();
+
+            // Fetch Course IDs and populate dropdown in modal
+            // $.ajax({
+            //     url: "/Course/GetAllCourseIds", // Adjust URL to match your controller action for fetching Course IDs
+            //     type: "GET",
+            //     dataType: "json",
+            //     success: function (data) {
+            //         if (Array.isArray(data)) {
+            //             var options = '<option value="">Select Course ID</option>';
+            //             data.forEach(function (courseId) {
+            //                 options += '<option value="' + courseId + '">' + courseId + '</option>';
+            //             });
+            //             $('#BatchCourseId').html(options); // Populate dropdown with Course IDs
+            //         } else {
+            //             console.error('Invalid data format for Course IDs:', data); // Log error to console for debugging
+            //             toastr.error('Invalid data format for Course IDs.'); // Display toastr error for invalid data format
+            //         }
+            //     },
+            //     error: function (xhr, status, error) {
+            //         console.error('Error fetching Course IDs:', error); // Log detailed error message to console for debugging
+            //         toastr.error('Error fetching Course IDs. Please try again later.'); // Display toastr error for fetching error
+            //     }
+            // });
+
+
+            // Handle modal close event to clear validation messages
+            $('#addEditBatchModal').on('hidden.bs.modal', function () {
+                clearValidationMessages();
+            });
         });
 
+        function getCourseName(courseId) {
+            // AJAX call to fetch courseName based on courseId
+            $.ajax({
+                url: '/Course/GetCourseName', // Adjust URL to your API endpoint
+                type: 'GET',
+                dataType: 'json',
+                data: { courseId: courseId },
+                success: function (data) {
+                    return data.courseName; // Assuming your API returns { courseName: "Course Name" }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching CourseName:', error);
+                    return '-';
+                }
+            });
+        }
+
+        function getAllCourses() {
+            $.ajax({
+                url: '/Course/GetAllCourseIds', // Adjust URL to match your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (Array.isArray(data) && data.length > 0) {
+                        var options = '<option value="">Select Course</option>';
+                        data.forEach(function (course) {
+                            options += '<option value="' + course.courseId + '">' + course.courseName + '</option>';
+                        });
+                        $('#BatchCourseId').html(options); // Populate dropdown with Course names
+                    } else {
+                        console.error('No Courses returned or invalid data format:', data);
+                        toastr.error('No Courses returned or invalid data format.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Courses: ' + error);
+                    console.error('Error fetching Courses:', xhr.responseText);
+                }
+            });
+        }
+
+        // Call the function to fetch and populate Courses
+        getAllCourses();
+
+        // function getAllBatchesIds() {
+        //     $.ajax({
+        //         url: '/Course/GetAllBatchesIds', // Adjust URL as per your controller route
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function (data) {
+        //             // Assuming data is an array of Course IDs, you can use it as needed
+        //             console.log('All Batches IDs:', data);
+        //             // Example: Displaying the data in console, adjust as per your requirement
+        //         },
+        //         error: function (xhr, status, error) {
+        //             toastr.error('Error fetching Batches IDs: ' + error);
+        //             console.error('Error fetching Batches IDs:', xhr.responseText);
+        //         }
+        //     });
+        // }
 
         function saveBatch() {
+            // Clear previous validation messages
+            clearValidationMessages();
+
+            // Validate required fields before proceeding
+            var isValid = true;
+
+            if ($('#BatchCode').val().trim() === '') {
+                displayValidationMessage('Batch Code is required.', $('#BatchCode'));
+                isValid = false;
+            }
+
+            if ($('#BatchTime').val().trim() === '') {
+                displayValidationMessage('Batch Time is required.', $('#BatchTime'));
+                isValid = false;
+            }
+
+            if ($('#FacultyName').val().trim() === '') {
+                displayValidationMessage('Faculty Name is required.', $('#FacultyName'));
+                isValid = false;
+            }
+
+            if ($('#BatchCourseId').val().trim() === '') {
+                displayValidationMessage('Course ID is required.', $('#BatchCourseId'));
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
             var formData = {
                 Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                 BatchCode: $('#BatchCode').val(),
                 BatchTime: $('#BatchTime').val(),
                 FacultyName: $('#FacultyName').val(),
-                BatchCourseId: $('#BatchCourseId').val(), 
+                BatchCourseId: $('#BatchCourseId').val(),
                 IsActive: $('#IsActive').prop('checked'),
                 Remarks: $('#Remarks').val()
             };
 
-            var url = (formData.Id && formData.Id !== "") ? "/Batch/UpdateBatch" : "/Batch/Create";
+            var url = (formData.Id && formData.Id !== 0) ? "/Batch/UpdateBatch" : "/Batch/Create";
 
             $.ajax({
                 url: url,
@@ -184,17 +344,30 @@
                 data: JSON.stringify(formData),
                 success: function (response) {
                     $('#addEditBatchModal').modal('hide');
-                    if (formData.Id === 0 || formData.Id === "") {
-                        toastr.success('Course fee added successfully.');
+                    if (formData.Id === 0) {
+                        toastr.success('Batch added successfully.');
                     } else {
-                        toastr.success('Course fee updated successfully.');
-                    } dataTable.ajax.reload();
+                        toastr.success('Batch updated successfully.');
+                    }
+                    dataTable.ajax.reload();
                 },
                 error: function (response) {
                     toastr.error('Error saving batch.');
                 }
             });
         }
+
+        function displayValidationMessage(message, inputElement) {
+            var parentDiv = inputElement.closest('.form-group');
+            parentDiv.addClass('has-error');
+            parentDiv.find('.invalid-feedback').text(message).show();
+        }
+
+        function clearValidationMessages() {
+            $('.form-group').removeClass('has-error');
+            $('.invalid-feedback').text('').hide();
+        }
+
 
         function onDeleteBatchClick(id) {
             $('#Id').val(id);

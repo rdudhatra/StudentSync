@@ -23,28 +23,7 @@ namespace StudentSync.Controllers
             return View();
         }
 
-        //[HttpGet("GetAll")]
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    try
-        //    {
-        //        var courseSyllabuses = await _courseSyllabusService.GetAllCourseSyllabusesAsync();
-        //        var dataTableResponse = new
-        //        {
-        //            draw = Request.Query["draw"],
-        //            recordsTotal = courseSyllabuses.Count(),
-        //            recordsFiltered = courseSyllabuses.Count(),
-        //            data = courseSyllabuses
-        //        };
-
-        //        return Ok(dataTableResponse);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Exception occurred: {ex.Message}");
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //}
+        
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

@@ -46,6 +46,9 @@ builder.Services.AddScoped<IStudentAssessmentService, StudentAssessmentService>(
 builder.Services.AddScoped<IBatchService, BatchService>();
 builder.Services.AddScoped<IStudentAttendanceService, StudentAttendanceService>();
 builder.Services.AddScoped<IStudentInstallmentService, StudentInstallmentService>();
+builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+builder.Services.AddScoped<IInquiryService, InquiryService>();
+builder.Services.AddScoped<IInquiryFollowUpService, InquiryFollowUpService>();
 
 builder.Services.AddDbContext<StudentSyncDbContext>(options =>
        options.UseSqlServer(builder.Configuration.GetConnectionString("StudentSyncCon"),

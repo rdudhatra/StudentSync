@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace StudentSync.Core.Services
 {
@@ -20,6 +21,16 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
+        public List<Course> GetAllCourseIds()
+        {
+            return _context.Courses.ToList();
+        }
+        //public string GetCourseNameById(int courseId)
+        //{
+        //    var course = _context.Courses.FirstOrDefault(c => c.CourseId == courseId);
+
+        //    return course != null ? course.CourseName : string.Empty;
+        //}
         public async Task<IResult<IEnumerable<Course>>> GetAllCourseAsync()
         {
             var courses = await _context.Courses.ToListAsync();

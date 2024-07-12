@@ -19,6 +19,11 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
+        public List<int> GetAllBatchesIds()
+        {
+            return _context.Batches.Select(b => b.Id).ToList();
+        }
+
         public async Task<List<Batch>> GetAllBatchesAsync()
         {
             return await _context.Batches.ToListAsync();

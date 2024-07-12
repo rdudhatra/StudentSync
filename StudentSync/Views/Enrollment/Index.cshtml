@@ -9,7 +9,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddEnrollmentClick()">Add Enrollment</button>
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddEnrollmentClick()">+</button>
                 <table id="EnrollmentTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
                     <thead>
                         <tr>
@@ -47,33 +47,65 @@
                     <input type="hidden" id="Id" />
                     <div class="form-group">
                         <label for="EnrollmentNo">Enrollment No</label>
-                        <input type="text" class="form-control" id="EnrollmentNo" />
+                        <input type="text" class="form-control" id="EnrollmentNo" required>
+                        <div class="invalid-feedback">Enrollment No is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="EnrollmentDate">Enrollment Date</label>
-                        <input type="date" class="form-control" id="EnrollmentDate" />
+                        <input type="date" class="form-control" id="EnrollmentDate" required>
+                        <div class="invalid-feedback">Enrollment Date is required.</div>
                     </div>
-                    <div class="form-group">
+                  @*   <div class="form-group">
                         <label for="BatchId">Batch ID</label>
-                        <input type="number" class="form-control" id="BatchId" />
+                        <input type="number" class="form-control" id="BatchId" required>
+                        <div class="invalid-feedback">Batch ID is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="CourseId">Course ID</label>
-                        <input type="number" class="form-control" id="CourseId" />
+                        <input type="number" class="form-control" id="CourseId" required>
+                        <div class="invalid-feedback">Course ID is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="CourseFeeId">Course Fee ID</label>
-                        <input type="number" class="form-control" id="CourseFeeId" />
+                        <input type="number" class="form-control" id="CourseFeeId" required>
+                        <div class="invalid-feedback">Course Fee ID is required.</div>
+                    </div> *@
+                    <div class="form-group">
+                        <label for="BatchId">Batch ID</label>
+                        <select class="form-control" id="BatchId" required>
+                            <option value="">Select Batch ID</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <div class="invalid-feedback">Batch ID is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="CourseId">Course ID</label>
+                        <select class="form-control" id="CourseId" required>
+                            <option value="">Select Course ID</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <div class="invalid-feedback">Course ID is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="CourseFeeId">Course Fee ID</label>
+                        <select class="form-control" id="CourseFeeId" required>
+                            <option value="">Select Course Fee ID</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <div class="invalid-feedback">Course Fee ID is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="InquiryNo">Inquiry No</label>
-                        <input type="number" class="form-control" id="InquiryNo" />
+                        <input type="number" class="form-control" id="InquiryNo" required>
+                        <div class="invalid-feedback">Inquiry No is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="Remarks">Remarks</label>
                         <input type="text" class="form-control" id="Remarks" />
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="saveEnrollment()">Save</button>
+                    <div class="modal-footer">
+                       <button type="button" class="btn btn-primary" onclick="saveEnrollment()">Save</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -164,8 +196,8 @@
                     {
                         "data": "id",
                         "render": function (data) {
-                            return '<button class="btn btn-primary" onclick="editEnrollment(' + data + ')">Edit</button>' +
-                                ' <button class="btn btn-danger" onclick="showDeleteConfirmationModal(' + data + ')">Delete</button>';
+                            return '<button class="btn btn-primary" onclick="editEnrollment(' + data + ')"><i class="fas fa-edit"></i></button>' +
+                                ' <button class="btn btn-danger" onclick="showDeleteConfirmationModal(' + data + ')"><i class="fas fa-trash-alt"></i></button>';
                         }
                     }
                 ],
@@ -174,8 +206,62 @@
                 },
                 "width": "100%"
             });
+
+            // Function to fetch and populate dropdown options
+          //   function populateDropdown(url, selectElement, defaultValueText) {
+          //       $.ajax({
+          //           url: url,
+          //           type: "GET",
+          //           dataType: "json",
+          //           success: function (response) {
+          //               if (response && response.data && Array.isArray(response.data)) {
+          //                   var data = response.data; // Extract the data array
+          //                   var options = '<option value="">' + defaultValueText + '</option>';
+          //                   data.forEach(function (item) {
+          //                       options += '<option value="' + item.id + '">' + item.name + '</option>';
+          //                   });
+          //                   $(selectElement).html(options);
+          //               } else {
+          //                   console.error('Invalid data format:', response);
+          //                   toastr.error('Failed to fetch data. Please try again.');
+          //               }
+          //           },
+          //           error: function (xhr, status, error) {
+          //               console.error('Error fetching data:', error);
+          //               toastr.error('Error fetching data. Please try again later.');
+          //           }
+          //       });
+          //   }
+
+          //   // Populate Batch ID dropdown
+          //  // populateDropdown("/Batch/GetAllBatchesIds", "#BatchId", "Select Batch ID");
+
+          //   // Populate Course ID dropdown
+          //   populateDropdown("/Course/GetAllCourseIds", "#CourseId", "Select Course ID");
+
+          //   // Populate Course Fee ID dropdown
+          // //  populateDropdown("/CourseFee/GetAll", "#CourseFeeId", "Select Course Fee ID");
+
+
         }
 
+
+
+        function displayValidationMessage(message, inputElement) {
+            var parentDiv = inputElement.closest('.form-group');
+            parentDiv.addClass('has-error');
+            parentDiv.find('.invalid-feedback').text(message).show(); // Show error message
+        }
+
+        // Function to clear validation messages
+        function clearValidationMessages() {
+            $('.form-group').removeClass('has-error');
+            $('.invalid-feedback').text('').hide(); // Clear and hide all error messages
+        }
+        // Handle modal close event to clear validation messages
+        $('#addEditEnrollmentModal').on('hidden.bs.modal', function () {
+            clearValidationMessages();
+        });
         function onAddEnrollmentClick() {
             $('#Id').val('');
             $('#EnrollmentNo').val('');
@@ -194,6 +280,50 @@
         }
 
         function saveEnrollment() {
+            clearValidationMessages(); // Clear validation messages before saving
+
+            var isValid = true;
+
+            // Validate Enrollment No
+            if ($('#EnrollmentNo').val().trim() === '') {
+                displayValidationMessage('Enrollment No is required.', $('#EnrollmentNo'));
+                isValid = false;
+            }
+
+            // Validate Enrollment Date
+            if ($('#EnrollmentDate').val().trim() === '') {
+                displayValidationMessage('Enrollment Date is required.', $('#EnrollmentDate'));
+                isValid = false;
+            }
+
+            // Validate Batch ID
+            if ($('#BatchId').val().trim() === '') {
+                displayValidationMessage('Batch ID is required.', $('#BatchId'));
+                isValid = false;
+            }
+
+            // Validate Course ID
+            if ($('#CourseId').val().trim() === '') {
+                displayValidationMessage('Course ID is required.', $('#CourseId'));
+                isValid = false;
+            }
+
+            // Validate Course Fee ID
+            if ($('#CourseFeeId').val().trim() === '') {
+                displayValidationMessage('Course Fee ID is required.', $('#CourseFeeId'));
+                isValid = false;
+            }
+
+            // Validate Inquiry No
+            if ($('#InquiryNo').val().trim() === '') {
+                displayValidationMessage('Inquiry No is required.', $('#InquiryNo'));
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
             var enrollment = {
                 Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                 EnrollmentNo: $('#EnrollmentNo').val(),

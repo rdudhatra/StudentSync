@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-body">
 
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseSyllabusClick()">Add Course Syllabus</button>
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseSyllabusClick()">+</button>
                 <table id="CourseSyllabusTable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                     <thead>
                         <tr>
@@ -40,17 +40,31 @@
                             <div class="modal-body">
                                 <form id="CourseSyllabusForm">
                                     <input type="hidden" id="Id" name="Id" />
-                                    <div class="form-group">
+                                   @*  <div class="form-group">
                                         <label for="CourseId">Course ID:</label>
                                         <input type="number" class="form-control" id="CourseId" placeholder="Enter course ID" required>
+                                        <div class="invalid-feedback">Course ID is required.</div>
+
+                                    </div> *@
+                                    <div class="form-group">
+                                        <label for="CourseId">Course ID:</label>
+                                        <select class="form-control" id="CourseId" required>
+                                            <option value="">Select Course ID</option>
+                                            <!-- Options will be dynamically populated here -->
+                                        </select>
+                                        <div class="invalid-feedback">Please enter a Course ID.</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="ChapterName">Chapter Name:</label>
                                         <input type="text" class="form-control" id="ChapterName" placeholder="Enter chapter name" required>
+                                        <div class="invalid-feedback">Chapter Name is required.</div>
+
                                     </div>
                                     <div class="form-group">
                                         <label for="TopicName">Topic Name:</label>
                                         <input type="text" class="form-control" id="TopicName" placeholder="Enter topic name">
+                                        <div class="invalid-feedback">Topic Name is required.</div>
+
                                     </div>
                                     <div class="form-group">
                                         <label for="Remarks">Remarks:</label>
@@ -111,8 +125,45 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
     <script>
+
+        // Function to display validation message
+        function displayValidationMessage(message, inputElement) {
+            var parentDiv = inputElement.closest('.form-group');
+            parentDiv.addClass('has-error');
+            parentDiv.find('.invalid-feedback').text(message).show(); // Show error message
+        }
+
+        // Function to clear validation messages
+        function clearValidationMessages() {
+            $('.form-group').removeClass('has-error');
+            $('.invalid-feedback').text('').hide(); // Clear and hide all error messages
+        }
         // Function to save CourseSyllabus data via AJAX
         function saveCourseSyllabus() {
+            clearValidationMessages(); // Clear validation messages before saving
+
+            var isValid = true;
+
+            // Validate Course ID
+            if ($('#CourseId').val().trim() === '') {
+                displayValidationMessage('Course ID is required.', $('#CourseId'));
+                isValid = false;
+            }
+            if ($('#TopicName').val().trim() === '') {
+                displayValidationMessage('Topic Name is required.', $('#TopicName'));
+                isValid = false;
+            }
+          
+            // Validate Chapter Name
+            if ($('#ChapterName').val().trim() === '') {
+                displayValidationMessage('Chapter Name is required.', $('#ChapterName'));
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
             var formData = {
                 Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                 CourseId: $('#CourseId').val(),
@@ -238,11 +289,47 @@
                 { "data": "remarks", "name": "Remarks", "autoWidth": true },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<a class="btn btn-info btn-sm" href="#" onclick="onEditCourseSyllabusClick(' + full.id + ')">Edit</a>' +
-                            ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteCourseSyllabusClick(' + full.id + ')">Delete</a>';
+                        return '<a class="btn btn-info btn-sm" href="#" onclick="onEditCourseSyllabusClick(' + full.id + ')"><i class="fas fa-edit"></i> </a>' +
+                            ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteCourseSyllabusClick(' + full.id + ')"><i class="fas fa-trash-alt"></i> </a>';
                     }
                 }
             ]
+
+        });
+
+        // Function to populate Course ID dropdown
+        function populateCourseDropdown() {
+            $.ajax({
+                url: "/Course/GetAllCourseIds",  // Replace with your API endpoint to fetch Course IDs
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (Array.isArray(data)) {
+                        var options = '<option value="">Select Course ID</option>';
+                        data.forEach(function (courseId) {
+                            options += '<option value="' + courseId + '">' + courseId + '</option>';
+
+                        });
+                        $('#CourseId').html(options);
+                    } else {
+                        console.error('Invalid data format:', data);
+                        toastr.error('Failed to fetch Course IDs. Please try again.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching Course IDs:', error);
+                    toastr.error('Error fetching Course IDs. Please try again later.');
+                }
+            });
+        }
+
+        // Call the function to populate Course ID dropdown
+        populateCourseDropdown();
+
+        // Handle modal close event to clear validation messages
+        $('#addEditCourseSyllabusModal').on('hidden.bs.modal', function () {
+            clearValidationMessages();
         });
     </script>
 }
+

@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-body">
 
-                    <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseClick()">Add Course</button>
+                    <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseClick()">+</button>
                     <table id="CourseTable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
@@ -42,24 +42,29 @@
                                     <input type="hidden" id="Id" name="Id" />
                                     <div class="form-group">
                                         <label for="Name">Name:</label>
-                                        <input type="text" class="form-control" id="Name" placeholder="Enter name" required>
+                                        <input type="text" class="form-control" id="Name" name="Name" placeholder="Enter name" required>
+                                        <div class="invalid-feedback">Please enter a name.</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="Duration">Duration:</label>
-                                        <input type="text" class="form-control" id="Duration" placeholder="Enter duration">
+                                        <input type="text" class="form-control" id="Duration" name="Duration" placeholder="Enter duration" required>
+                                        <div class="invalid-feedback">Please enter duration.</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="Prerequisite">Prerequisite:</label>
-                                        <input type="text" class="form-control" id="Prerequisite" placeholder="Enter prerequisite">
+                                        <input type="text" class="form-control" id="Prerequisite" name="Prerequisite" placeholder="Enter prerequisite" required>
+                                        <div class="invalid-feedback">Please enter prerequisite.</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="Remarks">Remarks:</label>
-                                        <input type="text" class="form-control" id="Remarks" placeholder="Enter remarks">
+                                        <input type="text" class="form-control" id="Remarks" name="Remarks" placeholder="Enter remarks" required>
+                                        <div class="invalid-feedback">Please enter remarks.</div>
                                     </div>
                                     <!-- Hidden fields for CreatedBy and UpdatedBy -->
                                     <input type="hidden" id="CreatedBy" name="CreatedBy" value="defaultUser" />
                                     <input type="hidden" id="UpdatedBy" name="UpdatedBy" value="defaultUser" />
                                 </form>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" onclick="saveCourse()">Save</button>
@@ -94,24 +99,16 @@
             </div>
         </div>
     </div>
-    @section Scripts {
+
+                                @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-    <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-    <!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 
-        <!-- Custom script -->
-        <script>
+    <script>
         toastr.options = {
             "closeButton": true,
             "debug": false,
@@ -129,8 +126,29 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         };
+
+        // Function to display validation message
+        function displayValidationMessage(message, inputElement) {
+            var parentDiv = inputElement.closest('.form-group');
+            parentDiv.addClass('has-error');
+            parentDiv.find('.text-danger').remove(); // Remove existing error messages
+            parentDiv.append('<div class="text-danger small">' + message + '</div>');
+        }
+
+        // Function to clear validation messages
+        function clearValidationMessages() {
+            $('.form-group').removeClass('has-error');
+            $('.text-danger').remove();
+        }
+
+        // Function to reload DataTable
+        function reloadTable() {
+            $('#CourseTable').DataTable().ajax.reload();
+        }
+
         // Function to handle "Add Course" button click
         function onAddCourseClick() {
+            clearValidationMessages(); // Clear validation messages on modal open
             $('#Id').val('');
             $('#Name').val('');
             $('#Duration').val('');
@@ -140,14 +158,39 @@
             $('#addEditCourseModal').modal('show');
             $('#addEditCourseModalLabel').text('Add New Course');
         }
-        function closeModal() {
-            $('#addEditCourseModal').modal('hide'); // Hide the modal using jQuery
-            $('#deleteConfirmationModal').modal('hide');
-        }
+
         // Function to save a course
         function saveCourse() {
-            var createdBy = 'defaultUser'; // Replace with logic to get the actual user
-            var updatedBy = 'defaultUser'; // Replace with logic to get the actual user
+            clearValidationMessages(); // Clear validation messages before saving
+
+            var isValid = true;
+
+            if ($('#Name').val().trim() === '') {
+                displayValidationMessage('Name is required.', $('#Name'));
+                isValid = false;
+            }
+
+            if ($('#Duration').val().trim() === '') {
+                displayValidationMessage('Duration is required.', $('#Duration'));
+                isValid = false;
+            }
+
+            if ($('#Prerequisite').val().trim() === '') {
+                displayValidationMessage('Prerequisite is required.', $('#Prerequisite'));
+                isValid = false;
+            }
+
+            if ($('#Remarks').val().trim() === '') {
+                displayValidationMessage('Remarks are required.', $('#Remarks'));
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            var createdBy = 'defaultUser';
+            var updatedBy = 'defaultUser';
 
             var course = {
                 CourseId: $('#Id').val() ? parseInt($('#Id').val()) : 0,
@@ -158,9 +201,6 @@
                 CreatedBy: createdBy,
                 UpdatedBy: updatedBy
             };
-
-            // Log the course object to ensure it is as expected
-            console.log('Course Payload:', JSON.stringify(course));
 
             var url = course.CourseId ? '/Course/UpdateCourse' : '/Course/AddCourse';
 
@@ -187,12 +227,14 @@
                 }
             });
         }
+
         // Function to edit a course
         function editCourse(id) {
             $.ajax({
                 url: '/Course/GetById/' + id,
                 type: 'GET',
                 success: function (result) {
+                    clearValidationMessages(); // Clear validation messages before editing
                     $('#Id').val(result.data.courseId);
                     $('#Name').val(result.data.courseName);
                     $('#Duration').val(result.data.duration);
@@ -207,8 +249,6 @@
                 }
             });
         }
-
-
 
         // Function to confirm course deletion
         function confirmDelete(id) {
@@ -234,62 +274,70 @@
             });
         }
 
-
-
-        // Function to reload DataTable
-        function reloadTable() {
-            $('#CourseTable').DataTable().ajax.reload();
-        }
-
-
-            // Document ready function
-            $(document).ready(function () {
-                // DataTable initialization
-                $('#CourseTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '/Course/GetAll',
-                        type: 'GET',
-                        data: function (d) {
-                            return {
-                                draw: d.draw,
-                                start: d.start,
-                                length: d.length,
-                                searchValue: d.search.value,
-                                sortColumn: d.columns[d.order[0].column].data,
-                                sortColumnDirection: d.order[0].dir
-                            };
-                        },
-                        dataSrc: 'data'
+        // Document ready function
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#CourseTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '/Course/GetAll',
+                    type: 'GET',
+                    data: function (d) {
+                        return {
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            searchValue: d.search.value,
+                            sortColumn: d.columns[d.order[0].column].data,
+                            sortColumnDirection: d.order[0].dir
+                        };
                     },
-                "columns": [
-                    { "data": "courseId", "title": "ID" },
-                    { "data": "courseName", "title": "Name" },
-                    { "data": "duration", "title": "Duration" },
-                    { "data": "preRequisite", "title": "PreRequisite" },
-                    { "data": "remarks", "title": "Remarks" },
-                        {
-                            data: null,
-                            render: function (data, type, row) {
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: "courseId", title: "ID" },
+                    { data: "courseName", title: "Name" },
+                    { data: "duration", title: "Duration" },
+                    { data: "preRequisite", title: "PreRequisite" },
+                    { data: "remarks", title: "Remarks" },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
                             return `
-                                                <button type="button" class="btn btn-info" onclick="editCourse(${ row.courseId })">Edit</button>
-                                                 <button type="button" class="btn btn-danger" onclick="confirmDelete(${ row.courseId })">Delete</button>
-                                          `;
-                        }, "autoWidth": true
-
+                                                <button type="button" class="btn btn-info" onclick="editCourse(${row.courseId})"><i class="fas fa-edit"></i> </button>
+                                                <button type="button" class="btn btn-danger" onclick="confirmDelete(${row.courseId})"><i class="fas fa-trash-alt"></i></button>
+                                    `;
                         }
-                    ]
-
-                });
-
-              
-
-                
+                    }
+                ]
             });
+            // Fetch all Course IDs on document ready
+            getAllCourseIds();
+            // Handle modal close event to clear validation messages
+            $('#addEditCourseModal').on('hidden.bs.modal', function () {
+                clearValidationMessages();
+            });
+        });
 
-     
+        // Function to fetch all Course IDs
+        function getAllCourseIds() {
+            $.ajax({
+                url: '/Course/GetAllCourseIds', // Adjust URL as per your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Assuming data is an array of Course IDs, you can use it as needed
+                    console.log('All Course IDs:', data);
+                    // Example: Displaying the data in console, adjust as per your requirement
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Course IDs: ' + error);
+                    console.error('Error fetching Course IDs:', xhr.responseText);
+                }
+            });
+        }
+    </script>
+                                }
 
-        </script>
-    }
-
+  

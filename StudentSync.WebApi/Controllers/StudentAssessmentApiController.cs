@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Data.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StudentSync.Controllers.Api
+namespace StudentSync.ApiControllers
 {
-    [Route("api/studentassessments")]
+    [Route("api/StudentAssessment")]
     [ApiController]
     public class StudentAssessmentApiController : ControllerBase
     {
@@ -21,8 +20,7 @@ namespace StudentSync.Controllers.Api
             _logger = logger;
         }
 
-        // GET: api/studentassessments
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -32,14 +30,32 @@ namespace StudentSync.Controllers.Api
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while retrieving student assessments.");
+                _logger.LogError(ex, "Exception occurred while fetching all student assessments.");
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        // GET: api/studentassessments/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] StudentAssessment studentAssessment)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _studentAssessmentService.SaveStudentAssessment(studentAssessment);
+                    return Ok(new { success = true, message = "Student assessment added successfully." });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Exception occurred while creating student assessment.");
+                    return StatusCode(500, "Internal server error");
+                }
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpGet("Edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
         {
             try
             {
@@ -52,59 +68,31 @@ namespace StudentSync.Controllers.Api
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while retrieving student assessment.");
+                _logger.LogError(ex, "Exception occurred while editing student assessment.");
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        // POST: api/studentassessments
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] StudentAssessment studentAssessment)
+        [HttpPost("Update")]
+        public async Task<IActionResult> Update([FromBody] StudentAssessment studentAssessment)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _studentAssessmentService.SaveStudentAssessment(studentAssessment);
-                    return CreatedAtAction(nameof(GetById), new { id = studentAssessment.Id }, studentAssessment);
+                    await _studentAssessmentService.UpdateStudentAssessment(studentAssessment);
+                    return Ok(new { success = true, message = "Student assessment updated successfully." });
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error occurred while saving student assessment.");
+                    _logger.LogError(ex, "Exception occurred while updating student assessment.");
                     return StatusCode(500, "Internal server error");
                 }
             }
             return BadRequest(ModelState);
         }
 
-        // PUT: api/studentassessments/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] StudentAssessment studentAssessment)
-        {
-            if (id != studentAssessment.Id)
-            {
-                return BadRequest("ID mismatch between URL and body.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                await _studentAssessmentService.UpdateStudentAssessment(studentAssessment);
-                return Ok(new { success = true, message = "Student assessment updated successfully." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while updating student assessment.");
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-        // DELETE: api/studentassessments/5
-        [HttpDelete("{id}")]
+        [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -114,7 +102,7 @@ namespace StudentSync.Controllers.Api
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while deleting student assessment.");
+                _logger.LogError(ex, "Exception occurred while deleting student assessment.");
                 return StatusCode(500, "Internal server error");
             }
         }

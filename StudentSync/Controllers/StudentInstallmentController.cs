@@ -1,17 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudentSync.Core.Services.Interfaces;
+using Newtonsoft.Json;
 using StudentSync.Data.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace StudentSync.Controllers
 {
     [Route("StudentInstallment")]
     public class StudentInstallmentController : Controller
     {
-        private readonly IStudentInstallmentService _studentInstallmentService;
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<StudentInstallmentController> _logger;
 
-        public StudentInstallmentController(IStudentInstallmentService studentInstallmentService)
+        public StudentInstallmentController(HttpClient httpClient, ILogger<StudentInstallmentController> logger)
         {
-            _studentInstallmentService = studentInstallmentService;
+            _httpClient = httpClient;
+            _logger = logger;
+            _httpClient.BaseAddress = new Uri("https://localhost:7024/api/"); // Adjust as needed
         }
 
         public IActionResult Index()
@@ -24,9 +33,15 @@ namespace StudentSync.Controllers
         {
             try
             {
-                var searchValue = Request.Query["search[value]"].FirstOrDefault();
-                var studentInstallments = await _studentInstallmentService.GetAllStudentInstallmentsAsync();
+                var response = await _httpClient.GetAsync("StudentInstallment/GetAll");
+                if (!response.IsSuccessStatusCode)
+                {
+                    return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+                }
 
+                var studentInstallments = JsonConvert.DeserializeObject<List<StudentInstallment>>(await response.Content.ReadAsStringAsync());
+
+                var searchValue = Request.Query["search[value]"].FirstOrDefault();
                 if (!string.IsNullOrEmpty(searchValue))
                 {
                     studentInstallments = studentInstallments
@@ -48,7 +63,7 @@ namespace StudentSync.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred: {ex.Message}");
+                _logger.LogError(ex, "Exception occurred while fetching all student installments.");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -58,8 +73,13 @@ namespace StudentSync.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _studentInstallmentService.CreateStudentInstallmentAsync(studentInstallment);
-                return Ok(new { success = true });
+                var content = new StringContent(JsonConvert.SerializeObject(studentInstallment), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("StudentInstallment/Create", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok(new { success = true });
+                }
+                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
             }
             return BadRequest(ModelState);
         }
@@ -67,7 +87,13 @@ namespace StudentSync.Controllers
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            var studentInstallment = await _studentInstallmentService.GetStudentInstallmentByIdAsync(id);
+            var response = await _httpClient.GetAsync($"StudentInstallment/Edit/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+            }
+
+            var studentInstallment = JsonConvert.DeserializeObject<StudentInstallment>(await response.Content.ReadAsStringAsync());
             if (studentInstallment == null)
             {
                 return NotFound();
@@ -80,8 +106,13 @@ namespace StudentSync.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _studentInstallmentService.UpdateStudentInstallmentAsync(studentInstallment);
-                return Ok(new { success = true });
+                var content = new StringContent(JsonConvert.SerializeObject(studentInstallment), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("StudentInstallment/Update", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok(new { success = true });
+                }
+                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
             }
             return BadRequest(ModelState);
         }
@@ -89,13 +120,12 @@ namespace StudentSync.Controllers
         [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var studentInstallment = await _studentInstallmentService.GetStudentInstallmentByIdAsync(id);
-            if (studentInstallment == null)
+            var response = await _httpClient.PostAsync($"StudentInstallment/Delete/{id}", null);
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                return Ok(new { success = true });
             }
-            await _studentInstallmentService.DeleteStudentInstallmentAsync(id);
-            return Ok(new { success = true });
+            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
         }
     }
 }

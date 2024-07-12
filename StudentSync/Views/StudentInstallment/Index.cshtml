@@ -9,7 +9,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <button type="button" class="btn btn-primary mb-3" onclick="onAddStudentInstallmentClick()">Add Student Installment</button>
+                    <button type="button" class="btn btn-primary mb-3" onclick="onAddStudentInstallmentClick()">+</button>
                     <table id="StudentInstallmentTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
                         <thead>
                             <tr>
@@ -41,32 +41,39 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="StudentInstallmentForm">
-                        <input type="hidden" id="Id" />
-                        <div class="form-group">
-                            <label for="ReceiptNo">Receipt No</label>
-                            <input type="text" class="form-control" id="ReceiptNo" />
-                        </div>
-                        <div class="form-group">
-                            <label for="ReceiptDate">Receipt Date</label>
-                            <input type="date" class="form-control" id="ReceiptDate" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Amount">Amount</label>
-                            <input type="number" class="form-control" id="Amount" />
-                        </div>
-                        <div class="form-group">
-                            <label for="EnrollmentNo">Enrollment No</label>
-                            <input type="text" class="form-control" id="EnrollmentNo" />
-                        </div>
-                        <div class="form-group">
-                            <label for="TransactionMode">Transaction Mode</label>
-                            <input type="text" class="form-control" id="TransactionMode" />
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="saveStudentInstallment()">Save</button>
-                    </form>
-                </div>
+            <div class="modal-body">
+                <form id="StudentInstallmentForm" novalidate>
+                    <input type="hidden" id="Id" />
+                    <div class="form-group">
+                        <label for="ReceiptNo">Receipt No</label>
+                        <input type="text" class="form-control" id="ReceiptNo" required />
+                        <div class="invalid-feedback">Receipt No is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ReceiptDate">Receipt Date</label>
+                        <input type="date" class="form-control" id="ReceiptDate" required />
+                        <div class="invalid-feedback">Receipt Date is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Amount">Amount</label>
+                        <input type="number" class="form-control" id="Amount" required />
+                        <div class="invalid-feedback">Amount is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="EnrollmentNo">Enrollment No</label>
+                        <input type="text" class="form-control" id="EnrollmentNo" required />
+                        <div class="invalid-feedback">Enrollment No is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="TransactionMode">Transaction Mode</label>
+                        <input type="text" class="form-control" id="TransactionMode" required />
+                        <div class="invalid-feedback">Transaction Mode is required.</div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="saveStudentInstallment()">Save</button>
+                    </div>
+                </form>
+            </div>
             </div>
         </div>
     </div>
@@ -153,8 +160,8 @@
                         {
                             "data": "id",
                             "render": function (data) {
-                                return `<button class="btn btn-primary" onclick="editStudentInstallment(${data})">Edit</button>
-                                                        <button class="btn btn-danger" onclick="showDeleteConfirmationModal(${data})">Delete</button>`;
+                            return `<button class="btn btn-primary" onclick="editStudentInstallment(${data})"><i class="fas fa-edit"></i></button>
+                                                                <button class="btn btn-danger" onclick="showDeleteConfirmationModal(${data})"><i class="fas fa-trash-alt"></i></button>`;
                             }
                         }
                     ],
@@ -180,7 +187,31 @@
                 $('#deleteConfirmationModal').modal('hide');
             }
 
+        // Reset form validation and fields when modal is hidden
+        $('#addEditStudentInstallmentModal').on('hidden.bs.modal', function () {
+            var form = document.getElementById('StudentInstallmentForm');
+            form.reset();
+            form.classList.remove('was-validated');
+
+            // Clear invalid-feedback elements
+            $('.invalid-feedback').each(function () {
+                $(this).text('');
+            });
+
+            // Reset custom validation messages (if any)
+            form.querySelectorAll('.form-control').forEach(function (element) {
+                element.setCustomValidity('');
+            });
+        });
+
             function saveStudentInstallment() {
+            var form = document.getElementById('StudentInstallmentForm');
+
+            if (form.checkValidity() === false) {
+                // Prevent form submission if validation fails
+                form.classList.add('was-validated');
+                return;
+            }
                 var studentInstallment = {
                     Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                     ReceiptNo: $('#ReceiptNo').val(),

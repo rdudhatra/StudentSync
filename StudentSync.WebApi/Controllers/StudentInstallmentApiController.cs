@@ -2,138 +2,114 @@
 using StudentSync.Core.Services.Interfaces;
 using StudentSync.Data.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StudentSync.Controllers.Api
+namespace StudentSync.ApiControllers
 {
-    [Route("api/studentinstallments")]
+    [Route("api/StudentInstallment")]
     [ApiController]
     public class StudentInstallmentApiController : ControllerBase
     {
         private readonly IStudentInstallmentService _studentInstallmentService;
+        private readonly ILogger<StudentInstallmentApiController> _logger;
 
-        public StudentInstallmentApiController(IStudentInstallmentService studentInstallmentService)
+        public StudentInstallmentApiController(IStudentInstallmentService studentInstallmentService, ILogger<StudentInstallmentApiController> logger)
         {
             _studentInstallmentService = studentInstallmentService;
+            _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetAll()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
             try
-            {   
-                    var searchValue = Request.Query["search[value]"].FirstOrDefault();
-
+            {
                 var studentInstallments = await _studentInstallmentService.GetAllStudentInstallmentsAsync();
-
-                // Apply search filter if searchValue is provided
-                if (!string.IsNullOrEmpty(searchValue))
-                {
-                    studentInstallments = studentInstallments.Where(si =>
-                        si.ReceiptNo.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                        si.EnrollmentNo.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
-                        si.Remarks.Contains(searchValue, StringComparison.OrdinalIgnoreCase)
-                    ).ToList();
-                }
-
-             
-
-                var dataTableResponse = new
-                {
-                    draw = Request.Query["draw"].FirstOrDefault(),
-                    recordsTotal = studentInstallments.Count(),
-                    recordsFiltered = studentInstallments.Count(),
-                    data = studentInstallments
-                };
-
-                return Ok(dataTableResponse);
+                return Ok(studentInstallments);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred: {ex.Message}");
+                _logger.LogError(ex, "Exception occurred while fetching all student installments.");
                 return StatusCode(500, "Internal server error");
             }
         }
-       
-        [HttpGet("{id}")]
-        public async Task<ActionResult<StudentInstallment>> GetStudentInstallmentById(int id)
-        {
-            var studentInstallment = await _studentInstallmentService.GetStudentInstallmentByIdAsync(id);
-            if (studentInstallment == null)
-            {
-                return NotFound();
-            }
-            return Ok(studentInstallment);
-        }
 
-        [HttpPost]
-        public async Task<ActionResult<StudentInstallment>> CreateStudentInstallment(StudentInstallment studentInstallment)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] StudentInstallment studentInstallment)
         {
             if (ModelState.IsValid)
             {
-                await _studentInstallmentService.CreateStudentInstallmentAsync(studentInstallment);
-                return Ok(studentInstallment); // Optionally return the created object with Ok()
+                try
+                {
+                    await _studentInstallmentService.CreateStudentInstallmentAsync(studentInstallment);
+                    return Ok(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Exception occurred while creating student installment.");
+                    return StatusCode(500, "Internal server error");
+                }
             }
             return BadRequest(ModelState);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateStudentInstallment(int id, StudentInstallment studentInstallment)
+        [HttpGet("Edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id != studentInstallment.Id)
-            {
-                return BadRequest();
-            }
-
             try
             {
-                await _studentInstallmentService.UpdateStudentInstallmentAsync(studentInstallment);
-            }
-            catch (Exception ex)
-            {
-                if (!StudentInstallmentExists(id))
+                var studentInstallment = await _studentInstallmentService.GetStudentInstallmentByIdAsync(id);
+                if (studentInstallment == null)
                 {
                     return NotFound();
                 }
-                else
-                {
-                    Console.WriteLine($"Exception occurred: {ex.Message}");
-                    return StatusCode(500, "Internal server error");
-                }
-            }
-
-            return NoContent();
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteStudentInstallment(int id)
-        {
-            var studentInstallment = await _studentInstallmentService.GetStudentInstallmentByIdAsync(id);
-            if (studentInstallment == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                await _studentInstallmentService.DeleteStudentInstallmentAsync(id);
+                return Ok(studentInstallment);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred: {ex.Message}");
+                _logger.LogError(ex, "Exception occurred while editing student installment.");
                 return StatusCode(500, "Internal server error");
             }
-
-            return Ok(new { success = true });
         }
 
-        private bool StudentInstallmentExists(int id)
+        [HttpPost("Update")]
+        public async Task<IActionResult> Update([FromBody] StudentInstallment studentInstallment)
         {
-            // Check if the StudentInstallment with the given id exists in your system
-            // This is a placeholder method and may vary based on your implementation
-            return true; // Replace with your actual implementation
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _studentInstallmentService.UpdateStudentInstallmentAsync(studentInstallment);
+                    return Ok(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Exception occurred while updating student installment.");
+                    return StatusCode(500, "Internal server error");
+                }
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var studentInstallment = await _studentInstallmentService.GetStudentInstallmentByIdAsync(id);
+                if (studentInstallment == null)
+                {
+                    return NotFound();
+                }
+                await _studentInstallmentService.DeleteStudentInstallmentAsync(id);
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception occurred while deleting student installment.");
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }

@@ -9,7 +9,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <button type="button" class="btn btn-primary mb-3" onclick="onAddStudentAttendanceClick()">Add Student Attendance</button>
+                    <button type="button" class="btn btn-primary mb-3" onclick="onAddStudentAttendanceClick()">+</button>
                     <table id="StudentAttendanceTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
                         <thead>
                             <tr>
@@ -39,28 +39,34 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="StudentAttendanceForm">
-                        <input type="hidden" id="Id" />
-                        <div class="form-group">
-                            <label for="AttendanceDate">Attendance Date</label>
-                            <input type="date" class="form-control" id="AttendanceDate" />
-                        </div>
-                        <div class="form-group">
-                            <label for="EnrollmentNo">Enrollment No</label>
-                            <input type="text" class="form-control" id="EnrollmentNo" />
-                        </div>
-                        <div class="form-group">
-                            <label for="BatchId">Batch ID</label>
-                            <input type="number" class="form-control" id="BatchId" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Remarks">Remarks</label>
-                            <textarea class="form-control" id="Remarks"></textarea>
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="saveStudentAttendance()">Save</button>
-                    </form>
-                </div>
+            <div class="modal-body">
+                <form id="StudentAttendanceForm" novalidate>
+                    <input type="hidden" id="Id" />
+                    <div class="form-group">
+                        <label for="AttendanceDate">Attendance Date</label>
+                        <input type="date" class="form-control" id="AttendanceDate" required />
+                        <div class="invalid-feedback">Attendance Date is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="EnrollmentNo">Enrollment No</label>
+                        <input type="text" class="form-control" id="EnrollmentNo" required />
+                        <div class="invalid-feedback">Enrollment No is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="BatchId">Batch ID</label>
+                        <input type="number" class="form-control" id="BatchId" required />
+                        <div class="invalid-feedback">Batch ID is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Remarks">Remarks</label>
+                        <textarea class="form-control" id="Remarks" required></textarea>
+                        <div class="invalid-feedback">Remarks are required.</div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="saveStudentAttendance()">Save</button>
+                    </div>
+                </form>
+            </div>
             </div>
         </div>
     </div>
@@ -145,8 +151,8 @@
                         {
                             "data": "id",
                             "render": function (data) {
-                                return `<button class="btn btn-primary" onclick="editStudentAttendance(${data})">Edit</button>
-                                                <button class="btn btn-danger" onclick="showDeleteConfirmationModal(${data})">Delete</button>`;
+                            return `<button class="btn btn-primary" onclick="editStudentAttendance(${data})"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-danger" onclick="showDeleteConfirmationModal(${data})"><i class="fas fa-trash-alt"></i></button>`;
                             },
                             "width": "20%"
                         }
@@ -171,8 +177,32 @@
                 $('#addEditStudentAttendanceModal').modal('hide');
                 $('#deleteConfirmationModal').modal('hide');
             }
+            // Reset form validation and fields when modal is hidden
+        $('#addEditStudentAttendanceModal').on('hidden.bs.modal', function () {
+                var form = document.getElementById('StudentAttendanceForm');
+                form.reset();
+                form.classList.remove('was-validated');
+
+                // Clear invalid-feedback elements
+                $('.invalid-feedback').each(function () {
+                    $(this).text('');
+                });
+
+                // Reset custom validation messages (if any)
+                form.querySelectorAll('.form-control').forEach(function (element) {
+                    element.setCustomValidity('');
+                });
+            });
 
             function saveStudentAttendance() {
+            var form = document.getElementById('StudentAttendanceForm');
+
+            if (form.checkValidity() === false) {
+                // Prevent form submission if validation fails
+                form.classList.add('was-validated');
+                return;
+            }
+
                 var studentAttendance = {
                     Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                     AttendanceDate: $('#AttendanceDate').val(),

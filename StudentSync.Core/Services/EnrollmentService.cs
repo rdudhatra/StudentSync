@@ -24,8 +24,8 @@ namespace StudentSync.Core.Services
        
         public async Task<Enrollment> GetEnrollmentById(int id)
         {
-            var result = await _context.Enrollments.FromSqlRaw("EXEC GetEnrollmentById @Id = {0}", id).FirstOrDefaultAsync();
-            return result;
+            var result = await _context.Enrollments.FromSqlRaw("EXEC GetEnrollmentById @Id = {0}", id).ToListAsync();
+            return result.Count > 0 ? result[0] : null;
         }
         //public async Task<StudentInstallment> GetStudentInstallmentByIdAsync(int id)
         //{

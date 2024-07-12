@@ -18,5 +18,9 @@ namespace StudentSync.Core.Services.Interface
         Task<IResult> UpdateCourseAsync(Course course);
         Task<IResult> DeleteCourseAsync(int id);
         Task<IResult<IEnumerable<Course>>> SearchCourseByNameAsync(string name);
+
+        List<Course> GetAllCourseIds();
+        //string GetCourseNameById(int courseId);
+
     }
 }

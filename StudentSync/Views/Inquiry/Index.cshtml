@@ -9,7 +9,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddInquiryClick()">Add Inquiry</button>
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddInquiryClick()">+</button>
                 <table id="InquiryTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
                     <thead>
                         <tr>
@@ -54,61 +54,53 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="InquiryForm">
+                <form id="InquiryForm" novalidate>
                     <input type="hidden" id="Id" name="Id" />
                     <input type="hidden" id="InquiryNo" />
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="InquiryDate">Inquiry Date</label>
-                                <input type="date" class="form-control" id="InquiryDate" />
+                                <input type="date" class="form-control" id="InquiryDate" required>
+                                <div class="invalid-feedback">Inquiry Date is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="FirstName">First Name</label>
-                                <input type="text" class="form-control" id="FirstName" />
+                                <input type="text" class="form-control" id="FirstName" required>
+                                <div class="invalid-feedback">First Name is required.</div>
                             </div>
-                         @*    <div class="form-group">
-                                <label for="LastName">Last Name</label>
-                                <input type="text" class="form-control" id="LastName" />
-                            </div> *@
                             <div class="form-group">
                                 <label for="ContactNo">Contact No</label>
-                                <input type="text" class="form-control" id="ContactNo" />
+                                <input type="text" class="form-control" id="ContactNo" required>
+                                <div class="invalid-feedback">Contact No is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="Address">Address</label>
-                                <input type="text" class="form-control" id="Address" />
+                                <input type="text" class="form-control" id="Address" required>
+                                <div class="invalid-feedback">Address is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="Reference">Reference</label>
-                                <input type="text" class="form-control" id="Reference" />
+                                <input type="text" class="form-control" id="Reference" required>
+                                <div class="invalid-feedback">Reference is required.</div>
                             </div>
-                     @*        <div class="form-group">
-                                <label for="EmailId">Email Id</label>
-                                <input type="email" class="form-control" id="EmailId" />
-                            </div> *@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="Dob">Date of Birth</label>
-                                <input type="date" class="form-control" id="Dob" />
+                                <input type="date" class="form-control" id="Dob" required>
+                                <div class="invalid-feedback">Date of Birth is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="LastName">Last Name</label>
-                                <input type="text" class="form-control" id="LastName" />
+                                <input type="text" class="form-control" id="LastName" required>
+                                <div class="invalid-feedback">Last Name is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="EmailId">Email Id</label>
-                                <input type="email" class="form-control" id="EmailId" />
+                                <input type="email" class="form-control" id="EmailId" required>
+                                <div class="invalid-feedback">Email Id is required.</div>
                             </div>
-                       @*      <div class="form-group">
-                                <label for="Address">Address</label>
-                                <input type="text" class="form-control" id="Address" />
-                            </div>
-                            <div class="form-group">
-                                <label for="Reference">Reference</label>
-                                <input type="text" class="form-control" id="Reference" />
-                            </div> *@
                             <div class="form-group">
                                 <label for="Job">Job</label>
                                 <input type="checkbox" id="Job" />
@@ -120,7 +112,6 @@
                             <div class="form-group">
                                 <label for="Study">Study</label>
                                 <input type="checkbox" id="Study" />
-
                             </div>
                             <div class="form-group">
                                 <label for="PrevCompCourse">Previous Completed Course</label>
@@ -134,40 +125,54 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                           
                             <div class="form-group">
                                 <label for="Other">Other</label>
-                                <input type="text" class="form-control" id="Other" />
+                                <input type="text" class="form-control" id="Other" required>
+                                <div class="invalid-feedback">Other is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="Status">Status</label>
-                                <input type="text" class="form-control" id="Status" />
+                                <input type="text" class="form-control" id="Status" required>
+                                <div class="invalid-feedback">Status is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="PrevCompCourseDetails">Previous Course Details</label>
-                                <input type="text" class="form-control" id="PrevCompCourseDetails" />
+                                <input type="text" class="form-control" id="PrevCompCourseDetails" required>
+                                <div class="invalid-feedback">Previous Course Details are required.</div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
+                           @*  <div class="form-group">
                                 <label for="CourseId">Course ID</label>
-                                <input type="text" class="form-control" id="CourseId" />
+                                <input type="text" class="form-control" id="CourseId" required>
+                                <div class="invalid-feedback">Course ID is required.</div>
+                            </div> *@
+                            <div class="form-group">
+                                <label for="CourseId">Course ID:</label>
+                                <select class="form-control" id="CourseId" required>
+                                    <option value="">Select Course ID</option>
+                                    <!-- Options will be dynamically populated here -->
+                                </select>
+                                <div class="invalid-feedback">Please enter a Course ID.</div>
                             </div>
                             <div class="form-group">
                                 <label for="Note">Note</label>
-                                <input type="text" class="form-control" id="Note" />
+                                <input type="text" class="form-control" id="Note" required>
+                                <div class="invalid-feedback">Note is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="EnquiryType">Enquiry Type</label>
-                                <input type="text" class="form-control" id="EnquiryType" />
+                                <input type="text" class="form-control" id="EnquiryType" required>
+                                <div class="invalid-feedback">Enquiry Type is required.</div>
                             </div>
-                          
-                        
                         </div>
                     </div>
+                    <div class="modal-footer">
                     <button type="button" class="btn btn-primary" onclick="saveInquiry()">Save</button>
+                    </div>
                 </form>
             </div>
+
         </div>
     </div>
 </div>
@@ -280,8 +285,8 @@
                         "render": function (data) {
                             return `
                                                 <div class="text-center">
-                                                    <button type="button" class="btn btn-warning btn-sm" onclick="onEditInquiryClick(${data.inquiryNo})">Edit</button>
-                                                    <button type="button" class="btn btn-danger btn-sm" onclick="onDeleteInquiryClick(${data.inquiryNo})">Delete</button>
+                                                            <button type="button" class="btn btn-warning btn-sm" onclick="onEditInquiryClick(${data.inquiryNo})"><i class="fas fa-edit"></i></button>
+                                                            <button type="button" class="btn btn-danger btn-sm" onclick="onDeleteInquiryClick(${data.inquiryNo})"><i class="fas fa-trash-alt"></i></button>
                                                 </div>
                                             `;
                         }
@@ -292,6 +297,35 @@
                 }
             });
         }
+
+        // Function to populate Course ID dropdown
+        function populateCourseDropdown() {
+            $.ajax({
+                url: "/Course/GetAllCourseIds",  // Replace with your API endpoint to fetch Course IDs
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (Array.isArray(data)) {
+                        var options = '<option value="">Select Course ID</option>';
+                        data.forEach(function (courseId) {
+                            options += '<option value="' + courseId + '">' + courseId + '</option>';
+
+                        });
+                        $('#CourseId').html(options);
+                    } else {
+                        console.error('Invalid data format:', data);
+                        toastr.error('Failed to fetch Course IDs. Please try again.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching Course IDs:', error);
+                    toastr.error('Error fetching Course IDs. Please try again later.');
+                }
+            });
+        }
+
+        // Call the function to populate Course ID dropdown
+        populateCourseDropdown();
 
         function onAddInquiryClick() {
             $('#InquiryForm')[0].reset();
@@ -331,8 +365,36 @@
                 }
             });
         }
+        // Handle modal close event to clear validation messages
+        // $('#addEditInquiryModal').on('hidden.bs.modal', function () {
+        //     clearValidationMessages();
+        // });
 
+        // Reset form validation and fields when modal is hidden
+        $('#addEditInquiryModal').on('hidden.bs.modal', function () {
+            var form = document.getElementById('InquiryForm');
+            form.reset();
+            form.classList.remove('was-validated');
+
+            // Clear invalid-feedback elements
+            $('.invalid-feedback').each(function () {
+                $(this).text('');
+            });
+
+            // Reset custom validation messages (if any)
+            form.querySelectorAll('.form-control').forEach(function (element) {
+                element.setCustomValidity('');
+            });
+        });
         function saveInquiry() {
+
+            var form = document.getElementById('InquiryForm');
+
+            if (form.checkValidity() === false) {
+                // Prevent form submission if validation fails
+                form.classList.add('was-validated');
+                return;
+            }
             var formData = {
 
                 InquiryNo: $('#InquiryNo').val() ? parseInt($('#InquiryNo').val()) : 0,

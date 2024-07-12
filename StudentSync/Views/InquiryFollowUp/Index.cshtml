@@ -9,7 +9,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddInquiryFollowUpClick()">Add Inquiry Follow Up</button>
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddInquiryFollowUpClick()">+</button>
                 <table id="InquiryFollowUpTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
                     <thead>
                         <tr>
@@ -40,25 +40,31 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="InquiryFollowUpForm">
+                <form id="InquiryFollowUpForm" novalidate>
                     <input type="hidden" id="Id" />
                     <div class="form-group">
                         <label for="InquiryDate">Inquiry Date</label>
-                        <input type="date" class="form-control" id="InquiryDate" />
+                        <input type="date" class="form-control" id="InquiryDate" required />
+                        <div class="invalid-feedback">Inquiry Date is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="InquiryNo">Inquiry No</label>
-                        <input type="number" class="form-control" id="InquiryNo" />
+                        <input type="number" class="form-control" id="InquiryNo" required />
+                        <div class="invalid-feedback">Inquiry No is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="Through">Through</label>
-                        <input type="text" class="form-control" id="Through" />
+                        <input type="text" class="form-control" id="Through" required />
+                        <div class="invalid-feedback">Through is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="Remarks">Remarks</label>
-                        <input type="text" class="form-control" id="Remarks" />
+                        <input type="text" class="form-control" id="Remarks" required />
+                        <div class="invalid-feedback">Remarks are required.</div>
                     </div>
+                    <div class="modal-footer">
                     <button type="button" class="btn btn-primary" onclick="saveInquiryFollowUp()">Save</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -145,8 +151,8 @@
                     {
                         "data": "id",
                         "render": function (data) {
-                            return `<button class="btn btn-primary" onclick="editInquiryFollowUp(${data})">Edit</button>
-                                                            <button class="btn btn-danger" onclick="showDeleteConfirmationModal(${data})">Delete</button>`;
+                            return `<button class="btn btn-primary" onclick="editInquiryFollowUp(${data})"><i class="fas fa-edit"></i></button>
+                                                                    <button class="btn btn-danger" onclick="showDeleteConfirmationModal(${data})"><i class="fas fa-trash-alt"></i></button>`;
                         }
                     }
                 ],
@@ -172,6 +178,14 @@
         }
 
         function saveInquiryFollowUp() {
+
+            var form = document.getElementById('InquiryFollowUpForm');
+
+            if (form.checkValidity() === false) {
+                // Prevent form submission if validation fails
+                form.classList.add('was-validated');
+                return;
+            }
             var inquiryFollowUp = {
                 Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                 InquiryDate: $('#InquiryDate').val(),
@@ -203,9 +217,24 @@
                 }
             });
         }
+        // Reset form validation and fields when modal is hidden
+        $('#addEditInquiryFollowUpModal').on('hidden.bs.modal', function () {
+            var form = document.getElementById('InquiryFollowUpForm');
+            form.reset();
+            form.classList.remove('was-validated');
 
+            // Clear invalid-feedback elements
+            $('.invalid-feedback').each(function () {
+                $(this).text('');
+            });
+
+            // Reset custom validation messages (if any)
+            form.querySelectorAll('.form-control').forEach(function (element) {
+                element.setCustomValidity('');
+            });
+        });
         function editInquiryFollowUp(id) {
-            $.ajax({
+            $.ajax({    
                 url: `/InquiryFollowUp/Edit/${id}`,
                 type: 'GET',
                 success: function (response) {

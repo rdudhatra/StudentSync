@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-body">
 
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseFeeClick()">Add Course Fee</button>
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddCourseFeeClick()">+</button>
                 <table id="CourseFeeTable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                     <thead>
                         <tr>
@@ -43,29 +43,44 @@
                             <div class="modal-body">
                                 <form id="CourseFeeForm">
                                     <input type="hidden" id="Id" name="Id" />
-                                    <div class="form-group">
+                                  @*   <div class="form-group">
                                         <label for="CourseId">Course ID:</label>
                                         <input type="number" class="form-control" id="CourseId" placeholder="Enter course ID" required>
+                                        <div class="invalid-feedback">Course ID is required.</div>
+                                    </div> *@
+                                    <div class="form-group">
+                                        <label for="CourseId">Course ID:</label>
+                                        <select class="form-control" id="CourseId" required>
+                                            <option value="">Select Course ID</option>
+                                            <!-- Options will be dynamically populated here -->
+                                        </select>
+                                        <div class="invalid-feedback">Course ID is required.</div>
                                     </div>
+
                                     <div class="form-group">
                                         <label for="TotalFees">Total Fees:</label>
                                         <input type="number" class="form-control" id="TotalFees" placeholder="Enter total fees">
+                                        <div class="invalid-feedback">Please enter a valid total fees amount.</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="DownPayment">Down Payment:</label>
                                         <input type="number" class="form-control" id="DownPayment" placeholder="Enter down payment">
+                                        <div class="invalid-feedback">Please enter a valid down payment amount.</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="NoofInstallment">No. of Installments:</label>
                                         <input type="number" class="form-control" id="NoofInstallment" placeholder="Enter number of installments">
+                                        <div class="invalid-feedback">Please enter the number of installments.</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="InstallmentAmount">Installment Amount:</label>
                                         <input type="number" class="form-control" id="InstallmentAmount" placeholder="Enter installment amount">
+                                        <div class="invalid-feedback">Please enter a valid installment amount.</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="Remarks">Remarks:</label>
                                         <input type="text" class="form-control" id="Remarks" placeholder="Enter remarks">
+                                        <div class="invalid-feedback">Please enter remarks.</div>
                                     </div>
                                     <!-- Hidden fields for CreatedBy and UpdatedBy -->
                                     <input type="hidden" id="CreatedBy" name="CreatedBy" value="defaultUser" />
@@ -74,7 +89,6 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" onclick="saveCourseFee()">Save</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -123,8 +137,72 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
     <script>
+
+
+        // Function to display validation message
+        function displayValidationMessage(message, inputElement) {
+            var parentDiv = inputElement.closest('.form-group');
+            parentDiv.addClass('has-error');
+            parentDiv.find('.invalid-feedback').text(message).show(); // Show error message
+        }
+
+        // Function to clear validation messages
+        function clearValidationMessages() {
+            $('.form-group').removeClass('has-error');
+            $('.invalid-feedback').text('').hide(); // Clear and hide all error messages
+        }
+        // Function to validate number input
+        function validateNumberInput(value) {
+            return !isNaN(parseFloat(value)) && isFinite(value);
+        }
         // Function to save CourseFee data via AJAX
         function saveCourseFee() {
+
+            clearValidationMessages(); // Clear validation messages before saving
+
+            var isValid = true;
+
+            // Validate Course ID
+            if ($('#CourseId').val().trim() === '') {
+                displayValidationMessage('Course ID is required.', $('#CourseId'));
+                isValid = false;
+            }
+
+            // Validate Total Fees (if provided)
+            if ($('#TotalFees').val().trim() === '') {
+                displayValidationMessage('TotalFees are required.', $('#TotalFees'));
+                isValid = false;
+            }
+
+            // Validate Down Payment (if provided)
+            if ($('#DownPayment').val().trim() === '') {
+                displayValidationMessage('DownPayment are required.', $('#DownPayment'));
+                isValid = false;
+            }
+                
+            // Validate Number of Installments (if provided)
+            if ($('#NoofInstallment').val().trim() === '') {
+                displayValidationMessage('No of Installment are required.', $('#NoofInstallment'));
+                isValid = false;
+            }
+
+            // Validate Installment Amount (if provided)
+            if ($('#InstallmentAmount').val().trim() === '') {
+                displayValidationMessage('Installment are required.', $('#InstallmentAmount'));
+                isValid = false;
+            }
+
+            // Validate Remarks
+            if ($('#Remarks').val().trim() === '') {
+                displayValidationMessage('Remarks are required.', $('#Remarks'));
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+
             var formData = {
                 Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                 CourseId: $('#CourseId').val(),
@@ -283,8 +361,10 @@
                         "render": function (data, type, row) {
                             return `
                                     <div class="text-center">
-                                        <a href="#" onclick="onEditCourseFeeClick(${data})" class="btn btn-primary btn-sm">Edit</a>
-                                        <a href="#" onclick="onDeleteCourseFeeClick(${row.id})" class="btn btn-danger btn-sm">Delete</a>
+                                                <a href="#" onclick="onEditCourseFeeClick(${data})" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i>
+        </a>
+                                                <a href="#" onclick="onDeleteCourseFeeClick(${row.id})" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i>
+        </a>
                                     </div>
                                 `;
                         },
@@ -292,145 +372,42 @@
                     }
                 ]
             });
-        }
-    </script>
-}
-@* @section Scripts {
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-    <!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
-    <!-- Custom script -->
-    <script>
-        toastr.options = {
-            "positionClass": "toast-bottom-right"
-        };
-
-        var dataTable;
-
-        $(document).ready(function () {
-            loadCourseFeeTable();
-        });
-
-        function loadCourseFeeTable() {
-            dataTable = $('#CourseFeeTable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "filter": true,
-                "orderMulti": false,
-                "ajax": {
-                    "url": "/CourseFee/GetAll",
-                    "type": "GET",
-                    "datatype": "json"
-                },
-                "columns": [
-                    { "data": "id", "name": "Id", "autoWidth": true },
-                    { "data": "courseId", "name": "CourseId", "autoWidth": true },
-                    { "data": "totalFees", "name": "TotalFees", "autoWidth": true },
-                    { "data": "downPayment", "name": "DownPayment", "autoWidth": true },
-                    { "data": "noofInstallment", "name": "NoofInstallment", "autoWidth": true },
-                    { "data": "installmentAmount", "name": "InstallmentAmount", "autoWidth": true },
-                    { "data": "remarks", "name": "Remarks", "autoWidth": true },
-                    {
-                        "data": "id",
-                        "render": function (data) {
-                            return `
-                                            <div class="text-center">
-                                                <a href="#" onclick="onEditCourseFeeClick(${data})" class="btn btn-primary btn-sm">Edit</a>
-                                                <a href="#" onclick="onDeleteCourseFeeClick(${data})" class="btn btn-danger btn-sm">Delete</a>
-                                            </div>
-                                        `;
-                        },
-                        "autoWidth": true
-                    }
-                ]
-            });
-        }
-
-        function onAddCourseFeeClick() {
-            $('#addEditCourseFeeModal').modal('show');
-            $('#CourseFeeForm')[0].reset(); // Reset form on open
-        }
-
-        function onEditCourseFeeClick(id) {
-            $.ajax({
-                url: "/CourseFee/GetById/" + id,
-                type: "GET",
-                success: function (data) {
-                    $('#Id').val(data.data.id);
-                    $('#CourseId').val(data.data.courseId);
-                    $('#TotalFees').val(data.data.totalFees);
-                    $('#DownPayment').val(data.data.downPayment);
-                    $('#NoofInstallment').val(data.data.noofInstallment);
-                    $('#InstallmentAmount').val(data.data.installmentAmount);
-                    $('#Remarks').val(data.data.remarks);
-
-                    $('#addEditCourseFeeModal').modal('show');
-                },
-                error: function (response) {
-                    toastr.error('Error retrieving data.');
-                }
-            });
-        }                                                                                                                                           
-
-        function saveCourseFee() {
-            var formData = {
-                Id: $('#Id').val(),
-                CourseId: $('#CourseId').val(),
-                TotalFees: $('#TotalFees').val(),
-                DownPayment: $('#DownPayment').val(),
-                NoofInstallment: $('#NoofInstallment').val(),
-                InstallmentAmount: $('#InstallmentAmount').val(),
-                Remarks: $('#Remarks').val(),
-                CreatedBy: $('#CreatedBy').val(),
-                UpdatedBy: $('#UpdatedBy').val()
-            };
-
-            var url = (formData.Id === "") ? "/CourseFee/AddCourseFee" : "/CourseFee/UpdateCourseFee";
-
-            $.ajax({
-                url: url,
-                type: "POST",
-                contentType: "application/json;charset=utf-8",
-                data: JSON.stringify(formData),
-                success: function (response) {
-                    $('#addEditCourseFeeModal').modal('hide');
-                    toastr.success(response.message);
-                    dataTable.ajax.reload();
-                },
-                error: function (response) {
-                    toastr.error('Error saving data.');
-                }
-            });
-        }
-
-        function onDeleteCourseFeeClick(id) {
-            $('#deleteConfirmationModal').modal('show');
-
-            $('#deleteConfirmationModal').on('click', '.btn-danger', function () {
+            // Function to populate Course ID dropdown
+            function populateCourseDropdown() {
                 $.ajax({
-                    url: "/CourseFee/DeleteCourseFee/" + id,
-                    type: "POST",
-                    success: function (response) {
-                        $('#deleteConfirmationModal').modal('hide');
-                        toastr.success(response.message);
-                        dataTable.ajax.reload();
+                    url: "/Course/GetAllCourseIds",  // Replace with your API endpoint to fetch Course IDs
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        if (Array.isArray(data)) {
+                            var options = '<option value="">Select Course ID</option>';
+                            data.forEach(function (courseId) {
+                                options += '<option value="' + courseId + '">' + courseId + '</option>';
+
+                            });
+                            $('#CourseId').html(options);
+                        } else {
+                            console.error('Invalid data format:', data);
+                            toastr.error('Failed to fetch Course IDs. Please try again.');
+                        }
                     },
-                    error: function (response) {
-                        toastr.error('Error deleting data.');
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching Course IDs:', error);
+                        toastr.error('Error fetching Course IDs. Please try again later.');
                     }
                 });
-            });
+            }
+
+            // Call the function to populate Course ID dropdown
+            populateCourseDropdown();
         }
+        // Handle modal close event to clear validation messages
+        $('#addEditCourseFeeModal').on('hidden.bs.modal', function () {
+            clearValidationMessages();
+        });
     </script>
-} *@
+}
+
 
 

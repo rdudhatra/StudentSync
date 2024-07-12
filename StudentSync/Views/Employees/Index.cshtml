@@ -13,7 +13,7 @@
         <div class="card">
             <div class="card-body">
        
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddEmployeeClick()">Add New Employee</button>
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddEmployeeClick()">+</button>
                 <table id="EmployeeTable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                     <thead>
                         <tr>
@@ -47,10 +47,14 @@
                                     <div class="form-group">
                                         <label for="FirstName">First Name:</label>
                                         <input type="text" class="form-control" id="FirstName" placeholder="Enter first name" required>
+                                        <div class="invalid-feedback">First Name is required.</div>
+
                                     </div>
                                     <div class="form-group">
                                         <label for="LastName">Last Name:</label>
                                         <input type="text" class="form-control" id="LastName" placeholder="Enter last name" required>
+                                        <div class="invalid-feedback">Last Name is required.</div>
+
                                     </div>
                                     <div class="form-group">
                                         <label for="Gender">Gender:</label>
@@ -59,10 +63,14 @@
                                             <option value="Female">Female</option>
                                             <option value="Other">Other</option>
                                         </select>
+                                        <div class="invalid-feedback">Please select a gender.</div>
+
                                     </div>
                                     <div class="form-group">
                                         <label for="DoB">Date of Birth:</label>
                                         <input type="date" class="form-control" id="DoB">
+                                        <div class="invalid-feedback">Date of Birth is required.</div>
+
                                     </div>
                                     <div class="form-group">
                                         <label for="Qualification">Qualification:</label>
@@ -76,8 +84,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" onclick="saveEmployee()">Save</button>
-@*                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
- *@                            </div>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -125,7 +132,17 @@
 
 
     <script>
-     
+        function displayValidationMessage(message, inputElement) {
+            var parentDiv = inputElement.closest('.form-group');
+            parentDiv.addClass('has-error');
+            parentDiv.find('.invalid-feedback').text(message).show(); // Show error message
+        }
+
+        // Function to clear validation messages
+        function clearValidationMessages() {
+            $('.form-group').removeClass('has-error');
+            $('.invalid-feedback').text('').hide(); // Clear and hide all error messages
+        }
 
         $(document).ready(function () {
             // Configure Toastr notifications
@@ -176,8 +193,8 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            return `<button type="button" class="btn btn-info" onclick="editEmployee(${ row.id })">Edit</button>
-                                        <button type="button" class="btn btn-danger" onclick="confirmDelete(${ row.id })">Delete</button>
+                            return `<button type="button" class="btn btn-info" onclick="editEmployee(${row.id})"><i class="fas fa-edit"></i> </button>
+                                                <button type="button" class="btn btn-danger" onclick="confirmDelete(${row.id})">  <i class="fas fa-trash-alt"></i> </button>
                                         `;
                         }, "autoWidth": true
 
@@ -188,6 +205,11 @@
                 }
 
             }); 
+        });
+
+        // Handle modal close event to clear validation messages
+        $('#addEditEmployeeModal').on('hidden.bs.modal', function () {
+            clearValidationMessages();
         });
        
        
@@ -224,6 +246,37 @@
         }
 
         function saveEmployee() {
+            clearValidationMessages(); // Clear validation messages before saving
+
+            var isValid = true;
+
+            // Validate First Name
+            if ($('#FirstName').val().trim() === '') {
+                displayValidationMessage('First Name is required.', $('#FirstName'));
+                isValid = false;
+            }
+
+            // Validate Last Name
+            if ($('#LastName').val().trim() === '') {
+                displayValidationMessage('Last Name is required.', $('#LastName'));
+                isValid = false;
+            }
+
+            // Validate Gender
+            if ($('#Gender').val() === '') {
+                displayValidationMessage('Gender is required.', $('#Gender'));
+                isValid = false;
+            }
+
+            // Validate Date of Birth
+            if ($('#DoB').val().trim() === '') {
+                displayValidationMessage('Date of Birth is required.', $('#DoB'));
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
             var employee = {
                 Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                 FirstName: $('#FirstName').val(),

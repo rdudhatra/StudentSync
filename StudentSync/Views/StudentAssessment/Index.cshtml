@@ -10,7 +10,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <button type="button" class="btn btn-primary mb-3" onclick="onAddStudentAssessmentClick()">Add Student Assessment</button>
+                <button type="button" class="btn btn-primary mb-3" onclick="onAddStudentAssessmentClick()">+</button>
                 <table id="StudentAssessmentTable" class="table table-bordered dt-responsive nowrap" style="width: 100%;">
                     <thead>
                         <tr>
@@ -43,32 +43,37 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="StudentAssessmentForm">
+                <form id="StudentAssessmentForm" novalidate>
                     <input type="hidden" id="Id" />
                     <div class="form-group">
                         <label for="AssessmentDate">Assessment Date</label>
-                        <input type="date" class="form-control" id="AssessmentDate" />
+                        <input type="date" class="form-control" id="AssessmentDate" required />
+                        <div class="invalid-feedback">Assessment Date is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="EnrollmentNo">Enrollment No</label>
-                        <input type="text" class="form-control" id="EnrollmentNo" />
+                        <input type="text" class="form-control" id="EnrollmentNo" required />
+                        <div class="invalid-feedback">Enrollment No is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="CourseExamId">Course Exam ID</label>
-                        <input type="text" class="form-control" id="CourseExamId" />
+                        <input type="text" class="form-control" id="CourseExamId" required />
+                        <div class="invalid-feedback">Course Exam ID is required.</div>
                     </div>
                     <div class="form-group">
                         <label for="ObtainedMarks">Obtained Marks</label>
-                        <input type="text" class="form-control" id="ObtainedMarks" />
+                        <input type="text" class="form-control" id="ObtainedMarks" required />
+                        <div class="invalid-feedback">Obtained Marks are required.</div>
                     </div>
                     <div class="form-group">
                         <label for="Remarks">Remarks</label>
-                        <textarea class="form-control" id="Remarks"></textarea>
+                        <textarea class="form-control" id="Remarks" required></textarea>
+                        <div class="invalid-feedback">Remarks are required.</div>
                     </div>
+                    <div class="modal-footer">
                     <button type="button" class="btn btn-primary" onclick="saveStudentAssessment()">Save</button>
+                    </div>
                 </form>
-               
-
             </div>
         </div>
     </div>
@@ -152,8 +157,8 @@
                     { "data": "remarks", "name": "Remarks" },
                     {
                         "render": function (data, type, full, meta) {
-                            return '<a class="btn btn-info btn-sm" href="#" onclick="onEditStudentAssessmentClick(' + full.id + ')">Edit</a>' +
-                                ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteStudentAssessmentClick(' + full.id + ')">Delete</a>';
+                            return '<a class="btn btn-info btn-sm" href="#" onclick="onEditStudentAssessmentClick(' + full.id + ')"><i class="fas fa-edit"></i></a>' +
+                                ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteStudentAssessmentClick(' + full.id + ')"><i class="fas fa-trash-alt"></i></a>';
                         }
                     }
                 ]
@@ -161,6 +166,13 @@
         });
 
                 function saveStudentAssessment() {
+                    var form = document.getElementById('StudentAssessmentForm');
+
+                    if (form.checkValidity() === false) {
+                        // Prevent form submission if validation fails
+                        form.classList.add('was-validated');
+                        return;
+                    }
                     var formData = {
                         Id: $('#Id').val() ? parseInt($('#Id').val()) : 0,
                         AssessmentDate: $('#AssessmentDate').val(),
@@ -171,7 +183,7 @@
                         FirstName: "efr",
                     };
                     // var url = (formData.Id && formData.Id !== "") ? "/StudentAssessment/Update" : "/StudentAssessment/Create";
-             var url = formData.Id ? "/StudentAssessment/Update" : "/StudentAssessment/Create";
+                      var url = formData.Id ? "/StudentAssessment/Update" : "/StudentAssessment/Create";
 
                     $.ajax({
                         url: url,
@@ -193,7 +205,22 @@
                 }
                     });
                 }
+        // Reset form validation and fields when modal is hidden
+        $('#addEditStudentAssessmentModal').on('hidden.bs.modal', function () {
+            var form = document.getElementById('StudentAssessmentForm');
+            form.reset();
+            form.classList.remove('was-validated');
 
+            // Clear invalid-feedback elements
+            $('.invalid-feedback').each(function () {
+                $(this).text('');
+            });
+
+            // Reset custom validation messages (if any)
+            form.querySelectorAll('.form-control').forEach(function (element) {
+                element.setCustomValidity('');
+            });
+        });
        
         function onDeleteStudentAssessmentClick(id) {
             $('#Id').val(id);
