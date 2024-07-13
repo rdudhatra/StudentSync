@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using StudentSync.Core.Services;
 
 namespace StudentSync.Controllers
 {
@@ -26,6 +27,19 @@ namespace StudentSync.Controllers
             return View();
         }
 
+        [HttpGet("GetAllfeeCourseIds")]
+        public IActionResult GetAllCourseIds()
+        {
+            try
+            {
+                var courseIds = _courseFeeService.GetAllCourseExamIds(); // Implement this method in your service
+                return Json(courseIds);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to retrieve Course IDs", error = ex.Message });
+            }
+        }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

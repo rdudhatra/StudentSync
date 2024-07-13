@@ -73,7 +73,6 @@
                     <div class="form-group">
                         <label for="BatchId">Batch ID</label>
                         <select class="form-control" id="BatchId" required>
-                            <option value="">Select Batch ID</option>
                             <!-- Options will be populated dynamically -->
                         </select>
                         <div class="invalid-feedback">Batch ID is required.</div>
@@ -81,7 +80,6 @@
                     <div class="form-group">
                         <label for="CourseId">Course ID</label>
                         <select class="form-control" id="CourseId" required>
-                            <option value="">Select Course ID</option>
                             <!-- Options will be populated dynamically -->
                         </select>
                         <div class="invalid-feedback">Course ID is required.</div>
@@ -89,7 +87,6 @@
                     <div class="form-group">
                         <label for="CourseFeeId">Course Fee ID</label>
                         <select class="form-control" id="CourseFeeId" required>
-                            <option value="">Select Course Fee ID</option>
                             <!-- Options will be populated dynamically -->
                         </select>
                         <div class="invalid-feedback">Course Fee ID is required.</div>
@@ -196,8 +193,8 @@
                     {
                         "data": "id",
                         "render": function (data) {
-                            return '<button class="btn btn-primary" onclick="editEnrollment(' + data + ')"><i class="fas fa-edit"></i></button>' +
-                                ' <button class="btn btn-danger" onclick="showDeleteConfirmationModal(' + data + ')"><i class="fas fa-trash-alt"></i></button>';
+                            return '<button class="btn btn-primary btn-sm" onclick="editEnrollment(' + data + ')"><i class="fas fa-edit"></i></button>' +
+                                ' <button class="btn btn-danger btn-sm" onclick="showDeleteConfirmationModal(' + data + ')"><i class="fas fa-trash-alt"></i></button>';
                         }
                     }
                 ],
@@ -207,45 +204,123 @@
                 "width": "100%"
             });
 
-            // Function to fetch and populate dropdown options
-          //   function populateDropdown(url, selectElement, defaultValueText) {
-          //       $.ajax({
-          //           url: url,
-          //           type: "GET",
-          //           dataType: "json",
-          //           success: function (response) {
-          //               if (response && response.data && Array.isArray(response.data)) {
-          //                   var data = response.data; // Extract the data array
-          //                   var options = '<option value="">' + defaultValueText + '</option>';
-          //                   data.forEach(function (item) {
-          //                       options += '<option value="' + item.id + '">' + item.name + '</option>';
-          //                   });
-          //                   $(selectElement).html(options);
-          //               } else {
-          //                   console.error('Invalid data format:', response);
-          //                   toastr.error('Failed to fetch data. Please try again.');
-          //               }
-          //           },
-          //           error: function (xhr, status, error) {
-          //               console.error('Error fetching data:', error);
-          //               toastr.error('Error fetching data. Please try again later.');
-          //           }
-          //       });
-          //   }
-
-          //   // Populate Batch ID dropdown
-          //  // populateDropdown("/Batch/GetAllBatchesIds", "#BatchId", "Select Batch ID");
-
-          //   // Populate Course ID dropdown
-          //   populateDropdown("/Course/GetAllCourseIds", "#CourseId", "Select Course ID");
-
-          //   // Populate Course Fee ID dropdown
-          // //  populateDropdown("/CourseFee/GetAll", "#CourseFeeId", "Select Course Fee ID");
-
-
         }
 
+        function GetAllBatchesIds() {
+            $.ajax({
+                url: '/Batch/GetAllBatchesIds', // Adjust URL to match your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (Array.isArray(data) && data.length > 0) {
+                        var options = '<option value="">Select Batch</option>';
+                        data.forEach(function (batch) {
+                            options += '<option value="' + batch.id + '">' + batch.id + '</option>';
+                        });
+                        $('#BatchId').html(options); // Populate dropdown with Course names
+                    } else {
+                        console.error('No Courses returned or invalid data format:', data);
+                        toastr.error('No Courses returned or invalid data format.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Courses: ' + error);
+                    console.error('Error fetching Courses:', xhr.responseText);
+                }
+            });
+        }
 
+        // Call the function to fetch and populate Courses
+        GetAllBatchesIds();
+
+        function getAllCourses() {
+            $.ajax({
+                url: '/Course/GetAllCourseIds', // Adjust URL to match your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (Array.isArray(data) && data.length > 0) {
+                        var options = '<option value="">Select Course</option>';
+                        data.forEach(function (course) {
+                            options += '<option value="' + course.courseId + '">' + course.courseName + '</option>';
+                        });
+                        $('#CourseId').html(options); // Populate dropdown with Course names
+                    } else {
+                        console.error('No Courses returned or invalid data format:', data);
+                        toastr.error('No Courses returned or invalid data format.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Courses: ' + error);
+                    console.error('Error fetching Courses:', xhr.responseText);
+                }
+            });
+        }
+
+        // Call the function to fetch and populate Courses
+        getAllCourses();
+
+        function getAllCoursesfee() {
+            $.ajax({
+                url: '/CourseFee/GetAllfeeCourseIds', // Adjust URL to match your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (Array.isArray(data) && data.length > 0) {
+                        var options = '<option value="">Select Course</option>';
+                        data.forEach(function (coursefee) {
+                            options += '<option value="' + coursefee.id + '">' + coursefee.id + '</option>';
+                        });
+                        $('#CourseFeeId').html(options); // Populate dropdown with Course names
+                    } else {
+                        console.error('No Courses returned or invalid data format:', data);
+                        toastr.error('No Courses returned or invalid data format.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Courses: ' + error);
+                    console.error('Error fetching Courses:', xhr.responseText);
+                }
+            });
+        }
+
+        // Call the function to fetch and populate Courses
+        getAllCoursesfee();
+
+        // Function to fetch and populate dropdown options
+        // function populateDropdown(url, selectElement, defaultValueText) {
+        //     $.ajax({
+        //         url: url,
+        //         type: "GET",
+        //         dataType: "json",
+        //         success: function (response) {
+        //             if (response && response.data && Array.isArray(response.data)) {
+        //                 var data = response.data; // Extract the data array
+        //                 var options = '<option value="">' + defaultValueText + '</option>';
+        //                 data.forEach(function (item) {
+        //                     options += '<option value="' + item.id + '">' + item.name + '</option>';
+        //                 });
+        //                 $(selectElement).html(options);
+        //             } else {
+        //                 console.error('Invalid data format:', response);
+        //                 toastr.error('Failed to fetch data. Please try again.');
+        //             }
+        //         },
+        //         error: function (xhr, status, error) {
+        //             console.error('Error fetching data:', error);
+        //             toastr.error('Error fetching data. Please try again later.');
+        //         }
+        //     });
+        // }
+
+        // // Populate Batch ID dropdown
+        //  populateDropdown("/Batch/GetAllBatchesIds", "#BatchId", "Select Batch ID");
+
+        // // Populate Course ID dropdown
+        // populateDropdown("/Course/GetAllCourseIds", "#CourseId", "Select Course ID");
+
+        //   // Populate Course Fee ID dropdown
+        // //  populateDropdown("/CourseFee/GetAll", "#CourseFeeId", "Select Course Fee ID");
 
         function displayValidationMessage(message, inputElement) {
             var parentDiv = inputElement.closest('.form-group');

@@ -11,6 +11,7 @@ namespace StudentSync.Core.Services.Interface
         Task<int> AddCourseFeeAsync(CourseFee courseFee);
         Task<int> UpdateCourseFeeAsync(CourseFee courseFee);
         Task<bool> DeleteCourseFeeAsync(int id);
+        List<CourseFee> GetAllCourseExamIds();
 
     }
 }

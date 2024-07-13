@@ -31,6 +31,7 @@ namespace StudentSync.Core.Services
 
         //    return course != null ? course.CourseName : string.Empty;
         //}
+
         public async Task<IResult<IEnumerable<Course>>> GetAllCourseAsync()
         {
             var courses = await _context.Courses.ToListAsync();

@@ -23,6 +23,11 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
+        public List<CourseFee> GetAllCourseExamIds()
+        {
+            return _context.CourseFees.ToList();
+        }
+
         public async Task<IEnumerable<CourseFee>> GetAllCourseFeesAsync()
         {
             return await _context.CourseFees.ToListAsync();

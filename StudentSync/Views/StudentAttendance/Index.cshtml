@@ -52,9 +52,16 @@
                         <input type="text" class="form-control" id="EnrollmentNo" required />
                         <div class="invalid-feedback">Enrollment No is required.</div>
                     </div>
-                    <div class="form-group">
+               @*      <div class="form-group">
                         <label for="BatchId">Batch ID</label>
                         <input type="number" class="form-control" id="BatchId" required />
+                        <div class="invalid-feedback">Batch ID is required.</div>
+                    </div> *@
+                    <div class="form-group">
+                        <label for="BatchId">Batch ID</label>
+                        <select class="form-control" id="BatchId" required>
+                            <!-- Options will be dynamically populated here -->
+                        </select>
                         <div class="invalid-feedback">Batch ID is required.</div>
                     </div>
                     <div class="form-group">
@@ -151,8 +158,8 @@
                         {
                             "data": "id",
                             "render": function (data) {
-                            return `<button class="btn btn-primary" onclick="editStudentAttendance(${data})"><i class="fas fa-edit"></i></button>
-                                                        <button class="btn btn-danger" onclick="showDeleteConfirmationModal(${data})"><i class="fas fa-trash-alt"></i></button>`;
+                            return `<button class="btn btn-primary btn-sm" onclick="editStudentAttendance(${data})"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-danger btn-sm" onclick="showDeleteConfirmationModal(${data})"><i class="fas fa-trash-alt"></i></button>`;
                             },
                             "width": "20%"
                         }
@@ -163,6 +170,33 @@
                     "width": "100%"
                 });
             }
+
+        function GetAllBatchesIds() {
+            $.ajax({
+                url: '/Batch/GetAllBatchesIds', // Adjust URL to match your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (Array.isArray(data) && data.length > 0) {
+                        var options = '<option value="">Select Batch</option>';
+                        data.forEach(function (batch) {
+                            options += '<option value="' + batch.id + '">' + batch.id + '</option>';
+                        });
+                        $('#BatchId').html(options); // Populate dropdown with Course names
+                    } else {
+                        console.error('No Courses returned or invalid data format:', data);
+                        toastr.error('No Courses returned or invalid data format.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Courses: ' + error);
+                    console.error('Error fetching Courses:', xhr.responseText);
+                }
+            });
+        }
+
+        // Call the function to fetch and populate Courses
+        GetAllBatchesIds();
 
             function onAddStudentAttendanceClick() {
                 $('#Id').val('');

@@ -28,12 +28,11 @@ namespace StudentSync.Controllers
         {
             return View();
         }
-        //[HttpGet]
+        //[HttpGet("GetCourseName")]
         //public IActionResult GetCourseName(int courseId)
         //{
         //    var courseName = _courseServices.GetCourseNameById(courseId);
-
-        //    return Json(new { courseName = courseName });
+        //    return Ok(new { courseName = courseName });
         //}
 
 

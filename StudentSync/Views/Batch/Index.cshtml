@@ -176,10 +176,8 @@
                     { "data": "batchTime", "name": "BatchTime" },
                     { "data": "facultyName", "name": "FacultyName" },
                     {
-                        "data": "courseId", // Use courseId to fetch courseName dynamically
-                        "render": function (data, type, row) {
-                            return getCourseName(row.courseId); // Fetch courseName dynamically
-                        }
+                        "data": "batchCourseId", // Use courseId to fetch courseName dynamically
+                      
                     },
                     // {
                     //     "data": "batchCourseId",
@@ -201,7 +199,6 @@
                 ]
             });
 
-            // getAllBatchesIds();
 
             // Fetch Course IDs and populate dropdown in modal
             // $.ajax({
@@ -277,22 +274,25 @@
         // Call the function to fetch and populate Courses
         getAllCourses();
 
-        // function getAllBatchesIds() {
-        //     $.ajax({
-        //         url: '/Course/GetAllBatchesIds', // Adjust URL as per your controller route
-        //         type: 'GET',
-        //         dataType: 'json',
-        //         success: function (data) {
-        //             // Assuming data is an array of Course IDs, you can use it as needed
-        //             console.log('All Batches IDs:', data);
-        //             // Example: Displaying the data in console, adjust as per your requirement
-        //         },
-        //         error: function (xhr, status, error) {
-        //             toastr.error('Error fetching Batches IDs: ' + error);
-        //             console.error('Error fetching Batches IDs:', xhr.responseText);
-        //         }
-        //     });
-        // }
+         getAllBatchesIds();
+
+
+        function getAllBatchesIds() {
+            $.ajax({
+                url: '/Batch/GetAllBatchesIds', // Adjust URL as per your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Assuming data is an array of Course IDs, you can use it as needed
+                    console.log('All Batches IDs:', data);
+                    // Example: Displaying the data in console, adjust as per your requirement
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Batches IDs: ' + error);
+                    console.error('Error fetching Batches IDs:', xhr.responseText);
+                }
+            });
+        }
 
         function saveBatch() {
             // Clear previous validation messages

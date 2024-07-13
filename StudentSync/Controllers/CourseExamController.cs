@@ -28,6 +28,20 @@ namespace StudentSync.Controllers
             return View();
         }
 
+        [HttpGet("GetAllExamCourseIds")]
+        public IActionResult GetAllCourseIds()
+        {
+            try
+            {
+                var courseIds = _courseExamServices.GetAllCourseExamIds(); // Implement this method in your service
+                return Json(courseIds);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to retrieve Course IDs", error = ex.Message });
+            }
+        }
+
         [HttpPost("GetAll")]
         public async Task<IActionResult> GetAll(int draw, int start, int length, string searchValue, string sortColumn, string sortColumnDirection)
         {

@@ -14,6 +14,7 @@ public partial class Batch
     public string? BatchTime { get; set; }
 
     public int? BatchCourseId { get; set; }
+    public string CourseName { get; set; } // Add this property
 
     public string? FacultyName { get; set; }
 

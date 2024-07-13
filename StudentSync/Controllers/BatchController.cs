@@ -21,19 +21,19 @@ namespace StudentSync.Controllers
             return View();
         }
 
-        //[HttpGet("GetAllBatchesIds")]
-        //public IActionResult GetAllCourseIds()
-        //{
-        //    try
-        //    {
-        //        var batchesIds = _batchService.GetAllBatchesIds(); // Implement this method in your service
-        //        return Json(batchesIds);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { message = "Failed to retrieve Batch IDs", error = ex.Message });
-        //    }
-        //}
+        [HttpGet("GetAllBatchesIds")]
+        public IActionResult GetAllCourseIds()
+        {
+            try
+            {
+                var batchesIds = _batchService.GetAllBatchesIds(); // Implement this method in your service
+                return Json(batchesIds);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to retrieve Batch IDs", error = ex.Message });
+            }
+        }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
