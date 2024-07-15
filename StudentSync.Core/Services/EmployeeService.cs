@@ -27,37 +27,6 @@ namespace StudentSync.Core.Services
             return Result<IEnumerable<Employee>>.Success(employees);
         }
 
-        //public async Task<PaginatedResult<Employee>> GetPaginatedEmployeesAsync(int pageNumber, int pageSize)
-        //{
-        //    try
-        //    {
-        //        var employees = await _context.Employees
-        //            .Skip((pageNumber - 1) * pageSize)
-        //            .Take(pageSize)
-        //            .ToListAsync();
-
-        //        var totalItems = await _context.Employees.CountAsync();
-
-        //        return new PaginatedResult<Employee>(employees, pageNumber, pageSize, totalItems)
-        //        {
-        //            Succeeded = true
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log the exception for debugging purposes
-        //        Console.WriteLine($"Error in GetPaginatedEmployeesAsync: {ex.Message}");
-        //        return new PaginatedResult<Employee>(null, pageNumber, pageSize, 0)
-        //        {
-        //            Succeeded = false,
-        //            Messages = new List<string> { "Failed to retrieve paginated employees." }
-        //        };
-        //    }
-        //}
-
-
-
-
         public async Task<IResult<Employee>> GetEmployeeByIdAsync(int id)
         {
             var employee = await _context.Employees.FindAsync(id);

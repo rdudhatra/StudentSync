@@ -17,10 +17,57 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
+        //public async Task<IList<Inquiry>> GetAllInquiriesAsync()
+        //{
+        //    return await _context.Inquiries.ToListAsync();
+        //}
+
+        public List<Inquiry> GetAllInquiryno()
+        {
+            return _context.Inquiries.ToList();
+        }
+
         public async Task<IList<Inquiry>> GetAllInquiriesAsync()
         {
-            return await _context.Inquiries.ToListAsync();
+            var inquiries = await (from inquiry in _context.Inquiries
+                                   join course in _context.Courses on inquiry.CourseId equals course.CourseId into courseJoin
+                                   from course in courseJoin.DefaultIfEmpty()
+                                   select new Inquiry
+                                   {
+                                       InquiryNo = inquiry.InquiryNo,
+                                       InquiryDate = inquiry.InquiryDate,
+                                       Title = inquiry.Title,
+                                       FirstName = inquiry.FirstName,
+                                       MiddleName = inquiry.MiddleName,
+                                       LastName = inquiry.LastName,
+                                       ContactNo = inquiry.ContactNo,
+                                       EmailId = inquiry.EmailId,
+                                       Dob = inquiry.Dob,
+                                       Address = inquiry.Address,
+                                       Reference = inquiry.Reference,
+                                       Job = inquiry.Job,
+                                       Business = inquiry.Business,
+                                       Study = inquiry.Study,
+                                       Other = inquiry.Other,
+                                       PrevCompCourse = inquiry.PrevCompCourse,
+                                       PrevCompCourseDetails = inquiry.PrevCompCourseDetails,
+                                       CourseId = inquiry.CourseId,
+                                       CourseName = course.CourseName, // Include CourseName from Courses table
+                                       Note = inquiry.Note,
+                                       EnquiryType = inquiry.EnquiryType,
+                                       Status = inquiry.Status,
+                                       IsActive = inquiry.IsActive,
+                                       CreatedBy = inquiry.CreatedBy,
+                                       CreatedDate = inquiry.CreatedDate,
+                                       UpdatedBy = inquiry.UpdatedBy,
+                                       UpdatedDate = inquiry.UpdatedDate
+                                   })
+                                              .ToListAsync();
+
+            return inquiries;
         }
+
+
 
         public async Task<Inquiry> GetInquiryByIdAsync(int id)
         {

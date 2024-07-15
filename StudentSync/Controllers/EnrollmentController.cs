@@ -122,6 +122,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using StudentSync.Core.Services.Interface;
 using StudentSync.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -136,9 +137,12 @@ namespace StudentSync.Web.Controllers
     public class EnrollmentController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly IEnrollmentService _enrollmentService;
 
-        public EnrollmentController(HttpClient httpClient)
+
+        public EnrollmentController(HttpClient httpClient, IEnrollmentService enrollmentService)
         {
+            _enrollmentService = enrollmentService;
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri("https://localhost:7024/api/"); // Adjust as needed
         }
@@ -147,7 +151,19 @@ namespace StudentSync.Web.Controllers
         {
             return View();
         }
-
+        [HttpGet("getAllEnrollMentno")]
+        public IActionResult GetAllCourseIds()
+        {
+            try
+            {
+                var batchesIds = _enrollmentService.GetAllEnrollMentno(); // Implement this method in your service
+                return Json(batchesIds);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to retrieve Batch IDs", error = ex.Message });
+            }
+        }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

@@ -11,5 +11,8 @@ namespace StudentSync.Core.Services.Interface
         Task AddEnrollment(Enrollment enrollment);
         Task UpdateEnrollment(Enrollment enrollment);
         Task DeleteEnrollment(int id);
+
+        List<Enrollment> GetAllEnrollMentno();
+
     }
 }

@@ -17,11 +17,71 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
+
+        public List<Enrollment> GetAllEnrollMentno()
+        {
+            return _context.Enrollments.ToList();
+        }
+
+        //public async Task<IEnumerable<Enrollment>> GetAllEnrollments()
+        //{
+        //    return await _context.Enrollments.ToListAsync();
+        //}
+
         public async Task<IEnumerable<Enrollment>> GetAllEnrollments()
         {
-            return await _context.Enrollments.ToListAsync();
+            var enrollments = await (from enrollment in _context.Enrollments
+                                     join course in _context.Courses on enrollment.CourseId equals course.CourseId into courseJoin
+                                     from course in courseJoin.DefaultIfEmpty()
+                                     select new Enrollment
+                                     {
+                                         Id = enrollment.Id,
+                                         EnrollmentNo = enrollment.EnrollmentNo,
+                                         EnrollmentDate = enrollment.EnrollmentDate,
+                                         BatchId = enrollment.BatchId,
+                                         CourseId = enrollment.CourseId,
+                                         CourseName = course.CourseName, // Assuming Course model has a CourseName property
+                                         CourseFeeId = enrollment.CourseFeeId,
+                                         InquiryNo = enrollment.InquiryNo,
+                                         IsActive = enrollment.IsActive,
+                                         Remarks = enrollment.Remarks,
+                                         CreatedBy = enrollment.CreatedBy,
+                                         CreatedDate = enrollment.CreatedDate,
+                                         UpdatedBy = enrollment.UpdatedBy,
+                                         UpdatedDate = enrollment.UpdatedDate
+                                     })
+                                                 .ToListAsync();
+
+            return enrollments;
         }
-       
+
+        //public async Task<List<Enrollment>> GetAllEnrollmentsAsync()
+        //{
+        //    var enrollments = await (from enrollment in _context.Enrollments
+        //                             join course in _context.Courses on enrollment.CourseId equals course.CourseId into courseJoin
+        //                             from course in courseJoin.DefaultIfEmpty()
+        //                             select new Enrollment
+        //                             {
+        //                                 Id = enrollment.Id,
+        //                                 EnrollmentNo = enrollment.EnrollmentNo,
+        //                                 EnrollmentDate = enrollment.EnrollmentDate,
+        //                                 BatchId = enrollment.BatchId,
+        //                                 CourseId = enrollment.CourseId,
+        //                                 CourseName = course.CourseName, // Assuming Course model has a CourseName property
+        //                                 CourseFeeId = enrollment.CourseFeeId,
+        //                                 InquiryNo = enrollment.InquiryNo,
+        //                                 IsActive = enrollment.IsActive,
+        //                                 Remarks = enrollment.Remarks,
+        //                                 CreatedBy = enrollment.CreatedBy,
+        //                                 CreatedDate = enrollment.CreatedDate,
+        //                                 UpdatedBy = enrollment.UpdatedBy,
+        //                                 UpdatedDate = enrollment.UpdatedDate
+        //                             })
+        //                             .ToListAsync();
+
+        //    return enrollments;
+        //}
+
         public async Task<Enrollment> GetEnrollmentById(int id)
         {
             var result = await _context.Enrollments.FromSqlRaw("EXEC GetEnrollmentById @Id = {0}", id).ToListAsync();

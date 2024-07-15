@@ -21,11 +21,33 @@ namespace StudentSync.Core.Services
         {
             return _context.CourseExams.ToList();
         }
-        public async Task<IResult<IEnumerable<CourseExam>>> GetAllCourseExamsAsync()
+        public async Task<List<CourseExam>> GetAllCourseExamsAsync()
         {
-            var courseExams = await _context.CourseExams.ToListAsync();
-            return Result<IEnumerable<CourseExam>>.Success(courseExams);
+            var courseExams = await _context.CourseExams
+            .Join(_context.Courses,
+                  ce => ce.CourseId,
+                  course => course.CourseId,
+                  (ce, course) => new CourseExam
+                  {
+                      Id = ce.Id,
+                      CourseId = ce.CourseId,
+                      CourseName = course.CourseName,
+                      ExamTitle = ce.ExamTitle,
+                      ExamType = ce.ExamType,
+                      TotalMarks = ce.TotalMarks,
+                      PassingMarks = ce.PassingMarks,
+                      Remarks = ce.Remarks,
+                      CreatedBy = ce.CreatedBy,
+                      CreatedDate = ce.CreatedDate,
+                      UpdatedBy = ce.UpdatedBy,
+                      UpdatedDate = ce.UpdatedDate
+                  })
+            .ToListAsync();
+
+            return courseExams;
         }
+
+
 
         public async Task<CourseExam> GetCourseExamByIdAsync(int id)
         {

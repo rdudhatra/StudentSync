@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Data.Data;
 using StudentSync.Data.Models;
@@ -26,7 +27,28 @@ namespace StudentSync.Core.Services
 
         public async Task<List<Batch>> GetAllBatchesAsync()
         {
-            return await _context.Batches.ToListAsync();
+            var batches = await _context.Batches
+                     .Join(_context.Courses,
+                           batch => batch.BatchCourseId,
+                           course => course.CourseId,
+                           (batch, course) => new Batch
+                           {
+                               Id = batch.Id,
+                               BatchCode = batch.BatchCode,
+                               BatchTime = batch.BatchTime,
+                               BatchCourseId = batch.BatchCourseId,
+                               CourseName = course.CourseName, // Assuming your Course model has a CourseName property
+                               FacultyName = batch.FacultyName,
+                               IsActive = batch.IsActive,
+                               Remarks = batch.Remarks,
+                               CreatedBy = batch.CreatedBy,
+                               CreatedDate = batch.CreatedDate,
+                               UpdatedBy = batch.UpdatedBy,
+                               UpdatedDate = batch.UpdatedDate
+                           })
+                     .ToListAsync();
+
+            return batches;
         }
 
         public async Task<Batch> GetBatchByIdAsync(int id)

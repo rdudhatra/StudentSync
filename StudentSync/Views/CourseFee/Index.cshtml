@@ -17,7 +17,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Course ID</th>
+                            <th>Course Name</th>
                             <th>Total Fees</th>
                             <th>Down Payment</th>
                             <th>No. of Installments</th>
@@ -58,7 +58,7 @@
                                     </div> *@
 
                                     <div class="form-group">
-                                        <label for="CourseId">Course ID:</label>
+                                        <label for="CourseId">Course Name:</label>
                                         <select class="form-control" id="CourseId" required>
                                             <!-- Options will be populated dynamically -->
                                         </select>
@@ -358,7 +358,8 @@
                 },
                 "columns": [
                     { "data": "id", "name": "Id", "autoWidth": true },
-                    { "data": "courseId", "name": "CourseId", "autoWidth": true },
+                    //{ "data": "courseId", "name": "CourseId", "autoWidth": true },
+                    { "data": "courseName", "name": "CourseName", "autoWidth": true }, // Display CourseName directly
                     { "data": "totalFees", "name": "TotalFees", "autoWidth": true },
                     { "data": "downPayment", "name": "DownPayment", "autoWidth": true },
                     { "data": "noofInstallment", "name": "NoofInstallment", "autoWidth": true },
@@ -399,7 +400,9 @@
                         console.error('Error fetching Coursefee IDs:', xhr.responseText);
                     }
                 });
-            }v
+            }
+
+
             function getAllCourses() {
                 $.ajax({
                     url: '/Course/GetAllCourseIds', // Adjust URL to match your controller route

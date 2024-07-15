@@ -1,7 +1,4 @@
-﻿
-
-
-                @model IEnumerable<StudentSync.Data.Models.Batch>
+﻿                @model IEnumerable<StudentSync.Data.Models.Batch>
 
 @{
     ViewBag.Title = "Batch Management";
@@ -64,18 +61,18 @@
                         <div class="invalid-feedback">Please enter Faculty Name.</div>
                     </div>
                     @* <div class="form-group">
-                        <label for="BatchCourseId">Course ID</label>
-                        <input type="text" class="form-control" id="BatchCourseId" name="BatchCourseId" required />
-                        <div class="invalid-feedback">Please enter Course ID.</div>
+                    <label for="BatchCourseId">Course ID</label>
+                    <input type="text" class="form-control" id="BatchCourseId" name="BatchCourseId" required />
+                    <div class="invalid-feedback">Please enter Course ID.</div>
                     </div> *@
 
-                   @*  <div class="form-group">
-                        <label for="BatchCourseId">Course ID</label>
-                        <select class="form-control" id="BatchCourseId" name="BatchCourseId" required>
-                            <option value="">Select Course ID</option>
-                            <!-- Options will be populated dynamically -->
-                        </select>
-                        <div class="invalid-feedback">Please select a Course ID.</div>
+                    @*  <div class="form-group">
+                    <label for="BatchCourseId">Course ID</label>
+                    <select class="form-control" id="BatchCourseId" name="BatchCourseId" required>
+                    <option value="">Select Course ID</option>
+                    <!-- Options will be populated dynamically -->
+                    </select>
+                    <div class="invalid-feedback">Please select a Course ID.</div>
                     </div> *@
 
                     <div class="form-group">
@@ -88,14 +85,14 @@
 
                     <div class="form-group">
                         <label for="IsActive">Is Active</label>
-                        <input type="checkbox"  id="IsActive" name="IsActive" />
+                        <input type="checkbox" id="IsActive" name="IsActive" />
                     </div>
                     <div class="form-group">
                         <label for="Remarks">Remarks</label>
                         <textarea class="form-control" id="Remarks" name="Remarks"></textarea>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-primary" onclick="saveBatch()">Save</button>
+                        <button type="button" class="btn btn-primary" onclick="saveBatch()">Save</button>
                     </div>
                 </form>
             </div>
@@ -175,25 +172,18 @@
                     { "data": "batchCode", "name": "BatchCode" },
                     { "data": "batchTime", "name": "BatchTime" },
                     { "data": "facultyName", "name": "FacultyName" },
-                    {
-                        "data": "batchCourseId", // Use courseId to fetch courseName dynamically
-                      
-                    },
-                    // {
-                    //     "data": "batchCourseId",
-                    //     "name": "BatchCourseId",
-                    //     "render": function (data, type, row, meta) {
-                    //         return row.course ? row.course.courseName : ''; // Assuming row.course has the course object with courseName property
-                    //     }
-                    // },
-                   // { "data": "batchCourseId", "name": "BatchCourseId" }, // Ensure this matches the property name returned by API
+
+                    { "data": "courseName", "name": "CourseName" }, // Use courseName directly
+
+
+                    // { "data": "batchCourseId", "name": "BatchCourseId" }, // Ensure this matches the property name returned by API
                     { "data": "isActive", "name": "IsActive" },
                     { "data": "remarks", "name": "Remarks" },
                     {
                         "render": function (data, type, full, meta) {
-                             return '<a class="btn btn-info btn-sm" href="#" onclick="onEditBatchClick(' + full.id + ')"><i class="fas fa-edit"></i> </a>' +
-                                 ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteBatchClick(' + full.id + ')"><i class="fas fa-trash-alt"></i> </a>';
-                            
+                            return '<a class="btn btn-info btn-sm" href="#" onclick="onEditBatchClick(' + full.id + ')"><i class="fas fa-edit"></i> </a>' +
+                                ' <a class="btn btn-danger btn-sm" href="#" onclick="onDeleteBatchClick(' + full.id + ')"><i class="fas fa-trash-alt"></i> </a>';
+
                         }
                     }
                 ]
@@ -230,22 +220,7 @@
             });
         });
 
-        function getCourseName(courseId) {
-            // AJAX call to fetch courseName based on courseId
-            $.ajax({
-                url: '/Course/GetCourseName', // Adjust URL to your API endpoint
-                type: 'GET',
-                dataType: 'json',
-                data: { courseId: courseId },
-                success: function (data) {
-                    return data.courseName; // Assuming your API returns { courseName: "Course Name" }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching CourseName:', error);
-                    return '-';
-                }
-            });
-        }
+
 
         function getAllCourses() {
             $.ajax({
@@ -274,7 +249,7 @@
         // Call the function to fetch and populate Courses
         getAllCourses();
 
-         getAllBatchesIds();
+        getAllBatchesIds();
 
 
         function getAllBatchesIds() {

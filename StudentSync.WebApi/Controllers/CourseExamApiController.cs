@@ -24,11 +24,8 @@ namespace StudentSync.Controllers.Api
         public async Task<IActionResult> GetAll()
         {
             var result = await _courseExamServices.GetAllCourseExamsAsync();
-            if (result.Succeeded)
-            {
-                return Ok(result.Data);
-            }
-            return BadRequest(result.Messages);
+            return Ok(result);
+
         }
 
         // GET: api/CourseExamApi/5

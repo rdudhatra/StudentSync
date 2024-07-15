@@ -20,7 +20,26 @@ namespace StudentSync.Core.Services
 
         public async Task<IEnumerable<CourseSyllabus>> GetAllCourseSyllabusesAsync()
         {
-            return await _context.CourseSyllabi.ToListAsync();
+            var courseSyllabuses = await _context.CourseSyllabi
+            .Join(_context.Courses,
+                  cs => cs.CourseId,
+                  course => course.CourseId,
+                  (cs, course) => new CourseSyllabus
+                  {
+                      Id = cs.Id,
+                      CourseId = cs.CourseId,
+                      CourseName = course.CourseName,
+                      ChapterName = cs.ChapterName,
+                      TopicName = cs.TopicName,
+                      Remarks = cs.Remarks,
+                      CreatedBy = cs.CreatedBy,
+                      CreatedDate = cs.CreatedDate,
+                      UpdatedBy = cs.UpdatedBy,
+                      UpdatedDate = cs.UpdatedDate
+                  })
+            .ToListAsync();
+
+            return courseSyllabuses;
         }
 
         public async Task<CourseSyllabus> GetCourseSyllabusByIdAsync(int id)

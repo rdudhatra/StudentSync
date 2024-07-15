@@ -1,5 +1,5 @@
 /*
-Template Name: Minible - Admin & Dashboard Template
+Template Name: Student Sync - Admin & Dashboard Template
 Author: Themesbrand
 Version: 2.0.0
 Website: https://themesbrand.com/

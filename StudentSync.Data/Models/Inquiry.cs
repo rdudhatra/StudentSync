@@ -45,6 +45,9 @@ public partial class Inquiry
 
     public int? CourseId { get; set; }
 
+    public string? CourseName { get; set; } // Property to hold the course name
+
+
     public string? Note { get; set; }
 
     public string? EnquiryType { get; set; }

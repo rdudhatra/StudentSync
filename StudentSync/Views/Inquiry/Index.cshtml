@@ -28,7 +28,7 @@
 @*                             <th>Other</th>
  *@                          @*   <th>Previous Completed Course</th>
                             <th>Previous Course Details</th> *@
-                            <th>Course ID</th>
+                            <th>Course Name</th>
                             @* <th>Note</th> *@
 @*                             <th>Enquiry Type</th>
  *@                            <th>Status</th>
@@ -269,7 +269,7 @@
                    // { "data": "other" },
                     // { "data": "prevCompCourse" },
                     // { "data": "prevCompCourseDetails" },
-                    { "data": "courseId" },
+                    { "data": "courseName" },
                    // { "data": "note" },
                    // { "data": "enquiryType" },
                     { "data": "status" },
@@ -293,6 +293,27 @@
                 ],
                 "language": {
                     "emptyTable": "No data available in table"
+                }
+            });
+        }
+
+
+        getAllInquiryno();
+
+
+        function getAllInquiryno() {
+            $.ajax({
+                url: '/Inquiry/getAllInquiryno', // Adjust URL as per your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Assuming data is an array of Course IDs, you can use it as needed
+                    console.log('All Inquiry No:', data);
+                    // Example: Displaying the data in console, adjust as per your requirement
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Inquiry IDs: ' + error);
+                    console.error('Error fetching Inquiry IDs:', xhr.responseText);
                 }
             });
         }

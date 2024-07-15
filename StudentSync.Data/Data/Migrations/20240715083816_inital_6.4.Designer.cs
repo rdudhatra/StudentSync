@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentSync.Data.Data;
 
 #nullable disable
 
-namespace StudentSync.Data.Migrations
+namespace StudentSync.Data.Data.Migrations
 {
     [DbContext(typeof(StudentSyncDbContext))]
-    partial class StudentSyncDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240715083816_inital_6.4")]
+    partial class inital_64
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,6 +310,7 @@ namespace StudentSync.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CourseName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
@@ -361,9 +365,6 @@ namespace StudentSync.Data.Migrations
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");

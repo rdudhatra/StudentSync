@@ -1,5 +1,5 @@
 /*
-Template Name: Minible - Admin & Dashboard Template
+Template Name: Student Sync - Admin & Dashboard Template
 Author: Themesbrand
 Version: 2.0.0
 Website: https://themesbrand.com/
@@ -18,6 +18,7 @@ File: Main Css Dark File
           box-shadow: 0 2px 4px rgba(15, 34, 58, 0.12); }
 
 .navbar-header {
+
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

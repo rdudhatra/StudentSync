@@ -14,5 +14,7 @@ namespace StudentSync.Core.Services.Interface
         Task AddInquiryAsync(Inquiry inquiry);
         Task UpdateInquiryAsync(Inquiry inquiry);
         Task DeleteInquiryAsync(int id);
+        List<Inquiry> GetAllInquiryno();
+
     }
 }

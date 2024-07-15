@@ -53,6 +53,9 @@ public partial class StudentSyncDbContext : DbContext
             .ValueGeneratedOnAdd();
 
 
+
+
+
     }
 
    
