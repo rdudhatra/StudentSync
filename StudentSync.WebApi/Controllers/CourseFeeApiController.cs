@@ -1,11 +1,116 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
+//using StudentSync.Core.Services.Interface;
+//using StudentSync.Data.Models;
+
+//namespace StudentSync.WebApi.Controllers
+//{
+//    [Route("api/[controller]")]
+//    [ApiController]
+//    public class CourseFeeApiController : ControllerBase
+//    {
+//        private readonly ICourseFeeService _courseFeeService;
+
+//        public CourseFeeApiController(ICourseFeeService courseFeeService)
+//        {
+//            _courseFeeService = courseFeeService;
+//        }
+
+//        [HttpGet]
+//        public async Task<IActionResult> GetAll()
+//        {
+//            try
+//            {
+//                var courseFees = await _courseFeeService.GetAllCourseFeesAsync();
+//                return Ok(courseFees);
+//            }
+//            catch (Exception ex)
+//            {
+//                return StatusCode(500, $"Internal server error: {ex.Message}");
+//            }
+//        }
+
+//        [HttpGet("GetById/{id}")]
+//        public async Task<IActionResult> GetById(int id)
+//        {
+//            try
+//            {
+//                var courseFee = await _courseFeeService.GetCourseFeeByIdAsync(id);
+//                if (courseFee == null)
+//                    return NotFound();
+
+//                return Ok(courseFee);
+//            }
+//            catch (Exception ex)
+//            {
+//                return StatusCode(500, $"Internal server error: {ex.Message}");
+//            }
+//        }
+
+//        [HttpPost]
+//        public async Task<IActionResult> Add([FromBody] CourseFee courseFee)
+//        {
+//            try
+//            {
+//                if (!ModelState.IsValid)
+//                    return BadRequest(ModelState);
+
+//                await _courseFeeService.AddCourseFeeAsync(courseFee);
+//                return Ok(new { message = "Course fee added successfully." });
+//            }
+//            catch (Exception ex)
+//            {
+//                return StatusCode(500, $"Internal server error: {ex.Message}");
+//            }
+//        }
+
+//        [HttpPut]
+//        public async Task<IActionResult> Update([FromBody] CourseFee courseFee)
+//        {
+//            try
+//            {
+//                if (!ModelState.IsValid)
+//                    return BadRequest(ModelState);
+
+//                await _courseFeeService.UpdateCourseFeeAsync(courseFee);
+//                return Ok(new { message = "Course fee updated successfully." });
+//            }
+//            catch (Exception ex)
+//            {
+//                return StatusCode(500, $"Internal server error: {ex.Message}");
+//            }
+//        }
+
+//        [HttpDelete]
+//        public async Task<IActionResult> Delete(int id)
+//        {
+//            try
+//            {
+//                var deleted = await _courseFeeService.DeleteCourseFeeAsync(id);
+//                return Ok(new { message = "Course fee deleted successfully." });
+//            }
+//            catch (ArgumentException ex)
+//            {
+//                return BadRequest(new { message = ex.Message });
+//            }
+//            catch (Exception ex)
+//            {
+//                return StatusCode(500, $"Internal server error: {ex.Message}");
+//            }
+//        }
+//    }
+//}
+
+
 using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Data.Models;
+using System;
+using System.Threading.Tasks;
 
-namespace StudentSync.WebApi.Controllers
+namespace StudentSync.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/CourseFee")]
     [ApiController]
     public class CourseFeeApiController : ControllerBase
     {
@@ -16,7 +121,7 @@ namespace StudentSync.WebApi.Controllers
             _courseFeeService = courseFeeService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -37,8 +142,9 @@ namespace StudentSync.WebApi.Controllers
             {
                 var courseFee = await _courseFeeService.GetCourseFeeByIdAsync(id);
                 if (courseFee == null)
+                {
                     return NotFound();
-
+                }
                 return Ok(courseFee);
             }
             catch (Exception ex)
@@ -47,16 +153,18 @@ namespace StudentSync.WebApi.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CourseFee courseFee)
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] CourseFee courseFee)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
                 await _courseFeeService.AddCourseFeeAsync(courseFee);
-                return Ok(new { message = "Course fee added successfully." });
+                return Ok(new { success = true });
             }
             catch (Exception ex)
             {
@@ -64,16 +172,18 @@ namespace StudentSync.WebApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] CourseFee courseFee)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
                 await _courseFeeService.UpdateCourseFeeAsync(courseFee);
-                return Ok(new { message = "Course fee updated successfully." });
+                return Ok(new { success = true });
             }
             catch (Exception ex)
             {
@@ -81,17 +191,18 @@ namespace StudentSync.WebApi.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var deleted = await _courseFeeService.DeleteCourseFeeAsync(id);
-                return Ok(new { message = "Course fee deleted successfully." });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
+                var courseFee = await _courseFeeService.GetCourseFeeByIdAsync(id);
+                if (courseFee == null)
+                {
+                    return NotFound();
+                }
+                await _courseFeeService.DeleteCourseFeeAsync(id);
+                return Ok(new { success = true });
             }
             catch (Exception ex)
             {

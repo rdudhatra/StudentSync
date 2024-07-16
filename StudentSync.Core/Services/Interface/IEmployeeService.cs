@@ -7,7 +7,7 @@ namespace StudentSync.Core.Services.Interface
 {
     public interface IEmployeeService
     {
-        Task<IResult<IEnumerable<Employee>>> GetAllEmployeesAsync();
+        Task<List<Employee>> GetAllEmployeesAsync();
         Task<IResult<Employee>> GetEmployeeByIdAsync(int id);
         Task<IResult> AddEmployeeAsync(Employee employee);
         Task<IResult> UpdateEmployeeAsync(Employee employee);

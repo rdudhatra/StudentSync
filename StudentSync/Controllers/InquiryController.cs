@@ -131,7 +131,7 @@ namespace StudentSync.Controllers
         {
             _inquiryService = inquiryService;
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri("https://localhost:7024/api/"); // Adjust the base address as needed
+            //_httpClient.BaseAddress = new Uri("https://localhost:7024/api/"); // Adjust the base address as needed
         }
 
         public IActionResult Index()
@@ -223,7 +223,7 @@ namespace StudentSync.Controllers
             if (ModelState.IsValid)
             {
                 var content = new StringContent(JsonConvert.SerializeObject(inquiry), Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("Inquiry", content);
+                var response = await _httpClient.PutAsync("Inquiry", content);
                 response.EnsureSuccessStatusCode();
 
                 return Ok(new { success = true });
@@ -234,7 +234,7 @@ namespace StudentSync.Controllers
         [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _httpClient.PostAsync($"Inquiry/Delete/{id}", null);
+            var response = await _httpClient.DeleteAsync($"Inquiry/Delete/{id}");
             if (response.IsSuccessStatusCode)
             {
                 return Ok(new { success = true });

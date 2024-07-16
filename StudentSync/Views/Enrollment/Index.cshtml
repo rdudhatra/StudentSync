@@ -259,8 +259,8 @@
                     }
                 },
                 error: function (xhr, status, error) {
-                    toastr.error('Error fetching Courses: ' + error);
-                    console.error('Error fetching Courses:', xhr.responseText);
+                    toastr.error('Error fetching Inquiry: ' + error);
+                    console.error('Error fetching Inquiry:', xhr.responseText);
                 }
             });
         }
@@ -295,32 +295,32 @@
         // Call the function to fetch and populate Courses
         getAllCourses();
 
-        function getAllCoursesfee() {
-            $.ajax({
-                url: '/CourseFee/GetAllfeeCourseIds', // Adjust URL to match your controller route
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    if (Array.isArray(data) && data.length > 0) {
-                        var options = '<option value="">Select Course</option>';
-                        data.forEach(function (coursefee) {
-                            options += '<option value="' + coursefee.id + '">' + coursefee.id + '</option>';
-                        });
-                        $('#CourseFeeId').html(options); // Populate dropdown with Course names
-                    } else {
-                        console.error('No Courses returned or invalid data format:', data);
-                        toastr.error('No Courses returned or invalid data format.');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    toastr.error('Error fetching Courses: ' + error);
-                    console.error('Error fetching Courses:', xhr.responseText);
-                }
-            });
-        }
+        // function getAllCoursesfee() {
+        //     $.ajax({
+        //         url: '/CourseFee/GetAllfeeCourseIds', // Adjust URL to match your controller route
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         success: function (data) {
+        //             if (Array.isArray(data) && data.length > 0) {
+        //                 var options = '<option value="">Select Course</option>';
+        //                 data.forEach(function (coursefee) {
+        //                     options += '<option value="' + coursefee.id + '">' + coursefee.id + '</option>';
+        //                 });
+        //                 $('#CourseFeeId').html(options); // Populate dropdown with Course names
+        //             } else {
+        //                 console.error('No Courses returned or invalid data format:', data);
+        //                 toastr.error('No Courses returned or invalid data format.');
+        //             }
+        //         },
+        //         error: function (xhr, status, error) {
+        //             toastr.error('Error fetching Courses: ' + error);
+        //             console.error('Error fetching Courses:', xhr.responseText);
+        //         }
+        //     });
+        // }
 
-        // Call the function to fetch and populate Courses
-        getAllCoursesfee();
+        // // Call the function to fetch and populate Courses
+        // getAllCoursesfee();
 
 
 
@@ -355,6 +355,7 @@
             $('#addEditEnrollmentModal').modal('hide');
             $('#deleteConfirmationModal').modal('hide');
         }
+
 
         function saveEnrollment() {
             clearValidationMessages(); // Clear validation messages before saving

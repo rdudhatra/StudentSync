@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Data.Models;
 using System;
@@ -72,7 +74,7 @@ namespace StudentSync.ApiControllers
             }
         }
 
-        [HttpPost("Update")]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] Enrollment enrollment)
         {
             if (ModelState.IsValid)
@@ -91,7 +93,7 @@ namespace StudentSync.ApiControllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("Delete/{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

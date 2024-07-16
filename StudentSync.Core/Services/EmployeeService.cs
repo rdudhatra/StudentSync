@@ -21,10 +21,10 @@ namespace StudentSync.Core.Services
         }
 
         
-        public async Task<IResult<IEnumerable<Employee>>> GetAllEmployeesAsync()
+        public async Task<List<Employee>> GetAllEmployeesAsync()
         {
             var employees = await _context.Employees.ToListAsync();
-            return Result<IEnumerable<Employee>>.Success(employees);
+            return employees;
         }
 
         public async Task<IResult<Employee>> GetEmployeeByIdAsync(int id)

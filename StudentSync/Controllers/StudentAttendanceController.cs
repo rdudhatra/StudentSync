@@ -124,7 +124,7 @@ namespace StudentSync.Web.Controllers
         {
             _httpClient = httpClient;
             _logger = logger;
-            _httpClient.BaseAddress = new Uri("https://localhost:7024/api/"); // Adjust as needed
+           // _httpClient.BaseAddress = new Uri("https://localhost:7024/api/"); // Adjust as needed
         }
 
         public IActionResult Index()
@@ -211,7 +211,7 @@ namespace StudentSync.Web.Controllers
             if (ModelState.IsValid)
             {
                 var content = new StringContent(JsonConvert.SerializeObject(studentAttendance), Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("StudentAttendance/Update", content);
+                var response = await _httpClient.PutAsync("StudentAttendance/Update", content);
                 if (response.IsSuccessStatusCode)
                 {
                     return Ok(new { success = true });
@@ -224,7 +224,7 @@ namespace StudentSync.Web.Controllers
         [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _httpClient.PostAsync($"StudentAttendance/Delete/{id}", null);
+            var response = await _httpClient.DeleteAsync($"StudentAttendance/Delete/{id}");
             if (response.IsSuccessStatusCode)
             {
                 return Ok(new { success = true });

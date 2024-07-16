@@ -60,12 +60,12 @@ builder.Services.AddHttpClient();
 //    client.Timeout = TimeSpan.FromMinutes(2); // Example: 2 minutes timeout
 //});
 
-//var baseUrl = builder.Configuration.GetValue<string>("BaseUrl");
-//builder.Services.AddScoped(sp => new HttpClient
-//{
-//    BaseAddress = new Uri(baseUrl),
-//    Timeout = Timeout.InfiniteTimeSpan
-//}) ;
+var baseUrl = builder.Configuration.GetValue<string>("BaseUrl");
+builder.Services.AddScoped(sp => new HttpClient
+{
+    BaseAddress = new Uri(baseUrl),
+    Timeout = Timeout.InfiniteTimeSpan
+});
 
 
 var app = builder.Build();

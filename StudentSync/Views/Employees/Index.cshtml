@@ -224,15 +224,15 @@
             $.ajax({
                 url: '/Employee/GetById/' + id,
                 type: 'GET',
-                success: function (result) {
-                    console.log("Employee data retrieved:", result);
-                    $('#Id').val(result.data.id);
-                    $('#FirstName').val(result.data.firstName);
-                    $('#LastName').val(result.data.lastName);
-                    $('#Gender').val(result.data.gender);
-                    $('#DoB').val(result.data.doB ? result.data.doB.slice(0, 10) : '');
-                    $('#Qualification').val(result.data.qualification);
-                    $('#Designation').val(result.data.designation);
+                success: function (data) {
+                    console.log("Employee data retrieved:", data);
+                    $('#Id').val(data.id);
+                    $('#FirstName').val(data.firstName);
+                    $('#LastName').val(data.lastName);
+                    $('#Gender').val(data.gender);
+                    $('#DoB').val(data.doB ? data.doB.slice(0, 10) : '');
+                    $('#Qualification').val(data.qualification);
+                    $('#Designation').val(data.designation);
 
                     $('#addEditEmployeeModal').modal('show');
 
@@ -244,7 +244,7 @@
                 }
             });
         }
-
+   
         function saveEmployee() {
             clearValidationMessages(); // Clear validation messages before saving
 
@@ -295,8 +295,12 @@
                 data: JSON.stringify(employee),
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
-                    toastr.success(result.message);
                     $('#addEditEmployeeModal').modal('hide');
+                    if (employee.id == 0){
+                        toastr.success('Employee Saved successfully.');
+                    }else{
+                        toastr.success('Employee updated successfully.');
+                    }
                     reloadData(); // Reload data after save
                 },
                 error: function (xhr, status, error) {
@@ -311,6 +315,8 @@
                 }
             });
         }
+
+
         function closeModal() {
             $('#addEditEmployeeModal').modal('hide'); // Hide the modal using jQuery
             $('#deleteConfirmationModal').modal('hide');

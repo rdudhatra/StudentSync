@@ -71,7 +71,7 @@ namespace StudentSync.ApiControllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("Delete/{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var inquiry = await _inquiryService.GetInquiryByIdAsync(id);

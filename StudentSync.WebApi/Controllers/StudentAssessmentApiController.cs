@@ -73,7 +73,7 @@ namespace StudentSync.ApiControllers
             }
         }
 
-        [HttpPost("Update")]
+        [HttpPut("Update")]
         public async Task<IActionResult> Update([FromBody] StudentAssessment studentAssessment)
         {
             if (ModelState.IsValid)
@@ -92,7 +92,7 @@ namespace StudentSync.ApiControllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("Delete/{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

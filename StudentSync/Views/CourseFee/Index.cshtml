@@ -382,25 +382,25 @@
                 ]
             });
 
-            getAllCoursefeeIds();
+            // getAllCoursefeeIds();
 
-            // Function to fetch all Course IDs
-            function getAllCoursefeeIds() {
-                $.ajax({
-                    url: '/CourseFee/GetAllfeeCourseIds', // Adjust URL as per your controller route
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        // Assuming data is an array of Course IDs, you can use it as needed
-                        console.log('All Coursefee  IDs:', data);
-                        // Example: Displaying the data in console, adjust as per your requirement
-                    },
-                    error: function (xhr, status, error) {
-                        toastr.error('Error fetching Coursefee IDs: ' + error);
-                        console.error('Error fetching Coursefee IDs:', xhr.responseText);
-                    }
-                });
-            }
+            // // Function to fetch all Course IDs
+            // function getAllCoursefeeIds() {
+            //     $.ajax({
+            //         url: '/CourseFee/GetAllfeeCourseIds', // Adjust URL as per your controller route
+            //         type: 'GET',
+            //         dataType: 'json',
+            //         success: function (data) {
+            //             // Assuming data is an array of Course IDs, you can use it as needed
+            //             console.log('All Coursefee  IDs:', data);
+            //             // Example: Displaying the data in console, adjust as per your requirement
+            //         },
+            //         error: function (xhr, status, error) {
+            //             toastr.error('Error fetching Coursefee IDs: ' + error);
+            //             console.error('Error fetching Coursefee IDs:', xhr.responseText);
+            //         }
+            //     });
+            // }
 
 
             function getAllCourses() {
