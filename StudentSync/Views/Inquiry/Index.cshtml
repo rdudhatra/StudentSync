@@ -19,19 +19,10 @@
                             <th>Last Name</th>
                             <th>Contact No</th>
                             <th>Email Id</th>
-                           @*  <th>Date of Birth</th>
-                            <th>Address</th>
-                            <th>Reference</th> *@
-                           @*  <th>Job</th>
-                            <th>Business</th>
-                            <th>Study</th> *@
-@*                             <th>Other</th>
- *@                          @*   <th>Previous Completed Course</th>
-                            <th>Previous Course Details</th> *@
+                         
                             <th>Course Name</th>
-                            @* <th>Note</th> *@
-@*                             <th>Enquiry Type</th>
- *@                            <th>Status</th>
+                          
+                             <th>Status</th>
                             <th>Active</th>
                             <th>Actions</th>
                         </tr>
@@ -142,11 +133,6 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                           @*  <div class="form-group">
-                                <label for="CourseId">Course ID</label>
-                                <input type="text" class="form-control" id="CourseId" required>
-                                <div class="invalid-feedback">Course ID is required.</div>
-                            </div> *@
                             <div class="form-group">
                                 <label for="CourseId">Course ID:</label>
                                 <select class="form-control" id="CourseId" required>
@@ -255,23 +241,9 @@
                     { "data": "lastName" },
                     { "data": "contactNo" },
                     { "data": "emailId" },
-                    // {
-                    //     "data": "dob",
-                    //     "render": function (data) {
-                    //         return data ? new Date(data).toLocaleDateString() : '';
-                    //     }
-                    // },
-                    // { "data": "address" },
-                    // { "data": "reference" },
-                    // { "data": "job" },
-                    // { "data": "business" },
-                    // { "data": "study" },
-                   // { "data": "other" },
-                    // { "data": "prevCompCourse" },
-                    // { "data": "prevCompCourseDetails" },
+               
                     { "data": "courseName" },
-                   // { "data": "note" },
-                   // { "data": "enquiryType" },
+                  
                     { "data": "status" },
                     {
                         "data": "isActive",
@@ -383,10 +355,7 @@
                 }
             });
         }
-        // Handle modal close event to clear validation messages
-        // $('#addEditInquiryModal').on('hidden.bs.modal', function () {
-        //     clearValidationMessages();
-        // });
+ 
 
         // Reset form validation and fields when modal is hidden
         $('#addEditInquiryModal').on('hidden.bs.modal', function () {

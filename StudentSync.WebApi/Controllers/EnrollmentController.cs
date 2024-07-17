@@ -21,6 +21,19 @@ namespace StudentSync.ApiControllers
             _enrollmentService = enrollmentService;
         }
 
+        [HttpGet("GetAllEnrollmentNumbers")]
+        public async Task<IActionResult> GetAllEnrollmentNumbers()
+        {
+            try
+            {
+                var enrollmentNumbers = _enrollmentService.GetAllEnrollMentno();
+                return Ok(enrollmentNumbers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to retrieve enrollment numbers", error = ex.Message });
+            }
+        }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

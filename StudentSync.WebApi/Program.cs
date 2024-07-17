@@ -9,6 +9,7 @@ using StudentSync.Core.Services.Interface;
 using StudentSync.Core.Services.Interfaces;
 using StudentSync.Data.Data;
 using System.Configuration;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 
@@ -153,12 +154,7 @@ if (app.Environment.IsDevelopment())
 
 
     });
-    //app.UseSwaggerUI(c =>
-    //{
-    //   // string swaggerJsonBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
-    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Student Sync API V1");
-    //    c.RoutePrefix = string.Empty;
-    //});
+
     app.UseStaticFiles(); // enable static file serving
 
 }

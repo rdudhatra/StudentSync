@@ -8,13 +8,12 @@ namespace StudentSync.Core.Services.Interface
     public interface IEmployeeService
     {
         Task<List<Employee>> GetAllEmployeesAsync();
-        Task<IResult<Employee>> GetEmployeeByIdAsync(int id);
+        Task<Employee> GetEmployeeByIdAsync(int id);
         Task<IResult> AddEmployeeAsync(Employee employee);
         Task<IResult> UpdateEmployeeAsync(Employee employee);
         Task<IResult> DeleteEmployeeAsync(int id);
         Task<IResult<IEnumerable<Employee>>> SearchEmployeesByNameAsync(string name);
 
-      //  Task<PaginatedResult<Employee>> GetPaginatedEmployeesAsync(int pageNumber, int pageSize);
 
     }
 }

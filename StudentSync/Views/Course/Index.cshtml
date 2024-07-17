@@ -233,13 +233,13 @@
             $.ajax({
                 url: '/Course/GetById/' + id,
                 type: 'GET',
-                success: function (result) {
+                success: function (data) {
                     clearValidationMessages(); // Clear validation messages before editing
-                    $('#Id').val(result.data.courseId);
-                    $('#Name').val(result.data.courseName);
-                    $('#Duration').val(result.data.duration);
-                    $('#Prerequisite').val(result.data.preRequisite);
-                    $('#Remarks').val(result.data.remarks);
+                    $('#Id').val(data.courseId);
+                    $('#Name').val(data.courseName);
+                    $('#Duration').val(data.duration);
+                    $('#Prerequisite').val(data.preRequisite);
+                    $('#Remarks').val(data.remarks);
 
                     $('#addEditCourseModal').modal('show');
                     $('#addEditCourseModalLabel').text('Edit Course');

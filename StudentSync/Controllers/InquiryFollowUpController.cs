@@ -122,7 +122,6 @@ namespace StudentSync.Controllers
         public InquiryFollowUpController(HttpClient httpClient)
         {
             _httpClient = httpClient;
-          //  _httpClient.BaseAddress = new Uri("https://localhost:7024/api/"); // Adjust as needed
         }
 
         public IActionResult Index()

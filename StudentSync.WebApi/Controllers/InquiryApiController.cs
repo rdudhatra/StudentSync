@@ -19,6 +19,20 @@ namespace StudentSync.ApiControllers
             _inquiryService = inquiryService;
         }
 
+        [HttpGet("GetAllInquiryNumbers")]
+        public async Task<IActionResult> GetAllInquiryNumbers()
+        {
+            try
+            {
+                var inquiryNumbers =  _inquiryService.GetAllInquiryno();
+                return Ok(inquiryNumbers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Failed to retrieve inquiry numbers", error = ex.Message });
+            }
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

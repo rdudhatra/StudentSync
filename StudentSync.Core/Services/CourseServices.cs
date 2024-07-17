@@ -2,13 +2,8 @@
 using StudentSync.Core.Wrapper;
 using StudentSync.Data.Data;
 using StudentSync.Data.Models;
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
+
 
 namespace StudentSync.Core.Services
 {
@@ -25,29 +20,23 @@ namespace StudentSync.Core.Services
         {
             return _context.Courses.ToList();
         }
-        //public string GetCourseNameById(int courseId)
-        //{
-        //    var course = _context.Courses.FirstOrDefault(c => c.CourseId == courseId);
+    
 
-        //    return course != null ? course.CourseName : string.Empty;
-        //}
-
-        public async Task<IResult<IEnumerable<Course>>> GetAllCourseAsync()
+        public async Task<List<Course>> GetAllCourseAsync()
         {
             var courses = await _context.Courses.ToListAsync();
-            return Result<IEnumerable<Course>>.Success(courses);
+            return courses;
         }
 
 
-        public async Task<IResult<Course>> GetCoursesByIdAsync(int id)
+        public async Task<Course> GetCoursesByIdAsync(int id)
         {
-            var courses = await _context.Courses.FindAsync(id);
-            if (courses == null)
-            {
-                return Result<Course>.Fail("Course not found");
-            }
-            return Result<Course>.Success(courses);
-        }
+            return await _context.Courses.FindAsync(id);
+        }  
+             
+
+
+     
 
         public async Task<IResult> AddCourseAsync(Course course)
         {

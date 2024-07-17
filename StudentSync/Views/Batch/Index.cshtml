@@ -60,20 +60,7 @@
                         <input type="text" class="form-control" id="FacultyName" name="FacultyName" required />
                         <div class="invalid-feedback">Please enter Faculty Name.</div>
                     </div>
-                    @* <div class="form-group">
-                    <label for="BatchCourseId">Course ID</label>
-                    <input type="text" class="form-control" id="BatchCourseId" name="BatchCourseId" required />
-                    <div class="invalid-feedback">Please enter Course ID.</div>
-                    </div> *@
-
-                    @*  <div class="form-group">
-                    <label for="BatchCourseId">Course ID</label>
-                    <select class="form-control" id="BatchCourseId" name="BatchCourseId" required>
-                    <option value="">Select Course ID</option>
-                    <!-- Options will be populated dynamically -->
-                    </select>
-                    <div class="invalid-feedback">Please select a Course ID.</div>
-                    </div> *@
+             
 
                     <div class="form-group">
                         <label for="BatchCourseId">Course:</label>
@@ -188,30 +175,6 @@
                     }
                 ]
             });
-
-
-            // Fetch Course IDs and populate dropdown in modal
-            // $.ajax({
-            //     url: "/Course/GetAllCourseIds", // Adjust URL to match your controller action for fetching Course IDs
-            //     type: "GET",
-            //     dataType: "json",
-            //     success: function (data) {
-            //         if (Array.isArray(data)) {
-            //             var options = '<option value="">Select Course ID</option>';
-            //             data.forEach(function (courseId) {
-            //                 options += '<option value="' + courseId + '">' + courseId + '</option>';
-            //             });
-            //             $('#BatchCourseId').html(options); // Populate dropdown with Course IDs
-            //         } else {
-            //             console.error('Invalid data format for Course IDs:', data); // Log error to console for debugging
-            //             toastr.error('Invalid data format for Course IDs.'); // Display toastr error for invalid data format
-            //         }
-            //     },
-            //     error: function (xhr, status, error) {
-            //         console.error('Error fetching Course IDs:', error); // Log detailed error message to console for debugging
-            //         toastr.error('Error fetching Course IDs. Please try again later.'); // Display toastr error for fetching error
-            //     }
-            // });
 
 
             // Handle modal close event to clear validation messages

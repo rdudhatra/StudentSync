@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using StudentSync.Core.Services.Interface;
-using StudentSync.Core.Services;
 using StudentSync.Data.Data;
 using System.Configuration;
-using StudentSync.Core.Services.Interfaces;
+using Microsoft.AspNetCore.Components;
+using System.Net.Http.Headers;
+using StudentSync.Service.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,19 +26,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();  
 
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<ICourseServices, CourseServices>();
-builder.Services.AddScoped<ICourseFeeService, CourseFeeService>();
-builder.Services.AddScoped<ICourseExamServices, CourseExamServices>();
-builder.Services.AddScoped<ICourseSyllabusService, CourseSyllabusService>();
-builder.Services.AddScoped<IBatchService, BatchService>();
-builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
-builder.Services.AddScoped<IStudentAssessmentService, StudentAssessmentService>();
-builder.Services.AddScoped<IStudentAttendanceService, StudentAttendanceService>();
-builder.Services.AddScoped<IStudentInstallmentService, StudentInstallmentService>();
-builder.Services.AddScoped<IInquiryService, InquiryService>();
-builder.Services.AddScoped<IInquiryFollowUpService, InquiryFollowUpService>();
+builder.Services.AddScoped<IHttpService, HttpService>();
 
 
 
@@ -52,6 +40,7 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader();
         });
 });
+
 
 builder.Services.AddHttpClient();
 //builder.Services.AddHttpClient("WebApiClient", client =>

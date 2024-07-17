@@ -27,14 +27,10 @@ namespace StudentSync.Core.Services
             return employees;
         }
 
-        public async Task<IResult<Employee>> GetEmployeeByIdAsync(int id)
+        public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
-            {
-                return Result<Employee>.Fail("Employee not found");
-            }
-            return Result<Employee>.Success(employee);
+            return await _context.Employees.FindAsync(id);
+             
         }
 
         public async Task<IResult> AddEmployeeAsync(Employee employee)

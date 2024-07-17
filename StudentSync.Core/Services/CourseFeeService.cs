@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StudentSync.Core.Services.Interface;
-using System.Security.Claims; // Add necessary namespace for ClaimsPrincipal
+using System.Security.Claims; 
 
 using StudentSync.Data;
 using StudentSync.Data.Data;
@@ -28,11 +28,7 @@ namespace StudentSync.Core.Services
             return _context.CourseFees.ToList();
         }
 
-        //public async Task<IEnumerable<CourseFee>> GetAllCourseFeesAsync()
-        //{
-        //    return await _context.CourseFees.ToListAsync();
-        //}
-
+  
         public async Task<IEnumerable<CourseFee>> GetAllCourseFeesAsync()
         {
             var courseFees = await _context.CourseFees

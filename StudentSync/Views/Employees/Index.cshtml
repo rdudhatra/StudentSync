@@ -1,7 +1,5 @@
 ﻿@{
-   // ViewBag.Title = "Datatables";
-   // ViewBag.pTitle = "Datatables";
-    //ViewBag.pageTitle = "Tables"; 
+    ViewBag.Title = "Employees";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -296,7 +294,7 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
                     $('#addEditEmployeeModal').modal('hide');
-                    if (employee.id == 0){
+                    if (employee.Id === 0){
                         toastr.success('Employee Saved successfully.');
                     }else{
                         toastr.success('Employee updated successfully.');

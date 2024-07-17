@@ -20,7 +20,7 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
-        public List<Batch> GetAllBatchesIds()
+        public List<Batch> GetAllBatchesIdsAsync()
         {
             return _context.Batches.ToList();
         }

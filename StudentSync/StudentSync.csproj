@@ -76,12 +76,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\StudentSync.Core\StudentSync.Core.csproj" />
-    <ProjectReference Include="..\StudentSync.WebApi\StudentSync.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -115,6 +111,10 @@
     <Folder Include="wwwroot\assets\libs\toastr\tests\" />
     <Folder Include="wwwroot\assets\libs\waypoints\src\" />
     <Folder Include="wwwroot\assets\libs\waypoints\test\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StudentSync.Data\StudentSync.Data.csproj" />
   </ItemGroup>
 
 </Project>

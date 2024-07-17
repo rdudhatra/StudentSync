@@ -17,10 +17,7 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
-        //public async Task<IList<Inquiry>> GetAllInquiriesAsync()
-        //{
-        //    return await _context.Inquiries.ToListAsync();
-        //}
+    
 
         public List<Inquiry> GetAllInquiryno()
         {

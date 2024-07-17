@@ -17,8 +17,3 @@ namespace StudentSync.Core.Services.Interface
     }
 
 }
-//Task<List<Enrollment>> GetAllEnrollmentsAsync();
-//Task<Enrollment> GetEnrollmentByIdAsync(int enrollmentno);
-//Task CreateEnrollmentAsync(Enrollment enrollment);
-//Task UpdateEnrollmentAsync(Enrollment enrollment);
-//Task DeleteEnrollmentAsync(string enrollmentNo);

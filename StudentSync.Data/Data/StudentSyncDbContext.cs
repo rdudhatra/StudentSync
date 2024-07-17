@@ -46,6 +46,7 @@ public partial class StudentSyncDbContext : DbContext
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()

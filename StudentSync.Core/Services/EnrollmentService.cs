@@ -23,10 +23,7 @@ namespace StudentSync.Core.Services
             return _context.Enrollments.ToList();
         }
 
-        //public async Task<IEnumerable<Enrollment>> GetAllEnrollments()
-        //{
-        //    return await _context.Enrollments.ToListAsync();
-        //}
+        
 
         public async Task<IEnumerable<Enrollment>> GetAllEnrollments()
         {
@@ -40,7 +37,7 @@ namespace StudentSync.Core.Services
                                          EnrollmentDate = enrollment.EnrollmentDate,
                                          BatchId = enrollment.BatchId,
                                          CourseId = enrollment.CourseId,
-                                         CourseName = course.CourseName, // Assuming Course model has a CourseName property
+                                         CourseName = course.CourseName, 
                                          CourseFeeId = enrollment.CourseFeeId,
                                          InquiryNo = enrollment.InquiryNo,
                                          IsActive = enrollment.IsActive,
@@ -55,44 +52,13 @@ namespace StudentSync.Core.Services
             return enrollments;
         }
 
-        //public async Task<List<Enrollment>> GetAllEnrollmentsAsync()
-        //{
-        //    var enrollments = await (from enrollment in _context.Enrollments
-        //                             join course in _context.Courses on enrollment.CourseId equals course.CourseId into courseJoin
-        //                             from course in courseJoin.DefaultIfEmpty()
-        //                             select new Enrollment
-        //                             {
-        //                                 Id = enrollment.Id,
-        //                                 EnrollmentNo = enrollment.EnrollmentNo,
-        //                                 EnrollmentDate = enrollment.EnrollmentDate,
-        //                                 BatchId = enrollment.BatchId,
-        //                                 CourseId = enrollment.CourseId,
-        //                                 CourseName = course.CourseName, // Assuming Course model has a CourseName property
-        //                                 CourseFeeId = enrollment.CourseFeeId,
-        //                                 InquiryNo = enrollment.InquiryNo,
-        //                                 IsActive = enrollment.IsActive,
-        //                                 Remarks = enrollment.Remarks,
-        //                                 CreatedBy = enrollment.CreatedBy,
-        //                                 CreatedDate = enrollment.CreatedDate,
-        //                                 UpdatedBy = enrollment.UpdatedBy,
-        //                                 UpdatedDate = enrollment.UpdatedDate
-        //                             })
-        //                             .ToListAsync();
-
-        //    return enrollments;
-        //}
-
+       
         public async Task<Enrollment> GetEnrollmentById(int id)
         {
             var result = await _context.Enrollments.FromSqlRaw("EXEC GetEnrollmentById @Id = {0}", id).ToListAsync();
             return result.Count > 0 ? result[0] : null;
         }
-        //public async Task<StudentInstallment> GetStudentInstallmentByIdAsync(int id)
-        //{
-
-        //    var result = await _context.StudentInstallments.FromSqlRaw("EXEC GetStudentInstallmentById @Id = {0}", id).ToListAsync();
-        //    return result.Count > 0 ? result[0] : null;
-        //}
+     
         public async Task AddEnrollment(Enrollment enrollment)
         {
             await _context.Database.ExecuteSqlRawAsync("EXEC CreateEnrollment @EnrollmentNo = {0}, @EnrollmentDate = {1}, @BatchId = {2}, @CourseId = {3}, @CourseFeeId = {4}, @InquiryNo = {5}, @IsActive = {6}, @Remarks = {7}, @CreatedBy = {8}, @CreatedDate = {9}",

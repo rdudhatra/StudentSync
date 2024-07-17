@@ -20,7 +20,6 @@ namespace StudentSync.Controllers
         {
             _httpClient = httpClient;
             _logger = logger;
-           // _httpClient.BaseAddress = new Uri("https://localhost:7024/api/"); // Adjust as needed
         }
 
         public IActionResult Index()

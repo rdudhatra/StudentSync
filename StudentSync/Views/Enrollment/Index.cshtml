@@ -69,13 +69,7 @@
                         </select>
                         <div class="invalid-feedback">Course ID is required.</div>
                     </div>
-               @*      <div class="form-group">
-                        <label for="CourseFeeId">Course Fee ID</label>
-                        <select class="form-control" id="CourseFeeId" required>
-                            <!-- Options will be populated dynamically -->
-                        </select>
-                        <div class="invalid-feedback">Course Fee ID is required.</div>
-                    </div> *@
+             
              
                     <div class="form-group">
                         <label for="InquiryNo">Inquiry No:</label>
@@ -175,7 +169,6 @@
                     },
                     { "data": "batchId" },
                     { "data": "courseName" },
-                    //{ "data": "courseFeeId" },
                     { "data": "inquiryNo" },
                     { "data": "remarks" },
                     {
@@ -295,32 +288,7 @@
         // Call the function to fetch and populate Courses
         getAllCourses();
 
-        // function getAllCoursesfee() {
-        //     $.ajax({
-        //         url: '/CourseFee/GetAllfeeCourseIds', // Adjust URL to match your controller route
-        //         type: 'GET',
-        //         dataType: 'json',
-        //         success: function (data) {
-        //             if (Array.isArray(data) && data.length > 0) {
-        //                 var options = '<option value="">Select Course</option>';
-        //                 data.forEach(function (coursefee) {
-        //                     options += '<option value="' + coursefee.id + '">' + coursefee.id + '</option>';
-        //                 });
-        //                 $('#CourseFeeId').html(options); // Populate dropdown with Course names
-        //             } else {
-        //                 console.error('No Courses returned or invalid data format:', data);
-        //                 toastr.error('No Courses returned or invalid data format.');
-        //             }
-        //         },
-        //         error: function (xhr, status, error) {
-        //             toastr.error('Error fetching Courses: ' + error);
-        //             console.error('Error fetching Courses:', xhr.responseText);
-        //         }
-        //     });
-        // }
 
-        // // Call the function to fetch and populate Courses
-        // getAllCoursesfee();
 
 
 
@@ -386,11 +354,7 @@
                 isValid = false;
             }
 
-            // Validate Course Fee ID
-            // if ($('#CourseFeeId').val().trim() === '') {
-            //     displayValidationMessage('Course Fee ID is required.', $('#CourseFeeId'));
-            //     isValid = false;
-            // }
+          
 
             // Validate Inquiry No
             if ($('#InquiryNo').val().trim() === '') {
