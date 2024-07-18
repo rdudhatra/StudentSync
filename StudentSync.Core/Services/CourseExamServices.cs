@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StudentSync.Data.ResponseModel;
 
 namespace StudentSync.Core.Services
 {
@@ -21,13 +22,13 @@ namespace StudentSync.Core.Services
         {
             return _context.CourseExams.ToList();
         }
-        public async Task<List<CourseExam>> GetAllCourseExamsAsync()
+        public async Task<List<CourseExamResponseModel>> GetAllCourseExamsAsync()
         {
             var courseExams = await _context.CourseExams
             .Join(_context.Courses,
                   ce => ce.CourseId,
                   course => course.CourseId,
-                  (ce, course) => new CourseExam
+                  (ce, course) => new CourseExamResponseModel
                   {
                       Id = ce.Id,
                       CourseId = ce.CourseId,

@@ -68,8 +68,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" onclick="saveCourse()">Save</button>
-@*                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
- *@                            </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,7 +99,7 @@
         </div>
     </div>
 
-                                @section Scripts {
+ @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -154,7 +153,6 @@
             $('#Duration').val('');
             $('#Prerequisite').val('');
             $('#Remarks').val('');
-
             $('#addEditCourseModal').modal('show');
             $('#addEditCourseModalLabel').text('Add New Course');
         }
@@ -283,17 +281,8 @@
                 ajax: {
                     url: '/Course/GetAll',
                     type: 'GET',
-                    data: function (d) {
-                        return {
-                            draw: d.draw,
-                            start: d.start,
-                            length: d.length,
-                            searchValue: d.search.value,
-                            sortColumn: d.columns[d.order[0].column].data,
-                            sortColumnDirection: d.order[0].dir
-                        };
-                    },
-                    dataSrc: 'data'
+                    data : 'data'
+                  
                 },
                 columns: [
                     { data: "courseId", title: "ID" },
@@ -323,7 +312,7 @@
         // Function to fetch all Course IDs
         function getAllCourseIds() {
             $.ajax({
-                url: '/Course/GetAllCourseIds', // Adjust URL as per your controller route
+                url: '/Course/GetAllCourseIds', 
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {

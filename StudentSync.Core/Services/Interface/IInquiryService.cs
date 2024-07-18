@@ -1,4 +1,5 @@
 ﻿using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace StudentSync.Core.Services.Interface
 {
     public interface IInquiryService
     {
-        Task<IList<Inquiry>> GetAllInquiriesAsync();
+        Task<IList<InquiryResponseModel>> GetAllInquiriesAsync();
         Task<Inquiry> GetInquiryByIdAsync(int id);
         Task AddInquiryAsync(Inquiry inquiry);
         Task UpdateInquiryAsync(Inquiry inquiry);

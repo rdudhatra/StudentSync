@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -50,13 +52,18 @@ namespace StudentSync.Controllers
         {
             try
             {
+                // DataTables parameters
+                int draw = int.Parse(Request.Query["draw"]);
+                int start = int.Parse(Request.Query["start"]);
+                int length = int.Parse(Request.Query["length"]);
+
                 var response = await _httpClient.GetAsync("CourseExam/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
                     return StatusCode((int)response.StatusCode, response.ReasonPhrase);
                 }
 
-                var courseExams = JsonConvert.DeserializeObject<List<CourseExam>>(await response.Content.ReadAsStringAsync());
+                var courseExams = JsonConvert.DeserializeObject<List<CourseExamResponseModel>>(await response.Content.ReadAsStringAsync());
 
                 var searchValue = Request.Query["search[value]"].FirstOrDefault();
                 if (!string.IsNullOrEmpty(searchValue))
@@ -69,11 +76,15 @@ namespace StudentSync.Controllers
                         .ToList();
                 }
 
+                // Paginate the results
+                int recordsTotal = courseExams.Count;
+                courseExams = courseExams.Skip(start).Take(length).ToList();
+
                 var dataTableResponse = new
                 {
-                    draw = Request.Query["draw"].FirstOrDefault(),
-                    recordsTotal = courseExams.Count(),
-                    recordsFiltered = courseExams.Count(),
+                    draw = draw,
+                    recordsTotal = recordsTotal,
+                    recordsFiltered = recordsTotal, // Assuming no filtering at server-side
                     data = courseExams
                 };
 
@@ -119,7 +130,7 @@ namespace StudentSync.Controllers
             return Ok(courseExam);
         }
 
-        [HttpPost("Update")]
+        [HttpPost("UpdateCourseExam")]
         public async Task<IActionResult> Update([FromBody] CourseExam courseExam)
         {
             if (ModelState.IsValid)

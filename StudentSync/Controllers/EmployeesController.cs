@@ -29,12 +29,16 @@ namespace StudentSync.Web.Controllers
         {
             return View();
         }
-
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll(int draw, int start, int length, string searchValue, string sortColumn, string sortColumnDirection)
+        public async Task<IActionResult> GetAll()
         {
             try
             {
+                // DataTables parameters
+                int draw = int.Parse(Request.Query["draw"]);
+                int start = int.Parse(Request.Query["start"]);
+                int length = int.Parse(Request.Query["length"]);
+
                 var response = await _httpClient.GetAsync("Employee/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
@@ -45,43 +49,29 @@ namespace StudentSync.Web.Controllers
 
                 var employees = JsonConvert.DeserializeObject<List<Employee>>(jsonResponse);
 
-                var employeeData = employees.AsQueryable();
-
-                // Apply search filter
+                var searchValue = Request.Query["search[value]"].FirstOrDefault();
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    employeeData = employeeData.Where(e => e.FirstName.Contains(searchValue)
-                                                    || e.LastName.Contains(searchValue));
+                    employees = employees
+                        .Where(ce =>
+                            ce.FirstName.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                            ce.LastName.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                            ce.Gender.Contains(searchValue, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                 }
 
-                // Apply sorting
-                if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
+                // Paginate the results
+                int recordsTotal = employees.Count;
+                employees = employees.Skip(start).Take(length).ToList();
+
+                var dataTableResponse = new 
                 {
-                    switch (sortColumn.ToLower())
-                    {
-                        case "firstname":
-                            employeeData = sortColumnDirection == "asc" ?
-                                           employeeData.OrderBy(e => e.FirstName) :
-                                           employeeData.OrderByDescending(e => e.FirstName);
-                            break;
-                        case "lastname":
-                            employeeData = sortColumnDirection == "asc" ?
-                                           employeeData.OrderBy(e => e.LastName) :
-                                           employeeData.OrderByDescending(e => e.LastName);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                // Get total records count
-                var recordsTotal = employeeData.Count();
-
-                // Apply pagination
-                var data = employeeData.Skip(start).Take(length).ToList();
-
-                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
-                return Ok(jsonData);
+                    draw = draw,
+                    recordsFiltered = recordsTotal,
+                    recordsTotal = recordsTotal,
+                    data = employees
+                };
+                return Ok(dataTableResponse);
             }
             catch (Exception ex)
             {
@@ -89,6 +79,66 @@ namespace StudentSync.Web.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        //[HttpGet("GetAll")]
+        //public async Task<IActionResult> GetAll(int draw, int start, int length, string searchValue, string sortColumn, string sortColumnDirection)
+        //{
+        //    try
+        //    {
+        //        var response = await _httpClient.GetAsync("Employee/GetAll");
+        //        if (!response.IsSuccessStatusCode)
+        //        {
+        //            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+        //        }
+
+        //        var jsonResponse = await response.Content.ReadAsStringAsync();
+
+        //        var employees = JsonConvert.DeserializeObject<List<Employee>>(jsonResponse);
+
+        //        var employeeData = employees.AsQueryable();
+
+        //        // Apply search filter
+        //        if (!string.IsNullOrEmpty(searchValue))
+        //        {
+        //            employeeData = employeeData.Where(e => e.FirstName.Contains(searchValue)
+        //                                            || e.LastName.Contains(searchValue));
+        //        }
+
+        //        // Apply sorting
+        //        if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
+        //        {
+        //            switch (sortColumn.ToLower())
+        //            {
+        //                case "firstname":
+        //                    employeeData = sortColumnDirection == "asc" ?
+        //                                   employeeData.OrderBy(e => e.FirstName) :
+        //                                   employeeData.OrderByDescending(e => e.FirstName);
+        //                    break;
+        //                case "lastname":
+        //                    employeeData = sortColumnDirection == "asc" ?
+        //                                   employeeData.OrderBy(e => e.LastName) :
+        //                                   employeeData.OrderByDescending(e => e.LastName);
+        //                    break;
+        //                default:
+        //                    break;
+        //            }
+        //        }
+
+        //        // Get total records count
+        //        var recordsTotal = employeeData.Count();
+
+        //        // Apply pagination
+        //        var data = employeeData.Skip(start).Take(length).ToList();
+
+        //        var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+        //        return Ok(jsonData);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.Error.WriteLine($"Error in GetAll action: {ex.Message}");
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
 
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)

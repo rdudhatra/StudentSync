@@ -50,11 +50,7 @@
                         <input type="date" class="form-control" id="AssessmentDate" required />
                         <div class="invalid-feedback">Assessment Date is required.</div>
                     </div>
-                   @*  <div class="form-group">
-                        <label for="EnrollmentNo">Enrollment No</label>
-                        <input type="text" class="form-control" id="EnrollmentNo" required />
-                        <div class="invalid-feedback">Enrollment No is required.</div>
-                    </div> *@
+                 
                     <div class="form-group">
                         <label for="EnrollmentNo">Enrollment No</label>
                         <select class="form-control" id="EnrollmentNo" required>
@@ -62,11 +58,7 @@
                         </select>
                         <div class="invalid-feedback">Enrollment No is required.</div>
                     </div>
-               @*      <div class="form-group">
-                        <label for="CourseExamId">Course Exam ID</label>
-                        <input type="text" class="form-control" id="CourseExamId" required />
-                        <div class="invalid-feedback">Course Exam ID is required.</div>
-                    </div> *@
+              
                     <div class="form-group">
                         <label for="CourseExamId">Course Exam ID</label>
                         <select class="form-control" id="CourseExamId" required>
@@ -150,7 +142,7 @@
             "hideMethod": "fadeOut"
         };
         function closeModal() {
-            $('#addEditStudentAssessmentModal').modal('hide'); // Hide the modal using jQuery
+            $('#addEditStudentAssessmentModal').modal('hide'); 
             $('#deleteConfirmationModal').modal('hide');
         }
         $(document).ready(function () {
@@ -253,7 +245,6 @@
                         Remarks: $('#Remarks').val(),
                         FirstName: "efr",
                     };
-                    // var url = (formData.Id && formData.Id !== "") ? "/StudentAssessment/Update" : "/StudentAssessment/Create";
                       var url = formData.Id ? "/StudentAssessment/Update" : "/StudentAssessment/Create";
 
                     $.ajax({
@@ -328,7 +319,7 @@
             $.ajax({
                 url: "/StudentAssessment/Edit/" + id,
                 type: "GET",
-                dataType: 'json', // added data type
+                dataType: 'json', 
                 contentType: 'application/json',
                 success: function (response) {
                    

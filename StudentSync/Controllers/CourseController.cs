@@ -53,6 +53,11 @@ namespace StudentSync.Web.Controllers
         {
             try
             {
+                // DataTables parameters
+                int draw = int.Parse(Request.Query["draw"]);
+                int start = int.Parse(Request.Query["start"]);
+                int length = int.Parse(Request.Query["length"]);
+
                 var response = await _httpClient.GetAsync("Course/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
@@ -61,11 +66,26 @@ namespace StudentSync.Web.Controllers
 
                 var courses = JsonConvert.DeserializeObject<List<Course>>(await response.Content.ReadAsStringAsync());
 
+                var searchValue = Request.Query["search[value]"].FirstOrDefault();
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    courses = courses
+                        .Where(ce =>
+                            ce.CourseName.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                            ce.Duration.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                            ce.Remarks.Contains(searchValue, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+
+                // Paginate the results
+                int recordsTotal = courses.Count;
+                courses = courses.Skip(start).Take(length).ToList();
+
                 var dataTableResponse = new
                 {
-                    draw = Request.Query["draw"].FirstOrDefault(),
-                    recordsTotal = courses.Count,
-                    recordsFiltered = courses.Count,
+                    draw = draw,
+                    recordsTotal = recordsTotal,
+                    recordsFiltered = recordsTotal, // Assuming no filtering at server-side
                     data = courses
                 };
 
@@ -77,6 +97,8 @@ namespace StudentSync.Web.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+
 
         [HttpPost("AddCourse")]
         public async Task<IActionResult> AddCourse([FromBody] Course course)

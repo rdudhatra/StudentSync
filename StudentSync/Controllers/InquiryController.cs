@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -57,7 +58,7 @@ namespace StudentSync.Controllers
                 var response = await _httpClient.GetAsync("Inquiry/GetAll");
                 response.EnsureSuccessStatusCode();
 
-                var inquiries = JsonConvert.DeserializeObject<List<Inquiry>>(await response.Content.ReadAsStringAsync());
+                var inquiries = JsonConvert.DeserializeObject<List<InquiryResponseModel>>(await response.Content.ReadAsStringAsync());
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {

@@ -11,8 +11,6 @@ public partial class CourseFee
 
     public int? CourseId { get; set; }
 
-    public string? CourseName { get; set; } // Property to hold the course name
-
 
     public decimal? TotalFees { get; set; }
 

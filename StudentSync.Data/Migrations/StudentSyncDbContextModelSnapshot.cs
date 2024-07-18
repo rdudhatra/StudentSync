@@ -39,9 +39,6 @@ namespace StudentSync.Data.Migrations
                     b.Property<string>("BatchTime")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -122,9 +119,6 @@ namespace StudentSync.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -167,9 +161,6 @@ namespace StudentSync.Data.Migrations
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -216,9 +207,6 @@ namespace StudentSync.Data.Migrations
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -306,9 +294,6 @@ namespace StudentSync.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -361,9 +346,6 @@ namespace StudentSync.Data.Migrations
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");

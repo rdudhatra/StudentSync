@@ -36,6 +36,11 @@ namespace StudentSync.Web.Controllers
         {
             try
             {
+                // DataTables parameters
+                int draw = int.Parse(Request.Query["draw"]);
+                int start = int.Parse(Request.Query["start"]);
+                int length = int.Parse(Request.Query["length"]);
+
                 var response = await _httpClient.GetAsync("StudentAssessment/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
@@ -54,11 +59,15 @@ namespace StudentSync.Web.Controllers
                         .ToList();
                 }
 
+                // Paginate the results
+                int recordsTotal = studentAssessments.Count;
+                studentAssessments = studentAssessments.Skip(start).Take(length).ToList();
+
                 var dataTableResponse = new
                 {
-                    draw = Request.Query["draw"].FirstOrDefault(),
-                    recordsTotal = studentAssessments.Count(),
-                    recordsFiltered = studentAssessments.Count(),
+                    draw = draw,
+                    recordsTotal = recordsTotal,
+                    recordsFiltered = recordsTotal,
                     data = studentAssessments
                 };
 

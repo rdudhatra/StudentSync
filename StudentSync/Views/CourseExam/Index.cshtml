@@ -52,9 +52,6 @@
                                         </select>
                                         <div class="invalid-feedback">Course ID is required.</div>
                                     </div>
-
-
-
                                     <div class="form-group">
                                         <label for="ExamTitle">Exam Title:</label>
                                         <input type="text" class="form-control" id="ExamTitle" placeholder="Enter exam title" required>
@@ -271,8 +268,6 @@
             
         }
         
-
-
         // Function to populate data in the modal for editing
         function onEditCourseExamClick(id) {
             $.ajax({
@@ -296,7 +291,6 @@
             });
         }
 
-
         // Function to open modal for adding a new CourseExam
         function onAddCourseExamClick() {
             $('#Id').val("");
@@ -309,7 +303,7 @@
 
             $('#addEditCourseExamModal').modal('show');
         }
-           
+          
         // DataTable initialization
         var dataTable = $('#CourseExamTable').DataTable({
 
@@ -319,18 +313,13 @@
                 "url": "/CourseExam/GetAll",
                 "type": "GET",
                 "datatype": "json"
-            //         "data": function (d) {
-            //     // Custom parameters to send along with the request
-            //     d.searchValue = d.search.value;
-            //     d.sortColumn = d.columns[d.order[0].column].data;
-            //     d.sortColumnDirection = d.order[0].dir;
-            // }
+           
             },
 
             "columns": [
-            
+
                 { "data": "id", "name": "Id", "autoWidth": true },
-        { "data": "courseName", "name": "CourseName", "autoWidth": true }, // CourseName column
+        { "data": "courseName", "name": "CourseName", "autoWidth": true }, 
                 { "data": "examTitle", "name": "ExamTitle", "autoWidth": true },
                 { "data": "examType", "name": "ExamType", "autoWidth": true },
                 { "data": "totalMarks", "name": "TotalMarks", "autoWidth": true },
@@ -346,8 +335,6 @@
                                    </div>
 
                             `;
-                            
-                            
                     }, "autoWidth": true
                 }
             ]
@@ -383,7 +370,7 @@
                             data.forEach(function (course) {
                                 options += '<option value="' + course.courseId + '">' + course.courseName + '</option>';
                             });
-                            $('#CourseId').html(options); // Populate dropdown with Course names
+                            $('#CourseId').html(options); 
                         } else {
                             console.error('No Courses returned or invalid data format:', data);
                             toastr.error('No Courses returned or invalid data format.');

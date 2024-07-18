@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -34,19 +35,37 @@ namespace StudentSync.Web.Controllers
         {
             try
             {
+                // DataTables parameters
+                int draw = int.Parse(Request.Query["draw"]);
+                int start = int.Parse(Request.Query["start"]);
+                int length = int.Parse(Request.Query["length"]);
+                //string searchValue = Request.Query["search[value]"];
+
                 var response = await _httpClient.GetAsync("CourseFee/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
                     return StatusCode((int)response.StatusCode, response.ReasonPhrase);
                 }
 
-                var courseFees = JsonConvert.DeserializeObject<List<CourseFee>>(await response.Content.ReadAsStringAsync());
+                var courseFees = JsonConvert.DeserializeObject<List<CourseFeeResponseModel>>(await response.Content.ReadAsStringAsync());
+                var searchValue = Request.Query["search[value]"].FirstOrDefault();
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    courseFees = courseFees
+                        .Where(ce =>
+                            ce.CourseName.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                            ce.Remarks.Contains(searchValue, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+                // Paginate the result 
+                int recordsTotal = courseFees.Count;
+                courseFees = courseFees.Skip(start).Take(length).ToList();
 
                 var dataTableResponse = new
                 {
-                    draw = Request.Query["draw"].FirstOrDefault(),
-                    recordsTotal = courseFees.Count,
-                    recordsFiltered = courseFees.Count,
+                    draw = draw,
+                    recordsTotal = recordsTotal,
+                    recordsFiltered = recordsTotal, // Assuming no filtering at server-side
                     data = courseFees
                 };
 

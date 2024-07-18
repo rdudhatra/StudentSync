@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StudentSync.Data.Data;
+using StudentSync.Data.ResponseModel;
 
 namespace StudentSync.Core.Services
 {
@@ -18,13 +19,13 @@ namespace StudentSync.Core.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<CourseSyllabus>> GetAllCourseSyllabusesAsync()
+        public async Task<IEnumerable<CourseSyllabusResponseModel>> GetAllCourseSyllabusesAsync()
         {
             var courseSyllabuses = await _context.CourseSyllabi
             .Join(_context.Courses,
                   cs => cs.CourseId,
                   course => course.CourseId,
-                  (cs, course) => new CourseSyllabus
+                  (cs, course) => new CourseSyllabusResponseModel
                   {
                       Id = cs.Id,
                       CourseId = cs.CourseId,

@@ -168,16 +168,6 @@
                 ajax: {
                     url: '/Employee/GetAll',
                     type: 'GET',
-                    data: function (d) {
-                        return {
-                            draw: d.draw,
-                            start: d.start,
-                            length: d.length,
-                            searchValue: d.search.value,
-                            sortColumn: d.columns[d.order[0].column].data,
-                            sortColumnDirection: d.order[0].dir
-                        };
-                    },
                     dataSrc: 'data'
                 },
                 columns: [

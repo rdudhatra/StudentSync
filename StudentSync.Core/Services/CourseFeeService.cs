@@ -9,6 +9,7 @@ using System.Security.Claims;
 using StudentSync.Data;
 using StudentSync.Data.Data;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 
 namespace StudentSync.Core.Services
 {
@@ -29,13 +30,13 @@ namespace StudentSync.Core.Services
         }
 
   
-        public async Task<IEnumerable<CourseFee>> GetAllCourseFeesAsync()
+        public async Task<IEnumerable<CourseFeeResponseModel>> GetAllCourseFeesAsync()
         {
             var courseFees = await _context.CourseFees
            .Join(_context.Courses,
                  courseFee => courseFee.CourseId,
                  course => course.CourseId,
-                 (courseFee, course) => new CourseFee
+                 (courseFee, course) => new CourseFeeResponseModel
                  {
                      Id = courseFee.Id,
                      CourseId = courseFee.CourseId,

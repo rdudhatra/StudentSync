@@ -11,7 +11,6 @@ public partial class CourseExam
     public int Id { get; set; }
 
     public int? CourseId { get; set; }
-    public string? CourseName { get; set; } // Property to hold the course name
 
     public string? ExamTitle { get; set; }
 

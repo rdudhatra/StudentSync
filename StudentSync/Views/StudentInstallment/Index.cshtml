@@ -59,11 +59,6 @@
                         <input type="number" class="form-control" id="Amount" required />
                         <div class="invalid-feedback">Amount is required.</div>
                     </div>
-                  @*   <div class="form-group">
-                        <label for="EnrollmentNo">Enrollment No</label>
-                        <input type="text" class="form-control" id="EnrollmentNo" required />
-                        <div class="invalid-feedback">Enrollment No is required.</div>
-                    </div> *@
                     <div class="form-group">
                         <label for="EnrollmentNo">EnrollmentNo</label>
                         <select class="form-control" id="EnrollmentNo" required>
@@ -182,7 +177,7 @@
 
         function getAllEnrollmentNo() {
             $.ajax({
-                url: '/Enrollment/getAllEnrollMentno', // Adjust URL to match your controller route
+                url: '/Enrollment/getAllEnrollMentno', 
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -191,7 +186,7 @@
                         data.forEach(function (enrollment) {
                             options += '<option value="' + enrollment.enrollmentNo + '">' + enrollment.enrollmentNo + '</option>';
                         });
-                        $('#EnrollmentNo').html(options); // Populate dropdown with Course names
+                        $('#EnrollmentNo').html(options); 
                     } else {
                         console.error('No Courses returned or invalid data format:', data);
                         toastr.error('No Courses returned or invalid data format.');
@@ -254,9 +249,9 @@
                     Amount: parseFloat($('#Amount').val()),
                     EnrollmentNo: $('#EnrollmentNo').val(),
                     TransactionMode: $('#TransactionMode').val(),
-                    CreatedBy: 'Admin', // Replace with actual user
+                    CreatedBy: 'Admin',
                     CreatedDate: new Date(),
-                    UpdatedBy: 'Admin', // Replace with actual user
+                    UpdatedBy: 'Admin', 
                     UpdatedDate: new Date()
                 };
 

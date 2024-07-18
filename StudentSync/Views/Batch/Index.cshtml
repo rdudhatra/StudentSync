@@ -17,7 +17,7 @@
                             <th>Batch Code</th>
                             <th>Batch Time</th>
                             <th>Faculty Name</th>
-                            <th>Course Name</th> <!-- Added Course ID column -->
+                            <th>Course Name</th> 
                             <th>Is Active</th>
                             <th>Remarks</th>
                             <th>Action</th>
@@ -123,8 +123,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
-
-
     <script>
         var dataTable;
         toastr.options = {
@@ -159,11 +157,7 @@
                     { "data": "batchCode", "name": "BatchCode" },
                     { "data": "batchTime", "name": "BatchTime" },
                     { "data": "facultyName", "name": "FacultyName" },
-
-                    { "data": "courseName", "name": "CourseName" }, // Use courseName directly
-
-
-                    // { "data": "batchCourseId", "name": "BatchCourseId" }, // Ensure this matches the property name returned by API
+                    { "data": "courseName", "name": "CourseName" }, 
                     { "data": "isActive", "name": "IsActive" },
                     { "data": "remarks", "name": "Remarks" },
                     {
@@ -176,14 +170,11 @@
                 ]
             });
 
-
             // Handle modal close event to clear validation messages
             $('#addEditBatchModal').on('hidden.bs.modal', function () {
                 clearValidationMessages();
             });
         });
-
-
 
         function getAllCourses() {
             $.ajax({
@@ -213,7 +204,6 @@
         getAllCourses();
 
         getAllBatchesIds();
-
 
         function getAllBatchesIds() {
             $.ajax({

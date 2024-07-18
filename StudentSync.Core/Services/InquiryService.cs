@@ -3,6 +3,7 @@ using StudentSync.Core.Services.Interface;
 using StudentSync.Core.Services.Interfaces;
 using StudentSync.Data.Data;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,12 +25,12 @@ namespace StudentSync.Core.Services
             return _context.Inquiries.ToList();
         }
 
-        public async Task<IList<Inquiry>> GetAllInquiriesAsync()
+        public async Task<IList<InquiryResponseModel>> GetAllInquiriesAsync()
         {
             var inquiries = await (from inquiry in _context.Inquiries
                                    join course in _context.Courses on inquiry.CourseId equals course.CourseId into courseJoin
                                    from course in courseJoin.DefaultIfEmpty()
-                                   select new Inquiry
+                                   select new InquiryResponseModel
                                    {
                                        InquiryNo = inquiry.InquiryNo,
                                        InquiryDate = inquiry.InquiryDate,

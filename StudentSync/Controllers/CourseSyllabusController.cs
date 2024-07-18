@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -32,19 +33,36 @@ namespace StudentSync.Web.Controllers
         {
             try
             {
+                // DataTables parameters
+                int draw = int.Parse(Request.Query["draw"]);
+                int start = int.Parse(Request.Query["start"]);
+                int length = int.Parse(Request.Query["length"]);
+
                 var response = await _httpClient.GetAsync("CourseSyllabus/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
                     return StatusCode((int)response.StatusCode, response.ReasonPhrase);
                 }
 
-                var courseSyllabuses = JsonConvert.DeserializeObject<List<CourseSyllabus>>(await response.Content.ReadAsStringAsync());
+                var courseSyllabuses = JsonConvert.DeserializeObject<List<CourseSyllabusResponseModel>>(await response.Content.ReadAsStringAsync());
+                var searchValue = Request.Query["search[value]"].FirstOrDefault();
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    courseSyllabuses = courseSyllabuses
+                        .Where(cs =>
+                            cs.CourseName.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                            cs.Remarks.Contains(searchValue, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+                // Paginate the results
+                int recordsTotal = courseSyllabuses.Count;
+                courseSyllabuses = courseSyllabuses.Skip(start).Take(length).ToList();
 
                 var dataTableResponse = new
                 {
-                    draw = Request.Query["draw"].FirstOrDefault(),
-                    recordsTotal = courseSyllabuses.Count,
-                    recordsFiltered = courseSyllabuses.Count,
+                    draw = draw,
+                    recordsTotal = recordsTotal,
+                    recordsFiltered = recordsTotal,
                     data = courseSyllabuses
                 };
 

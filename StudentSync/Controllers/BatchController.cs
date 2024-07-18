@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System.Text;
 
 namespace StudentSync.Web.Controllers
@@ -50,20 +51,39 @@ namespace StudentSync.Web.Controllers
         {
             try
             {
+                // DataTables parameters
+                int draw = int.Parse(Request.Query["draw"]);
+                int start = int.Parse(Request.Query["start"]);
+                int length = int.Parse(Request.Query["length"]);
+                string searchValue = Request.Query["search[value]"];
+
                 var response = await _httpClient.GetAsync("Batch/GetAll");
                 if (!response.IsSuccessStatusCode)
                 {
                     return StatusCode((int)response.StatusCode, response.ReasonPhrase);
                 }
 
-                var batches = JsonConvert.DeserializeObject<List<Batch>>(await response.Content.ReadAsStringAsync());
+                var batches = JsonConvert.DeserializeObject<List<BatchResponseModel>>(await response.Content.ReadAsStringAsync());
+                // Apply search filter if searchValue is provided
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    batches = batches.Where(b =>
+                        b.BatchTime.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+                        b.FacultyName.Contains(searchValue, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+
+                // Paginate the results
+                int recordsTotal = batches.Count;
+                batches = batches.Skip(start).Take(length).ToList();
 
                 var dataTableResponse = new
                 {
-                    draw = Request.Query["draw"].FirstOrDefault(),
-                    recordsTotal = batches.Count,
-                    recordsFiltered = batches.Count,
+                    draw = draw,
+                    recordsTotal = recordsTotal,
+                    recordsFiltered = recordsTotal, // Assuming no filtering at server-side
                     data = batches
+
                 };
 
                 return Ok(dataTableResponse);

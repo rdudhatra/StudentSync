@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +61,7 @@ namespace StudentSync.Web.Controllers
                     return StatusCode((int)response.StatusCode, response.ReasonPhrase);
                 }
 
-                var enrollments = JsonConvert.DeserializeObject<List<Enrollment>>(await response.Content.ReadAsStringAsync());
+                var enrollments = JsonConvert.DeserializeObject<List<EnrollmentResponseModel>>(await response.Content.ReadAsStringAsync());
 
                 var dataTableResponse = new
                 {

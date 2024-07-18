@@ -3,6 +3,7 @@ using StudentSync.Core.Services.Interface;
 using StudentSync.Data;
 using StudentSync.Data.Data;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,12 +26,12 @@ namespace StudentSync.Core.Services
 
         
 
-        public async Task<IEnumerable<Enrollment>> GetAllEnrollments()
+        public async Task<IEnumerable<EnrollmentResponseModel>> GetAllEnrollments()
         {
             var enrollments = await (from enrollment in _context.Enrollments
                                      join course in _context.Courses on enrollment.CourseId equals course.CourseId into courseJoin
                                      from course in courseJoin.DefaultIfEmpty()
-                                     select new Enrollment
+                                     select new EnrollmentResponseModel
                                      {
                                          Id = enrollment.Id,
                                          EnrollmentNo = enrollment.EnrollmentNo,

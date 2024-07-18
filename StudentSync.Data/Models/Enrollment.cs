@@ -16,8 +16,6 @@ public partial class Enrollment
     public int? BatchId { get; set; }
 
     public int? CourseId { get; set; }
-    public string? CourseName { get; set; } // Property to hold the course name
-
 
     public int? CourseFeeId { get; set; }
 

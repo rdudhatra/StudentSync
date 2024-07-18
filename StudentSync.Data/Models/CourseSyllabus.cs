@@ -12,8 +12,6 @@ public partial class CourseSyllabus
 
     public int? CourseId { get; set; }
 
-    public string? CourseName { get; set; } // Property to hold the course name
-
 
     public string? ChapterName { get; set; }
 

@@ -47,11 +47,6 @@
                         <input type="date" class="form-control" id="AttendanceDate" required />
                         <div class="invalid-feedback">Attendance Date is required.</div>
                     </div>
-                  @*   <div class="form-group">
-                        <label for="EnrollmentNo">Enrollment No</label>
-                        <input type="text" class="form-control" id="EnrollmentNo" required />
-                        <div class="invalid-feedback">Enrollment No is required.</div>
-                    </div> *@
                     <div class="form-group">
                         <label for="EnrollmentNo">EnrollmentNo</label>
                         <select class="form-control" id="EnrollmentNo" required>
@@ -59,11 +54,6 @@
                         </select>
                         <div class="invalid-feedback">Enrollment No is required.</div>
                     </div>
-               @*      <div class="form-group">
-                        <label for="BatchId">Batch ID</label>
-                        <input type="number" class="form-control" id="BatchId" required />
-                        <div class="invalid-feedback">Batch ID is required.</div>
-                    </div> *@
                     <div class="form-group">
                         <label for="BatchId">Batch ID</label>
                         <select class="form-control" id="BatchId" required>
@@ -207,7 +197,7 @@
 
         function getAllEnrollmentNo() {
             $.ajax({
-                url: '/Enrollment/getAllEnrollMentno', // Adjust URL to match your controller route
+                url: '/Enrollment/getAllEnrollMentno', 
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -277,9 +267,9 @@
                     EnrollmentNo: $('#EnrollmentNo').val(),
                     BatchId: $('#BatchId').val(),
                     Remarks: $('#Remarks').val(),
-                    CreatedBy: 'Admin', // You can replace this with the actual user
+                    CreatedBy: 'Admin',
                     CreatedDate: new Date(),
-                    UpdatedBy: 'Admin', // You can replace this with the actual user
+                    UpdatedBy: 'Admin', 
                     UpdatedDate: new Date()
                 };
 

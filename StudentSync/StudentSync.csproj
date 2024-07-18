@@ -81,6 +81,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Model\Response\" />
     <Folder Include="wwwroot\assets\libs\flot-charts\examples\" />
     <Folder Include="wwwroot\assets\libs\flot.curvedlines\examples\" />
     <Folder Include="wwwroot\assets\libs\flot.curvedlines\tests\" />
