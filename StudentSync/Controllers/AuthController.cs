@@ -265,8 +265,9 @@ namespace StudentSync.Controllers
                     response.EnsureSuccessStatusCode();
 
                     var result = await response.Content.ReadAsStringAsync();
-                    //var tokenResponse = JsonSerializer.Deserialize<ApiResponse<string>>(result);
-
+                    var tokenResponse = JsonSerializer.Deserialize<ApiResponse<string>>(result);
+                    // Debug output
+                    Console.WriteLine($"Token received: {result}");
                     // Handle null or empty token response
                     if (string.IsNullOrEmpty(result))
                     {
@@ -282,6 +283,9 @@ namespace StudentSync.Controllers
                         Secure = true, // Ensures the cookie is only sent over HTTPS if your site is HTTPS
                         SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict // Protects against cross-site request forgery
                     });
+
+                    // Debug output
+                    Console.WriteLine("Token stored in cookie.");
 
                     TempData["SuccessMessage"] = "Login successful.";
 

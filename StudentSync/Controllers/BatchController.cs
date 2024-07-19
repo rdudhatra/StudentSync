@@ -1,21 +1,23 @@
 ﻿
+
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using StudentSync.Data.Models;
 using StudentSync.Data.ResponseModel;
-using System.Text;
+using StudentSync.Service.Http;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudentSync.Web.Controllers
 {
     [Route("Batch")]
     public class BatchController : Controller
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpService _httpService;
 
-
-        public BatchController(HttpClient httpClient)
+        public BatchController(IHttpService httpService)
         {
-            _httpClient = httpClient;
+            _httpService = httpService;
         }
 
         public IActionResult Index()
@@ -23,28 +25,24 @@ namespace StudentSync.Web.Controllers
             return View();
         }
 
-
         [HttpGet("GetAllBatchesIds")]
         public async Task<IActionResult> GetAllBatchIds()
         {
             try
             {
-                var response = await _httpClient.GetAsync("Batch/GetAllBatchesIds");
-                if (!response.IsSuccessStatusCode)
+                var response = await _httpService.Get<List<Batch>>("Batch/GetAllBatchesIds");
+                if (!response.Succeeded)
                 {
-                    return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+                    return StatusCode((int)response.Response.StatusCode, response.Response.ReasonPhrase);
                 }
 
-                var batchesIds = JsonConvert.DeserializeObject<List<Batch>>(await response.Content.ReadAsStringAsync());
-                return Json(batchesIds);
+                return Json(response.Data);
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = "Failed to retrieve Batch IDs", error = ex.Message });
             }
         }
-
-
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
@@ -57,13 +55,13 @@ namespace StudentSync.Web.Controllers
                 int length = int.Parse(Request.Query["length"]);
                 string searchValue = Request.Query["search[value]"];
 
-                var response = await _httpClient.GetAsync("Batch/GetAll");
-                if (!response.IsSuccessStatusCode)
+                var response = await _httpService.Get<List<BatchResponseModel>>("Batch/GetAll");
+                if (!response.Succeeded)
                 {
-                    return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+                    return StatusCode((int)response.Response.StatusCode, response.Response.ReasonPhrase);
                 }
 
-                var batches = JsonConvert.DeserializeObject<List<BatchResponseModel>>(await response.Content.ReadAsStringAsync());
+                var batches = response.Data;
                 // Apply search filter if searchValue is provided
                 if (!string.IsNullOrEmpty(searchValue))
                 {
@@ -83,7 +81,6 @@ namespace StudentSync.Web.Controllers
                     recordsTotal = recordsTotal,
                     recordsFiltered = recordsTotal, // Assuming no filtering at server-side
                     data = batches
-
                 };
 
                 return Ok(dataTableResponse);
@@ -99,13 +96,12 @@ namespace StudentSync.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var content = new StringContent(JsonConvert.SerializeObject(batch), Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync("Batch/Create", content);
-                if (response.IsSuccessStatusCode)
+                var response = await _httpService.Post("Batch/Create", batch);
+                if (response.Succeeded)
                 {
                     return Ok(new { success = true });
                 }
-                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+                return StatusCode((int)response.Response.StatusCode, response.Response.ReasonPhrase);
             }
             return BadRequest(ModelState);
         }
@@ -113,13 +109,13 @@ namespace StudentSync.Web.Controllers
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            var response = await _httpClient.GetAsync($"Batch/Edit/{id}");
-            if (!response.IsSuccessStatusCode)
+            var response = await _httpService.Get<Batch>($"Batch/Edit/{id}");
+            if (!response.Succeeded)
             {
-                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+                return StatusCode((int)response.Response.StatusCode, response.Response.ReasonPhrase);
             }
 
-            var batch = JsonConvert.DeserializeObject<Batch>(await response.Content.ReadAsStringAsync());
+            var batch = response.Data;
             if (batch == null)
             {
                 return NotFound();
@@ -132,13 +128,12 @@ namespace StudentSync.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var content = new StringContent(JsonConvert.SerializeObject(batch), Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync("Batch/Update", content);
-                if (response.IsSuccessStatusCode)
+                var response = await _httpService.Put("Batch/Update", batch);
+                if (response.Succeeded)
                 {
                     return Ok(new { success = true });
                 }
-                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+                return StatusCode((int)response.Response.StatusCode, response.Response.ReasonPhrase);
             }
             return BadRequest(ModelState);
         }
@@ -146,15 +141,173 @@ namespace StudentSync.Web.Controllers
         [HttpPost("DeleteConfirmed/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _httpClient.DeleteAsync($"Batch/Delete/{id}");
-            if (response.IsSuccessStatusCode)
+            var response = await _httpService.Delete($"Batch/Delete/{id}");
+            if (response.Succeeded)
             {
                 return Ok(new { success = true });
             }
-            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+            return StatusCode((int)response.Response.StatusCode, response.Response.ReasonPhrase);
         }
     }
 }
+
+
+//using Microsoft.AspNetCore.Mvc;
+//using Newtonsoft.Json;
+//using StudentSync.Data.Models;
+//using StudentSync.Data.ResponseModel;
+//using System.Text;
+
+//namespace StudentSync.Web.Controllers
+//{
+//    [Route("Batch")]
+//    public class BatchController : Controller
+//    {
+//        private readonly HttpClient _httpClient;
+
+
+//        public BatchController(HttpClient httpClient)
+//        {
+//            _httpClient = httpClient;
+//        }
+
+//        public IActionResult Index()
+//        {
+//            return View();
+//        }
+
+
+//        [HttpGet("GetAllBatchesIds")]
+//        public async Task<IActionResult> GetAllBatchIds()
+//        {
+//            try
+//            {
+//                var response = await _httpClient.GetAsync("Batch/GetAllBatchesIds");
+//                if (!response.IsSuccessStatusCode)
+//                {
+//                    return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+//                }
+
+//                var batchesIds = JsonConvert.DeserializeObject<List<Batch>>(await response.Content.ReadAsStringAsync());
+//                return Json(batchesIds);
+//            }
+//            catch (Exception ex)
+//            {
+//                return BadRequest(new { message = "Failed to retrieve Batch IDs", error = ex.Message });
+//            }
+//        }
+
+
+
+//        [HttpGet("GetAll")]
+//        public async Task<IActionResult> GetAll()
+//        {
+//            try
+//            {
+//                // DataTables parameters
+//                int draw = int.Parse(Request.Query["draw"]);
+//                int start = int.Parse(Request.Query["start"]);
+//                int length = int.Parse(Request.Query["length"]);
+//                string searchValue = Request.Query["search[value]"];
+
+//                var response = await _httpClient.GetAsync("Batch/GetAll");
+//                if (!response.IsSuccessStatusCode)
+//                {
+//                    return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+//                }
+
+//                var batches = JsonConvert.DeserializeObject<List<BatchResponseModel>>(await response.Content.ReadAsStringAsync());
+//                // Apply search filter if searchValue is provided
+//                if (!string.IsNullOrEmpty(searchValue))
+//                {
+//                    batches = batches.Where(b =>
+//                        b.BatchTime.Contains(searchValue, StringComparison.OrdinalIgnoreCase) ||
+//                        b.FacultyName.Contains(searchValue, StringComparison.OrdinalIgnoreCase))
+//                        .ToList();
+//                }
+
+//                // Paginate the results
+//                int recordsTotal = batches.Count;
+//                batches = batches.Skip(start).Take(length).ToList();
+
+//                var dataTableResponse = new
+//                {
+//                    draw = draw,
+//                    recordsTotal = recordsTotal,
+//                    recordsFiltered = recordsTotal, // Assuming no filtering at server-side
+//                    data = batches
+
+//                };
+
+//                return Ok(dataTableResponse);
+//            }
+//            catch (Exception ex)
+//            {
+//                return StatusCode(500, $"Internal server error: {ex.Message}");
+//            }
+//        }
+
+//        [HttpPost("Create")]
+//        public async Task<IActionResult> Create([FromBody] Batch batch)
+//        {
+//            if (ModelState.IsValid)
+//            {
+//                var content = new StringContent(JsonConvert.SerializeObject(batch), Encoding.UTF8, "application/json");
+//                var response = await _httpClient.PostAsync("Batch/Create", content);
+//                if (response.IsSuccessStatusCode)
+//                {
+//                    return Ok(new { success = true });
+//                }
+//                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+//            }
+//            return BadRequest(ModelState);
+//        }
+
+//        [HttpGet("Edit/{id}")]
+//        public async Task<IActionResult> Edit(int id)
+//        {
+//            var response = await _httpClient.GetAsync($"Batch/Edit/{id}");
+//            if (!response.IsSuccessStatusCode)
+//            {
+//                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+//            }
+
+//            var batch = JsonConvert.DeserializeObject<Batch>(await response.Content.ReadAsStringAsync());
+//            if (batch == null)
+//            {
+//                return NotFound();
+//            }
+//            return Ok(batch);
+//        }
+
+//        [HttpPost("UpdateBatch")]
+//        public async Task<IActionResult> Update([FromBody] Batch batch)
+//        {
+//            if (ModelState.IsValid)
+//            {
+//                var content = new StringContent(JsonConvert.SerializeObject(batch), Encoding.UTF8, "application/json");
+//                var response = await _httpClient.PutAsync("Batch/Update", content);
+//                if (response.IsSuccessStatusCode)
+//                {
+//                    return Ok(new { success = true });
+//                }
+//                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+//            }
+//            return BadRequest(ModelState);
+//        }
+
+//        [HttpPost("DeleteConfirmed/{id}")]
+//        public async Task<IActionResult> Delete(int id)
+//        {
+//            var response = await _httpClient.DeleteAsync($"Batch/Delete/{id}");
+//            if (response.IsSuccessStatusCode)
+//            {
+//                return Ok(new { success = true });
+//            }
+//            return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+//        }
+//    }
+//}
 
 
 

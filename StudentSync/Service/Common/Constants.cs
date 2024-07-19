@@ -8,7 +8,7 @@ namespace StudentSync.Service.Common
 {
     public class Constants
     {
-        public static string[] ANONYMOUSAPI = { "login, forgotpassword"};
+        public static string[] ANONYMOUSAPI = {};
         public static long MaxAllowedSizeForImageUpload = 1024 * 1024 * 1024;
     }
 }

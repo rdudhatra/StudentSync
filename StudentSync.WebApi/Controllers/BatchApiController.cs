@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 
 namespace StudentSync.ApiControllers
 {
+
     [Route("api/Batch")]
     [ApiController]
+    [Authorize]
     public class BatchApiController : ControllerBase
     {
         private readonly IBatchService _batchService;

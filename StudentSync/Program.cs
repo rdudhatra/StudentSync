@@ -5,6 +5,7 @@ using System.Configuration;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Headers;
 using StudentSync.Service.Http;
+using StudentSync.Web.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IHttpService, HttpService>();
 
 
 
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -43,19 +45,23 @@ builder.Services.AddCors(options =>
 
 
 builder.Services.AddHttpClient();
-//builder.Services.AddHttpClient("WebApiClient", client =>
-//{
-//    client.BaseAddress = new Uri(builder.Configuration["WebApiClient:BaseAddress"]);
-//    client.Timeout = TimeSpan.FromMinutes(2); // Example: 2 minutes timeout
-//});
+
 
 var baseUrl = builder.Configuration.GetValue<string>("BaseUrl");
 builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri(baseUrl),
     Timeout = Timeout.InfiniteTimeSpan
+
 });
 
+
+//builder.Services.AddHttpClient<BatchController>(client =>
+//{
+//    client.BaseAddress = new Uri(baseUrl);
+//    client.DefaultRequestHeaders.Accept.Clear();
+//    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+//});
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StudentSync.Data.Models;
@@ -39,6 +40,7 @@ namespace StudentSync.Web.Controllers
                     return StatusCode((int)response.StatusCode, response.ReasonPhrase);
                 }
 
+                
                 var courseIds = JsonConvert.DeserializeObject<List<Course>>(await response.Content.ReadAsStringAsync());
                 return Json(courseIds);
             }
