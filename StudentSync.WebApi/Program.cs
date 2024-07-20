@@ -15,14 +15,43 @@ using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddCookie(options =>
+// Configure cookie authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.Cookie.Name = "StudentSyncAuthCookie"; // Cookie name
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Cookie expiration time
+    options.SlidingExpiration = true; // Renew expiration time with each request
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+
+    // Handle token validation errors
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
         {
-            options.Cookie.Name = "StudentSyncAuthCookie"; // Replace with your desired cookie name
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Adjust the expiration time as needed
-            options.SlidingExpiration = true; // Renew the expiration time with each request
-        });
-// Add services to the container.
+            // Handle authentication failure
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            var result = new { message = "Invalid token or authentication failed." };
+            return context.Response.WriteAsJsonAsync(result);
+        }
+          };
+});// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
@@ -35,22 +64,22 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader();
         });
 });
-builder.Services.AddAuthentication(config =>
-{
-    config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-            .AddJwtBearer(config =>
-            {
-                config.RequireHttpsMetadata = false;
-                config.SaveToken = true;
-                config.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+//builder.Services.AddAuthentication(config =>
+//{
+//    config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//            .AddJwtBearer(config =>
+//            {
+//                config.RequireHttpsMetadata = false;
+//                config.SaveToken = true;
+//                config.TokenValidationParameters = new TokenValidationParameters
+//                {
+//                    ValidateIssuerSigningKey = true,
+//                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+//                    ValidateIssuer = false,
+//                    ValidateAudience = false
+//                };
+//            });
 
 builder.Services.AddHttpContextAccessor();  
 

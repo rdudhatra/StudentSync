@@ -3,6 +3,7 @@
 
 
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Data.Models;
@@ -15,6 +16,7 @@ namespace StudentSync.ApiControllers
 {
     [Route("api/Employee")]
     [ApiController]
+    [Authorize]
     public class EmployeeApiController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;

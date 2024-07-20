@@ -13,6 +13,7 @@ namespace StudentSync.Api.Controllers
 {
     [Route("api/Course")]
     [ApiController]
+    [Authorize]
     public class CourseApiController : ControllerBase
     {
         private readonly ICourseServices _courseServices;

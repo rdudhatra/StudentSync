@@ -1,6 +1,7 @@
 ﻿
 
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Data.Models;
@@ -11,6 +12,7 @@ namespace StudentSync.ApiControllers
 {
     [Route("api/CourseFee")]
     [ApiController]
+    [Authorize]
     public class CourseFeeApiController : ControllerBase
     {
         private readonly ICourseFeeService _courseFeeService;

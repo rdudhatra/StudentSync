@@ -12,6 +12,7 @@ namespace StudentSync.ApiControllers
 {
     [Route("api/Enrollment")]
     [ApiController]
+    [Authorize]
     public class EnrollmentApiController : ControllerBase
     {
         private readonly IEnrollmentService _enrollmentService;

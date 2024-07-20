@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services.Interfaces;
 using StudentSync.Data.Models;
 using System;
@@ -9,6 +10,7 @@ namespace StudentSync.ApiControllers
 {
     [Route("api/StudentInstallment")]
     [ApiController]
+    [Authorize]
     public class StudentInstallmentApiController : ControllerBase
     {
         private readonly IStudentInstallmentService _studentInstallmentService;

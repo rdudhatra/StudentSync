@@ -238,7 +238,7 @@
                          alt="Header Avatar">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">@User.Identity.Name</span>
+                        <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">@User.Identity.IsAuthenticated</span>
                     }
                     <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
                 </button>

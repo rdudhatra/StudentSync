@@ -1,6 +1,7 @@
 ﻿
 
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services;
 using StudentSync.Core.Services.Interface;
@@ -12,6 +13,7 @@ namespace StudentSync.ApiControllers
 {
     [Route("api/CourseExam")]
     [ApiController]
+    [Authorize]
     public class CourseExamApiController : ControllerBase
     {
         private readonly ICourseExamServices _courseExamServices;

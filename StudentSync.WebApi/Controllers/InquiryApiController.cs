@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Core.Services.Interfaces;
 using StudentSync.Data.Models;
@@ -10,6 +11,7 @@ namespace StudentSync.ApiControllers
 {
     [Route("api/Inquiry")]
     [ApiController]
+    [Authorize]
     public class InquiryApiController : ControllerBase
     {
         private readonly IInquiryService _inquiryService;

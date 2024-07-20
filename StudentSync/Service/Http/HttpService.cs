@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using StudentSync.Data.Models;
 using StudentSync.Service.Common;
 using System;
 using System.Collections.Generic;
@@ -69,6 +70,7 @@ namespace StudentSync.Service.Http
         {
             // Retrieve your token from cookies
             var authToken = _httpContextAccessor.HttpContext.Request.Cookies["authToken"];
+            //authToken = authToken + "DD";
             return await Task.FromResult(authToken);
         }
 
