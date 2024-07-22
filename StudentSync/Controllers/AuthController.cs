@@ -15,10 +15,13 @@ namespace StudentSync.Controllers
     public class AuthController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthController(HttpClient httpClient)
+
+        public AuthController(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -56,7 +59,7 @@ namespace StudentSync.Controllers
             return View("~/Views/AuthRegister/Index.cshtml", model);
         }
 
-        [HttpGet]
+        [HttpGet]   
         public IActionResult Login()
         {
             var model = new LoginViewModel();
@@ -97,13 +100,13 @@ namespace StudentSync.Controllers
                                 return View("~/Views/AuthLogin/Index.cshtml", model);
                             }
 
-                            // Format token as "bearer <token_value>"
+                            // Format token as "bearer <token_value>"   
                             var formattedToken = $"{token}";
 
                             // Store token in cookie
                             Response.Cookies.Append("AuthToken", formattedToken, new Microsoft.AspNetCore.Http.CookieOptions
                             {
-                                Expires = DateTimeOffset.UtcNow.AddDays(30), // Set cookie expiration as needed
+                                Expires = DateTimeOffset.UtcNow.AddMonths(12), // Set cookie expiration as needed
                                 HttpOnly = true, // Ensures the cookie is accessible only through HTTP requests
                                 Secure = true, // Ensures the cookie is only sent over HTTPS if your site is HTTPS
                                 SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict // Protects against cross-site request forgery
@@ -139,28 +142,7 @@ namespace StudentSync.Controllers
 
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
-        {
-            try
-            {
-                var response = await _httpClient.PostAsync("Auth/logout", null); // No content needed for logout
-                response.EnsureSuccessStatusCode();
 
-                var result = await response.Content.ReadAsStringAsync();
-                var message = JsonSerializer.Deserialize<ApiResponse<string>>(result);
-
-                TempData["SuccessMessage"] = message.Data;
-                return RedirectToAction("Login");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
 
         //[HttpPost]
         //[ValidateAntiForgeryToken]
@@ -168,26 +150,11 @@ namespace StudentSync.Controllers
         //{
         //    try
         //    {
-        //        // Retrieve the token from the cookie or other secure storage
-        //        var token = Request.Cookies["AuthToken"];
-
-        //        if (string.IsNullOrEmpty(token))
-        //        {
-        //            ModelState.AddModelError(string.Empty, "No token found for logout.");
-        //            return RedirectToAction("Index", "Home");
-        //        }
-
-        //        var requestMessage = new HttpRequestMessage(HttpMethod.Post, "token/logout");
-        //        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        //        var response = await _httpClient.SendAsync(requestMessage);
+        //        var response = await _httpClient.PostAsync("Auth/logout", null); // No content needed for logout
         //        response.EnsureSuccessStatusCode();
 
         //        var result = await response.Content.ReadAsStringAsync();
         //        var message = JsonSerializer.Deserialize<ApiResponse<string>>(result);
-
-        //        // Remove the authentication cookie
-        //        Response.Cookies.Delete("AuthToken");
 
         //        TempData["SuccessMessage"] = message.Data;
         //        return RedirectToAction("Login");
@@ -199,6 +166,44 @@ namespace StudentSync.Controllers
 
         //    return RedirectToAction("Index", "Home");
         //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                // Retrieve the token from the cookie or other secure storage
+                var token = Request.Cookies["AuthToken"];
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    ModelState.AddModelError(string.Empty, "No token found for logout.");
+                    return RedirectToAction("Index", "Home");
+                }
+
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "token/logout");
+                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = await _httpClient.SendAsync(requestMessage);
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadAsStringAsync();
+                var message = JsonSerializer.Deserialize<ApiResponse<string>>(result);
+
+                // Remove the authentication cookie
+                Response.Cookies.Delete("AuthToken");
+
+                TempData["SuccessMessage"] = message.Data;
+                return RedirectToAction("Login");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
 
 
     }

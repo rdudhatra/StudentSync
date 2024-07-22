@@ -87,7 +87,6 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" onclick="saveCourseExam()">Save</button>
-@*                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
  *@                            </div>
                         </div>
                     </div>
@@ -353,8 +352,8 @@
                     // Example: Displaying the data in console, adjust as per your requirement
                 },
                 error: function (xhr, status, error) {
-                    toastr.error('Error fetching Course IDs: ' + error);
-                    console.error('Error fetching Course IDs:', xhr.responseText);
+                    toastr.error('Error fetching CourseExam IDs: ' + error);
+                    console.error('Error fetching CourseExam IDs:', xhr.responseText);
                 }
             });
         }

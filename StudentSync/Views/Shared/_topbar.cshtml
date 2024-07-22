@@ -238,19 +238,17 @@
                          alt="Header Avatar">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">@User.Identity.IsAuthenticated</span>
+                        <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">@User.Identity.Name</span>
                     }
+
                     <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
                 </button>
 
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
                     <a class="dropdown-item" href="#"><i class="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i> <span class="align-middle">View Profile</span></a>
-                    <a class="dropdown-item" href="#"><i class="uil uil-wallet font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">My Wallet</span></a>
-                    <a class="dropdown-item d-block" href="#"><i class="uil uil-cog font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">Settings</span> <span class="badge bg-soft-success rounded-pill mt-1 ms-2">03</span></a>
-                    <a class="dropdown-item" href="#"><i class="uil uil-lock-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">Lock screen</span></a>
-@*                     <a class="dropdown-item" href="#"><i class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span class="align-middle">Sign out</span></a>
- *@                    <form class="dropdown-item" asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
+  
+                    <form class="dropdown-item" asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
                         <button type="submit" class="btn btn-link p-0 text-muted">
                             <i class="uil uil-sign-out-alt font-size-18 align-middle me-1"></i>
                             <span class="align-middle">Sign out</span>

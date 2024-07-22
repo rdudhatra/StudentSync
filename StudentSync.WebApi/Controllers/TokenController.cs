@@ -55,7 +55,7 @@ namespace StudentSync.WebApi.Controllers
                         var token = new JwtSecurityToken(
                             issuer: _configuration["JWT:ValidIssuer"],
                             audience: _configuration["JWT:ValidAudience"],
-                            expires: DateTime.UtcNow.AddHours(1), // Adjust token expiration as needed
+                            expires: DateTime.UtcNow.AddMonths(12), // Adjust token expiration as needed
                             claims: authClaims,
                             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                         );
@@ -81,6 +81,7 @@ namespace StudentSync.WebApi.Controllers
             return BadRequest(new { message = "Invalid model" });
         }
 
+
         [HttpPost]
         [Route("logout")]
         public async Task<IActionResult> Logout()
@@ -101,5 +102,27 @@ namespace StudentSync.WebApi.Controllers
                 return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
             }
         }
+
+
+        //[HttpPost]
+        //[Route("logout")]
+        //public async Task<IActionResult> Logout()
+        //{
+        //    try
+        //    {
+        //        var result = await _authService.LogoutAsync();
+
+        //        if (result.Succeeded)
+        //        {
+        //            return Ok(new { message = "Logout successful" });
+        //        }
+
+        //        return BadRequest(new { message = "Invalid credentials" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
+        //    }
+        //}
     }
 }

@@ -17,8 +17,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
        .AddCookie(options =>
        {
            options.LoginPath = "/Auth/Login";
-           options.LogoutPath = "/Auth/Logout";
-           options.AccessDeniedPath = "/Auth/AccessDenied";
+           options.LogoutPath = "/Auth/Logout";         
        });
 
 // Add services to the container.
@@ -28,7 +27,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();  
 
 builder.Services.AddScoped<IHttpService, HttpService>();
-
 
 
 
@@ -82,6 +80,7 @@ app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 

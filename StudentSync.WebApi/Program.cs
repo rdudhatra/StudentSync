@@ -15,6 +15,9 @@ using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+ 
+
 // Configure cookie authentication
 builder.Services.AddAuthentication(options =>
 {
@@ -38,20 +41,8 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = false,
         ValidateAudience = false
     };
-
-    // Handle token validation errors
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
-        {
-            // Handle authentication failure
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            var result = new { message = "Invalid token or authentication failed." };
-            return context.Response.WriteAsJsonAsync(result);
-        }
-          };
-});// Add services to the container.
+});
+// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
@@ -89,7 +80,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tickets API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Student Sync API", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
@@ -109,32 +100,16 @@ builder.Services.AddSwaggerGen(c =>
                             {
                                 Type = ReferenceType.SecurityScheme,
                                 Id = "Bearer"
-                            }
-                            //Scheme = "oauth2",
-                            //Name = "Bearer",
-                            //In = ParameterLocation.Header,
-                        },
-                new string[] { }
-
-                    }
-                });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
                             },
                             Scheme = "oauth2",
                             Name = "Bearer",
                             In = ParameterLocation.Header,
                         },
-                        new List<string>()
+                new string[] { }
+
                     }
                 });
+
 });
 
 // Add global authorization policy
