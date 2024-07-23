@@ -22,4 +22,5 @@ public partial class User
 
     public DateTime? UpdatedDate { get; set; }
 
+
 }

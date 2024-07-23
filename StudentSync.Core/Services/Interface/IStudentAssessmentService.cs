@@ -1,4 +1,5 @@
 ﻿using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace StudentSync.Core.Services.Interface
         Task  SaveStudentAssessment(StudentAssessment studentAssessment);
         Task UpdateStudentAssessment(StudentAssessment studentAssessment);
         Task DeleteStudentAssessment(int studentAssessmentId);
-        Task<List<StudentAssessment>> GetAllStudentAssessments();
+        Task<IEnumerable<StudentAssessmentResponseModel>> GetAllStudentAssessments();
         Task<StudentAssessment> GetStudentAssessmentById(int id);
     }
 

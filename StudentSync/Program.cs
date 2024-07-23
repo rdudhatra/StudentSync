@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components;
 using System.Net.Http.Headers;
 using StudentSync.Service.Http;
 using StudentSync.Web.Controllers;
+using StudentSync.Core.Services.Interface;
+using StudentSync.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
            options.LoginPath = "/Auth/Login";
            options.LogoutPath = "/Auth/Logout";         
        });
+builder.Services.AddAuthorization();
+
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -27,6 +31,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();  
 
 builder.Services.AddScoped<IHttpService, HttpService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+
 
 
 

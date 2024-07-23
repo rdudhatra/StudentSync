@@ -17,7 +17,7 @@
                             <th>ID</th>
                             <th>Assessment Date</th>
                             <th>Enrollment No</th>
-                            <th>Course Exam ID</th>
+                            <th>Course Name</th>
                             <th>Obtained Marks</th>
                             <th>Remarks</th>
                             <th>Action</th>
@@ -27,7 +27,7 @@
                       
                     </tbody>
                 </table>
-            </div>
+            </div>  
         </div>
     </div>
 </div>
@@ -60,7 +60,7 @@
                     </div>
               
                     <div class="form-group">
-                        <label for="CourseExamId">Course Exam ID</label>
+                        <label for="CourseExamId">Course Name</label>
                         <select class="form-control" id="CourseExamId" required>
                             <!-- Options will be dynamically populated here -->
                         </select>
@@ -158,7 +158,8 @@
                     { "data": "id", "name": "Id" },
                     { "data": "assessmentDate", "name": "AssessmentDate" },
                     { "data": "enrollmentNo", "name": "EnrollmentNo" },
-                    { "data": "courseExamId", "name": "CourseExamId" },
+                    { "data": "courseName","name":"CourseName" },
+                   // { "data": "courseExamId", "name": "CourseExamId" },
                     { "data": "obtainedMarks", "name": "ObtainedMarks" },
                     { "data": "remarks", "name": "Remarks" },
                     {
@@ -170,36 +171,6 @@
                 ]
             });
         });
-
-
-
-        function getAllCourses() {
-            $.ajax({
-                url: '/CourseExam/GetAllExamCourseIds', // Adjust URL to match your controller route
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    if (Array.isArray(data) && data.length > 0) {
-                        var options = '<option value="">Select Course</option>';
-                        data.forEach(function (course) {
-                            options += '<option value="' + course.courseId + '">' + course.courseId + '</option>';
-                        });
-                        $('#CourseExamId').html(options); // Populate dropdown with Course names
-                    } else {
-                        console.error('No Courses returned or invalid data format:', data);
-                        toastr.error('No Courses returned or invalid data format.');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    toastr.error('Error fetching Courses: ' + error);
-                    console.error('Error fetching Courses:', xhr.responseText);
-                }
-            });
-        }
-
-        // Call the function to fetch and populate Courses
-        getAllCourses();
-
 
         function getAllEnrollmentNo() {
             $.ajax({
@@ -224,6 +195,33 @@
                 }
             });
         }
+
+        function getAllCourses() {
+            $.ajax({
+                url: '/Course/GetAllCourseIds', // Adjust URL to match your controller route
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (Array.isArray(data) && data.length > 0) {
+                        var options = '<option value="">Select Course</option>';
+                        data.forEach(function (course) {
+                            options += '<option value="' + course.courseId + '">' + course.courseName + '</option>';
+                        });
+                        $('#CourseExamId').html(options); // Populate dropdown with Course names
+                    } else {
+                        console.error('No Courses returned or invalid data format:', data);
+                        toastr.error('No Courses returned or invalid data format.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    toastr.error('Error fetching Courses: ' + error);
+                    console.error('Error fetching Courses:', xhr.responseText);
+                }
+            });
+        }
+
+        // Call the function to fetch and populate Courses
+        getAllCourses();
 
         // Call the function to fetch and populate Courses
         getAllEnrollmentNo();
@@ -313,6 +311,8 @@
             $('#ObtainedMarks').val('');
             $('#Remarks').val('');
             $('#addEditStudentAssessmentModal').modal('show');
+            $('#addEditStudentAssessmentModalLabel').text('Add New StudentAssessment');
+
         }
 
         function onEditStudentAssessmentClick(id) {
@@ -331,6 +331,8 @@
                     $('#ObtainedMarks').val(response.obtainedMarks);
                     $('#Remarks').val(response.remarks);
                     $('#addEditStudentAssessmentModal').modal('show');
+                    $('#addEditStudentAssessmentModalLabel').text('Edit StudentAssessment');
+
                 },
                 error: function (response) {
 

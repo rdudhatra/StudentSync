@@ -590,7 +590,6 @@ namespace StudentSync.Data.Migrations
             modelBuilder.Entity("StudentSync.Data.Models.User", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -604,6 +603,9 @@ namespace StudentSync.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoleId")

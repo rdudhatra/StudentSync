@@ -46,7 +46,7 @@
                                     <input type="hidden" id="Id" name="Id" />
                               
                                     <div class="form-group">
-                                        <label for="CourseId">Course ID:</label>
+                                        <label for="CourseId">Corse Name:</label>
                                         <select class="form-control" id="CourseId" required>
                                             <!-- Options will be populated dynamically -->
                                         </select>
@@ -87,7 +87,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" onclick="saveCourseExam()">Save</button>
- *@                            </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -301,6 +301,8 @@
             $('#Remarks').val("");
 
             $('#addEditCourseExamModal').modal('show');
+                        $('#addEditCourseExamModalLabel').text('Add New Course Exam');
+
         }
           
         // DataTable initialization

@@ -199,6 +199,8 @@
             $('#Through').val('');
             $('#Remarks').val('');
             $('#addEditInquiryFollowUpModal').modal('show');
+            $('#addEditInquiryFollowUpModalLabel').text('Add New InquiryFollowUp');
+            
         }
 
         function closeModal() {
@@ -273,6 +275,8 @@
                     $('#Through').val(response.through);
                     $('#Remarks').val(response.remarks);
                     $('#addEditInquiryFollowUpModal').modal('show');
+                    $('#addEditInquiryFollowUpModalLabel').text('Edit InquiryFollowUp');
+
                 },
                 error: function () {
                     toastr.error('Error retrieving inquiry follow-up details.');

@@ -16,6 +16,9 @@ namespace StudentSync.Data.ResponseModel
 
         public int? CourseExamId { get; set; }
 
+        public string? CourseName { get; set; } // Example: Including course name
+
+
         public decimal? ObtainedMarks { get; set; }
 
         public string? Remarks { get; set; }

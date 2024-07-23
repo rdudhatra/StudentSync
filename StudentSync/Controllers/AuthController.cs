@@ -204,7 +204,7 @@ namespace StudentSync.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
+       
 
     }
 }

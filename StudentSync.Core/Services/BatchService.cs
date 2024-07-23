@@ -26,56 +26,6 @@ namespace StudentSync.Core.Services
             return _context.Batches.ToList();
         }
 
-        //public async Task<List<Batch>> GetAllBatchesAsync()
-        //{
-        //    var batches = await _context.Batches
-        //             .Join(_context.Courses,
-        //                   batch => batch.BatchCourseId,
-        //                   course => course.CourseId,
-        //                   (batch, course) => new Batch
-        //                   {
-        //                       Id = batch.Id,
-        //                       BatchCode = batch.BatchCode,
-        //                       BatchTime = batch.BatchTime,
-        //                       BatchCourseId = batch.BatchCourseId,
-        //                      // CourseName = course.CourseName, // Assuming your Course model has a CourseName property
-        //                       FacultyName = batch.FacultyName,
-        //                       IsActive = batch.IsActive,
-        //                       Remarks = batch.Remarks,
-        //                       CreatedBy = batch.CreatedBy,
-        //                       CreatedDate = batch.CreatedDate,
-        //                       UpdatedBy = batch.UpdatedBy,
-        //                       UpdatedDate = batch.UpdatedDate
-        //                   })
-        //             .ToListAsync();
-
-        //    return batches;
-        //}
-
-        //public async Task<List<BatchResponseModel>> GetAllBatchesAsync()
-        //{
-        //    var batches = await _context.Batches
-        //        .ToListAsync();
-
-        //    var batchResponseModels = batches.Select(batch => new BatchResponseModel
-        //    {
-        //        Id = batch.Id,
-        //        BatchCode = batch.BatchCode,
-        //        BatchTime = batch.BatchTime,
-        //        BatchCourseId = batch.BatchCourseId,                                                                                                            
-        //        FacultyName = batch.FacultyName,
-        //        IsActive = batch.IsActive ?? false,
-        //        Remarks = batch.Remarks,
-        //        CreatedBy = batch.CreatedBy,
-        //        CreatedDate = batch.CreatedDate ?? default,
-        //        UpdatedBy = batch.UpdatedBy,
-        //        UpdatedDate = batch.UpdatedDate ?? default,
-        //        CourseName = _context.Courses.FirstOrDefault(c => c.CourseId == batch.BatchCourseId)?.CourseName
-        //    }).ToList();
-
-        //    return batchResponseModels;
-        //}
-
 
         public async Task<List<BatchResponseModel>> GetAllBatchesAsync()
         {

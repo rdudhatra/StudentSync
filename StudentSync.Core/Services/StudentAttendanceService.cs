@@ -2,6 +2,7 @@
 using StudentSync.Core.Services.Interface;
 using StudentSync.Data.Data;
 using StudentSync.Data.Models;
+using StudentSync.Data.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,26 @@ namespace StudentSync.Core.Services
         {
             _context = context;
         }
-
-        public async Task<IList<StudentAttendance>> GetAllStudentAttendances()
+        public async Task<IEnumerable<StudentAttendanceResponseModel>> GetAllStudentAttendances()
         {
-            return await _context.StudentAttendances.ToListAsync();
+            var attendances = await (from attendance in _context.StudentAttendances
+                                     join course in _context.Courses on attendance.BatchId equals course.CourseId into courseJoin
+                                     from course in courseJoin.DefaultIfEmpty()
+                                     select new StudentAttendanceResponseModel
+                                     {
+                                         Id = attendance.Id,
+                                         AttendanceDate = attendance.AttendanceDate,
+                                         EnrollmentNo = attendance.EnrollmentNo,
+                                         BatchId = attendance.BatchId,
+                                         CourseName = course.CourseName,// Include the Course name
+                                         Remarks = attendance.Remarks,
+                                         CreatedBy = attendance.CreatedBy,
+                                         CreatedDate = attendance.CreatedDate,
+                                         UpdatedBy = attendance.UpdatedBy,
+                                         UpdatedDate = attendance.UpdatedDate
+                                     }).ToListAsync();
+
+            return attendances;
         }
 
         public async Task<StudentAttendance> GetStudentAttendanceById(int id)

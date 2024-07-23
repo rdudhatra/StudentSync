@@ -62,7 +62,7 @@
                         <div class="invalid-feedback">Batch ID is required.</div>
                     </div>
                     <div class="form-group">
-                        <label for="CourseId">Course ID</label>
+                        <label for="CourseId">Corse Name</label>
                         <select class="form-control" id="CourseId" required>
                             <!-- Options will be populated dynamically -->
                         </select>
@@ -312,10 +312,11 @@
             $('#EnrollmentDate').val('');
             $('#BatchId').val('');
             $('#CourseId').val('');
-           // $('#CourseFeeId').val('');
             $('#InquiryNo').val('');
             $('#Remarks').val('');
             $('#addEditEnrollmentModal').modal('show');
+            $('#addEditEnrollmentModalLabel').text('Add New Enrollnment');
+
         }
 
         function closeModal() {
@@ -371,7 +372,6 @@
                 EnrollmentDate: $('#EnrollmentDate').val(),
                 BatchId: parseInt($('#BatchId').val()),
                 CourseId: parseInt($('#CourseId').val()),
-                //CourseFeeId: parseInt($('#CourseFeeId').val()),
                 InquiryNo: parseInt($('#InquiryNo').val()),
                 Remarks: $('#Remarks').val(),
                 CreatedBy: 'Admin', // Replace with actual user
@@ -412,10 +412,11 @@
                     $('#EnrollmentDate').val(response.enrollmentDate ? new Date(response.enrollmentDate).toISOString().substr(0, 10) : '');
                     $('#BatchId').val(response.batchId);
                     $('#CourseId').val(response.courseId);
-                  //  $('#CourseFeeId').val(response.courseFeeId);
                     $('#InquiryNo').val(response.inquiryNo);
                     $('#Remarks').val(response.remarks);
                     $('#addEditEnrollmentModal').modal('show');
+                    $('#addEditEnrollmentModalLabel').text('Edit Enrollnment');
+
                 },
                 error: function () {
                     toastr.error('Error fetching enrollment details.');

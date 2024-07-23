@@ -12,8 +12,8 @@ using StudentSync.Data.Data;
 namespace StudentSync.Data.Data.Migrations
 {
     [DbContext(typeof(StudentSyncDbContext))]
-    [Migration("20240718065730_initial_6.10")]
-    partial class initial_610
+    [Migration("20240723114107_initial_8.4")]
+    partial class initial_84
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,9 +122,6 @@ namespace StudentSync.Data.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -167,9 +164,6 @@ namespace StudentSync.Data.Data.Migrations
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -216,9 +210,6 @@ namespace StudentSync.Data.Data.Migrations
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -306,9 +297,6 @@ namespace StudentSync.Data.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -361,9 +349,6 @@ namespace StudentSync.Data.Data.Migrations
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -608,7 +593,6 @@ namespace StudentSync.Data.Data.Migrations
             modelBuilder.Entity("StudentSync.Data.Models.User", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -622,6 +606,9 @@ namespace StudentSync.Data.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoleId")

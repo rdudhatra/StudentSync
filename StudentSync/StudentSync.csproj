@@ -115,6 +115,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StudentSync.Core\StudentSync.Core.csproj" />
     <ProjectReference Include="..\StudentSync.Data\StudentSync.Data.csproj" />
   </ItemGroup>
 

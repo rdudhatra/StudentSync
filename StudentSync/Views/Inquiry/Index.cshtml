@@ -122,27 +122,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                          @*   <div class="form-group">
-                                <label for="Job">Job</label>
-                                <input type="checkbox" id="Job" />
-                            </div>
-                            <div class="form-group">
-                                <label for="Business">Business</label>
-                                <input type="checkbox" id="Business" />
-                            </div>
-                            <div class="form-group">
-                                <label for="Study">Study</label>
-                                <input type="checkbox" id="Study" />
-                            </div>
-                            <div class="form-group">
-                                <label for="PrevCompCourse">Previous Completed Course</label>
-                                <input type="checkbox" id="PrevCompCourse" />
-                            </div>
-                            <div class="form-group">
-                                <label for="IsActive">Active</label>
-                                <input type="checkbox" id="IsActive" />
-                            </div> *@
                         </div>
                     </div>
                     <div class="row">
@@ -165,7 +144,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="CourseId">Course ID:</label>
+                                <label for="CourseId">Corse Name:</label>
                                 <select class="form-control" id="CourseId" required>
                                     <!-- Options will be dynamically populated here -->
                                 </select>
@@ -349,6 +328,8 @@
         function onAddInquiryClick() {
             $('#InquiryForm')[0].reset();
             $('#addEditInquiryModal').modal('show');
+            $('#addEditInquiryModalLabel').text('Add New  Inquiry');
+            
         }
 
         function onEditInquiryClick(inquiryNo) {
@@ -377,6 +358,8 @@
                     $('#Status').val(data.status);
                     $('#IsActive').prop('checked', data.isActive);
                     $('#addEditInquiryModal').modal('show');
+                    $('#addEditInquiryModalLabel').text('Edit Inquiry');
+
                 },
                 error: function (error) {
                     console.log(error);

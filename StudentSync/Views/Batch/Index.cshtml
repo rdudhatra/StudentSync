@@ -63,7 +63,7 @@
              
 
                         <div class="form-group">
-                            <label for="BatchCourseId">Course:</label>
+                        <label for="BatchCourseId">Corse Name:</label>
                             <select class="form-control" id="BatchCourseId" required>
                                 <!-- Options will be populated dynamically -->
                             </select>
@@ -335,6 +335,8 @@
                         $('#IsActive').prop('checked', data.isActive);
                         $('#Remarks').val(data.remarks);
                         $('#addEditBatchModal').modal('show');
+                    $('#addEditBatchModalLabel').text('Edit Batch');
+
                     },
                     error: function (response) {
                         toastr.error('Error fetching batch details.');
@@ -350,7 +352,10 @@
                 $('#BatchCourseId').val('');
                 $('#IsActive').prop('checked', false);
                 $('#Remarks').val('');
-                $('#addEditBatchModal').modal('show');
+            $('#addEditBatchModal').modal('show');
+            $('#addEditBatchModalLabel').text('Add New Batch');
+            
+
             }
         </script>
     }

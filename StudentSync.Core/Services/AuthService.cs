@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Core.Wrapper;
 using StudentSync.Data.Data;
 using StudentSync.Data.Models;
 using StudentSync.Data.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace StudentSync.Core.Services
 {
@@ -145,5 +142,6 @@ namespace StudentSync.Core.Services
                 throw new InvalidOperationException("An error occurred during sign-in.", ex);
             }
         }
+   
     }
 }

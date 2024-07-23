@@ -210,6 +210,8 @@
                 $('#EnrollmentNo').val('');
                 $('#TransactionMode').val('');
                 $('#addEditStudentInstallmentModal').modal('show');
+            $('#addEditStudentInstallmentModalLabel').text('Add New StudentInstallment');
+
             }
 
             function closeModal() {
@@ -287,6 +289,8 @@
                         $('#EnrollmentNo').val(response.enrollmentNo);
                         $('#TransactionMode').val(response.transactionMode);
                         $('#addEditStudentInstallmentModal').modal('show');
+                    $('#addEditStudentInstallmentModalLabel').text('Edit StudentInstallment');
+
                     },
                     error: function () {
                         toastr.error('Error retrieving student installment.');

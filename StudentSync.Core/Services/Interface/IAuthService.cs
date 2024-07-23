@@ -1,4 +1,5 @@
 ﻿using StudentSync.Core.Wrapper;
+using StudentSync.Data.Models;
 using StudentSync.Data.ViewModels;
 
 namespace StudentSync.Core.Services.Interface
@@ -9,6 +10,7 @@ namespace StudentSync.Core.Services.Interface
         Task<IResult> LoginAsync(LoginViewModel model);
         Task<IResult> LogoutAsync();
         Task<IResult> AdminLoginAsync(LoginViewModel model); // New method for admin login
+                                                             
 
     }
 }

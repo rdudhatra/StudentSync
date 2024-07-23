@@ -42,7 +42,7 @@
                                     <input type="hidden" id="Id" name="Id" />
                                  
                                     <div class="form-group">
-                                        <label for="CourseId">Course ID:</label>
+                                        <label for="CourseId">Corse Name:</label>
                                         <select class="form-control" id="CourseId" required>
                                             <!-- Options will be dynamically populated here -->
                                         </select>
@@ -260,6 +260,8 @@
             $('#Remarks').val("");
 
             $('#addEditCourseSyllabusModal').modal('show');
+            $('#addEditCourseSyllabusModalLabel').text('Add New CourseSyllabus');
+
         }
 
         // DataTable initialization

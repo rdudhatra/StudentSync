@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Data.ViewModels;
 using System;
@@ -115,5 +116,6 @@ namespace StudentSync.WebApi.Controllers
                 return StatusCode(500, new { Error = $"An error occurred: {ex.Message}" });
             }
         }
+
     }
 }
