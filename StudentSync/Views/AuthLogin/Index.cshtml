@@ -34,6 +34,11 @@
                                         <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                     <div class="mb-3">
+                                        <label class="form-label" for="username">Username</label>
+                                        <input type="username" class="form-control" id="username" name="Username" placeholder="Enter Username" value="@Model?.Username">
+                                        <span asp-validation-for="Username" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
                                         <label class="form-label" for="password">Password</label>
                                         <input type="password" class="form-control" id="password" name="Password" placeholder="Enter password" value="@Model?.Password">
                                         <span asp-validation-for="Password" class="text-danger"></span>

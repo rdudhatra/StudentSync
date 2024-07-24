@@ -25,7 +25,7 @@ namespace StudentSync.Web.Controllers
         {
             return View();
         }
-
+         
         [HttpGet("getAllEnrollMentno")]
         public async Task<IActionResult> GetAllEnrollmentNumbers()
         {

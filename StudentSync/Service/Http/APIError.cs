@@ -25,3 +25,4 @@ namespace StudentSync.Service.Http
         public bool Succeeded { get; set; }
     }
 }
+ 

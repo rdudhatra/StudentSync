@@ -104,25 +104,6 @@ namespace StudentSync.WebApi.Controllers
         }
 
 
-        //[HttpPost]
-        //[Route("logout")]
-        //public async Task<IActionResult> Logout()
-        //{
-        //    try
-        //    {
-        //        var result = await _authService.LogoutAsync();
-
-        //        if (result.Succeeded)
-        //        {
-        //            return Ok(new { message = "Logout successful" });
-        //        }
-
-        //        return BadRequest(new { message = "Invalid credentials" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
-        //    }
-        //}
+  
     }
 }

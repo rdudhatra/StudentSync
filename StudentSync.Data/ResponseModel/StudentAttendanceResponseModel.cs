@@ -16,7 +16,7 @@ namespace StudentSync.Data.ResponseModel
 
         public int? BatchId { get; set; }
 
-        public string? CourseName { get; set; } // Example: Including course name
+        public string? CourseName { get; set; }
 
         public string? Remarks { get; set; }
 

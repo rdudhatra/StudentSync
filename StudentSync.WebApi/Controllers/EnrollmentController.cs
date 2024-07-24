@@ -24,7 +24,7 @@ namespace StudentSync.ApiControllers
 
         [HttpGet("GetAllEnrollmentNumbers")]
         public async Task<IActionResult> GetAllEnrollmentNumbers()
-        {
+        { 
             try
             {
                 var enrollmentNumbers = _enrollmentService.GetAllEnrollMentno();

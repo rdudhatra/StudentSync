@@ -32,7 +32,7 @@ namespace StudentSync.ApiControllers
                 var courseSyllabuses = await _courseSyllabusService.GetAllCourseSyllabusesAsync();
                 return Ok(courseSyllabuses);
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
                 Console.WriteLine($"Exception occurred: {ex.Message}");
                 return StatusCode(500, $"Internal server error: {ex.Message}");

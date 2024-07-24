@@ -34,7 +34,7 @@ namespace StudentSync.ApiControllers
             {
                 _logger.LogError(ex, "Exception occurred while fetching all student attendances.");
                 return StatusCode(500, "Internal server error");
-            }
+            } 
         }
 
         [HttpPost("Create")]

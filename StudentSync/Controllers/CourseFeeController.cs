@@ -23,7 +23,7 @@ namespace StudentSync.Web.Controllers
             _httpService = httpService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index() 
         {
             return View();
         }

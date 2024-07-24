@@ -24,7 +24,7 @@ namespace StudentSync.Controllers
         {
             return View();
         }
-
+         
         [HttpGet("GetAllExamCourseIds")]
         public async Task<IActionResult> GetAllCourseExamIds()
         {

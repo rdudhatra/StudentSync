@@ -20,3 +20,53 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.container {
+        max-width: 600px;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+         align-items: center;
+        min-height: 20vh; /* Ensures the container takes at least full viewport height */
+    }
+
+    .form-wrapper {
+        width: 100%;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .eye-icon {
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 100;
+    }
+
+    .form-control {
+        padding-right: 2.5rem;
+    }
+
+    .btn-update {
+        display: block;
+        margin: auto;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    h6 {
+        text-align: center;
+        margin-top: 20px; /* Add space above the h6 */
+        color: #6c757d; /* Optional: adjust color */
+    }

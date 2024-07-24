@@ -33,7 +33,7 @@ namespace StudentSync.Controllers
 
                 if (!response.Succeeded)
                 {
-                    return StatusCode((int)response.Response.StatusCode, response.Response.ReasonPhrase);
+                    return StatusCode((int)response.Response.StatusCode, response.Response.ReasonPhrase); 
                 }
 
                 var inquiryFollowUps = response.Data;

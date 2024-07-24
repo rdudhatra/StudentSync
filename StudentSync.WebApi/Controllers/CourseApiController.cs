@@ -1,7 +1,5 @@
 ﻿
 
-
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentSync.Core.Services.Interface;
@@ -136,23 +134,6 @@ namespace StudentSync.Api.Controllers
             }
         }
 
-        [HttpGet("SearchByName")]
-        public async Task<IActionResult> SearchByName(string name)
-        {
-            try
-            {
-                var result = await _courseServices.SearchCourseByNameAsync(name);
-                if (result.Succeeded)
-                {
-                    return Ok(new { data = result.Data });
-                }
-                return BadRequest(result.Messages);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception occurred: {ex.Message}");
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+      
     }
 }

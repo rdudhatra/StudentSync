@@ -12,3 +12,4 @@ namespace StudentSync.Service.Common
         public static long MaxAllowedSizeForImageUpload = 1024 * 1024 * 1024;
     }
 }
+ 

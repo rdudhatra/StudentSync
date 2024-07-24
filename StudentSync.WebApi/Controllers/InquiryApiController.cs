@@ -24,7 +24,7 @@ namespace StudentSync.ApiControllers
         [HttpGet("GetAllInquiryNumbers")]
         public async Task<IActionResult> GetAllInquiryNumbers()
         {
-            try
+            try 
             {
                 var inquiryNumbers =  _inquiryService.GetAllInquiryno();
                 return Ok(inquiryNumbers);

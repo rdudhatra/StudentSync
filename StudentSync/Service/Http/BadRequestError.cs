@@ -8,3 +8,4 @@ namespace StudentSync.Service.Http
         public Dictionary<string, string[]> Errors { get; set; }
     }
 }
+ 

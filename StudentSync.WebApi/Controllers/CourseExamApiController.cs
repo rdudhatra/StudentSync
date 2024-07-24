@@ -26,7 +26,7 @@ namespace StudentSync.ApiControllers
         [HttpGet("GetAllCourseExamIds")]
         public async Task<IActionResult> GetAllCourseExamIds()
         {
-            try
+            try 
             {
                 var courseExamIds = _courseExamServices.GetAllCourseExamIds();
                 return Ok(courseExamIds);

@@ -50,9 +50,9 @@ public partial class StudentSyncDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
-           // .Property(u => u.Id)
-            //.ValueGeneratedOnAdd()
-        .HasKey(u => u.Id); // Ensure the key type is string
+           .Property(u => u.Id)
+           .ValueGeneratedOnAdd();
+       // .HasKey(u => u.Id) // Ensure the key type is string
         
 
     }

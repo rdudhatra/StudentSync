@@ -43,7 +43,7 @@ namespace StudentSync.ApiControllers
             if (ModelState.IsValid)
             {
                 try
-                {
+                { 
                     await _studentInstallmentService.CreateStudentInstallmentAsync(studentInstallment);
                     return Ok(new { success = true });
                 }

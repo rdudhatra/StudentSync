@@ -4,41 +4,62 @@
     ViewData["Title"] = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="~/css/site.css" rel="stylesheet" />
+
 
 <div class="container">
-    <h2>@ViewData["Title"]</h2>
+    <div class="form-wrapper">
+        <h2 class="text-center">@ViewData["Title"]</h2>
 
-    <form asp-action="Update" method="post">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="Email">Email:</label>
-                    <input type="text" id="Email" name="Email" class="form-control" value="@Model.Email" readonly />
-                </div>
-                <div class="form-group">
-                    <label for="Username">Username:</label>
-                    <input type="text" id="Username" name="Username" class="form-control" value="@Model.Username" readonly />
-                </div>
-                <div class="form-group">
-                    <label for="Password">Password:</label>
-                    <input type="password" id="Password" name="Password" class="form-control" value="@Model.Password" readonly />
-                </div>
-                <div class="form-group">
-                    <label for="ProfileImage">Profile Image:</label>
-                    <input type="file" id="ProfileImage" name="ProfileImage" class="form-control" />
-                    @if (Model.ProfileImageUrl != null)
-                    {
-                        <img src="@Model.ProfileImageUrl" alt="Profile Image" style="width: 150px; height: 150px;" />
-                    }
-                </div>
-                <br />
-                <button type="submit" class="btn btn-primary">Update</button>
+        <form asp-action="Update" method="post">
+            <div class="form-group">
+                <label for="Email">Email:</label>
+                <input type="text" id="Email" name="Email" class="form-control" value="@Model.Email" readonly />
             </div>
-        </div>
-    </form>
+            <div class="form-group">
+                <label for="Username">Username:</label>
+                <input type="text" id="Username" name="Username" class="form-control" value="@Model.Username" readonly />
+            </div>
+            <div class="form-group">
+                <label for="Password">Password:</label>
+                <div class="position-relative">
+                    <input type="password" id="Password" name="Password" class="form-control" value="@Model.Password" readonly />   
+                    <i class="eye-icon fas fa-eye" id="togglePassword"></i>
+                </div>
+            </div>
+        </form>
+        <h6 >
+            Dear User, you can view the profile but cannot make any changes.
+        </h6>
+    </div>
+   
 </div>
 
+
+
 @section Scripts {
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+    <script>
+        $(document).ready(function () {
+            $('#togglePassword').on('click', function () {
+                const passwordField = $('#Password');
+                const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+                passwordField.attr('type', type);
+                // Toggle eye icon
+                $(this).toggleClass('fa-eye fa-eye-slash');
+            });
+        });
+    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

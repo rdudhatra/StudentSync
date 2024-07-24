@@ -36,7 +36,7 @@
                     @if (User.Identity.IsAuthenticated)
 
                     {
-                        <span class="nav-link text-dark">Hello, @User.Identity.Name</span>
+                        <span class="nav-link text-dark">Hello, @User.Identity.Name</span> 
 
                         <form class="form-inline" asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
                             <button type="submit" class="btn btn-danger">Logout</button>

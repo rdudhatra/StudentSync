@@ -30,7 +30,7 @@ namespace StudentSync.Controllers
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
-        {
+        { 
             try
             {
                 var response = await _httpService.Get<List<StudentInstallment>>("StudentInstallment/GetAll");

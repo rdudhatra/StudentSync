@@ -33,7 +33,7 @@ namespace StudentSync.ApiControllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            } 
         }
 
         [HttpGet("GetById/{id}")]

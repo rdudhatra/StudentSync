@@ -17,21 +17,28 @@ namespace StudentSync.Web.Controllers
         // GET: AuthProfile/Index
         public async Task<IActionResult> Index()
         {
-            var profile = await _profileService.GetProfileAsync(User.Identity.Name); // Assuming username is used as an identifier
+            var userName = Request.Cookies["CurrentUsername"];
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            // Print the current username for debugging purposes
+            System.Diagnostics.Debug.WriteLine($"Current username: {userName}");
+
+            var profile = await _profileService.GetProfileAsync(userName);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+            // Pass the username to the view
+            ViewBag.CurrentUsername = userName;
             return View(profile);
+         
         }
 
-        // POST: AuthProfile/Update
-        [HttpPost]
-        public async Task<IActionResult> Update(ProfileViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                await _profileService.UpdateProfileAsync(model);
-                TempData["SuccessMessage"] = "Profile updated successfully!";
-                return RedirectToAction(nameof(Index));
-            }
-            return View(nameof(Index), model);
-        }
+
+
+     
     }
 }

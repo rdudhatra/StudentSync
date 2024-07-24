@@ -23,7 +23,7 @@ namespace StudentSync.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(); 
         }
 
         [HttpGet("GetAll")]

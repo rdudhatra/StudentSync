@@ -3,6 +3,8 @@
 
 @{
     ViewData["Title"] = "Student Assessment Management";
+    ViewBag.pTitle = "Student Assessment";
+    ViewBag.pageTitle = "Students";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -159,7 +161,6 @@
                     { "data": "assessmentDate", "name": "AssessmentDate" },
                     { "data": "enrollmentNo", "name": "EnrollmentNo" },
                     { "data": "courseName","name":"CourseName" },
-                   // { "data": "courseExamId", "name": "CourseExamId" },
                     { "data": "obtainedMarks", "name": "ObtainedMarks" },
                     { "data": "remarks", "name": "Remarks" },
                     {
@@ -174,7 +175,7 @@
 
         function getAllEnrollmentNo() {
             $.ajax({
-                url: '/Enrollment/getAllEnrollMentno', // Adjust URL to match your controller route
+                url: '/Enrollment/getAllEnrollMentno', 
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -198,7 +199,7 @@
 
         function getAllCourses() {
             $.ajax({
-                url: '/Course/GetAllCourseIds', // Adjust URL to match your controller route
+                url: '/Course/GetAllCourseIds',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {

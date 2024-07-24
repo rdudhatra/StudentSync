@@ -26,7 +26,7 @@ namespace StudentSync.Data.ResponseModel
         public bool? PrevCompCourse { get; set; }
         public string? PrevCompCourseDetails { get; set; }
         public int? CourseId { get; set; }
-        public string? CourseName { get; set; } // Example: Including course name
+        public string? CourseName { get; set; }
         public string? Note { get; set; }
         public string? EnquiryType { get; set; }
         public string Status { get; set; } = null!;

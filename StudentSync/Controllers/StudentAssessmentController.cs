@@ -28,7 +28,7 @@ namespace StudentSync.Web.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll() 
         {
             try
             {

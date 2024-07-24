@@ -60,12 +60,7 @@ builder.Services.AddScoped(sp => new HttpClient
 });
 
 
-//builder.Services.AddHttpClient<BatchController>(client =>
-//{
-//    client.BaseAddress = new Uri(baseUrl);
-//    client.DefaultRequestHeaders.Accept.Clear();
-//    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-//});
+
 
 var app = builder.Build();
 

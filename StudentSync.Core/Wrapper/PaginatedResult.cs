@@ -56,21 +56,4 @@ namespace StudentSync.Core.Wrapper
     }
 }
 
-//public class PaginatedResult<T> : Result
-//{
-//    public List<T> Data { get; set; }
-//    public int PageNumber { get; set; }
-//    public int PageSize { get; set; }
-//    public int TotalItems { get; set; }
 
-
-
-//    public PaginatedResult(List<T> data, int pageNumber, int pageSize, int totalItems)
-//    {
-//        Data = data;
-//        PageNumber = pageNumber;
-//        PageSize = pageSize;
-//        TotalItems = totalItems;
-//    }
-
-//}

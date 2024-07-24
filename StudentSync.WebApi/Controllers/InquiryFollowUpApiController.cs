@@ -43,7 +43,7 @@ namespace StudentSync.ApiControllers
             {
                 try
                 {
-                    await _inquiryFollowUpService.AddInquiryFollowUpAsync(inquiryFollowUp);
+                    await _inquiryFollowUpService.AddInquiryFollowUpAsync(inquiryFollowUp); 
                     return Ok(new { success = true });
                 }
                 catch (Exception ex)

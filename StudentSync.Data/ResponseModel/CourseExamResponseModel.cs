@@ -10,7 +10,7 @@ namespace StudentSync.Data.ResponseModel
     {
         public int Id { get; set; }
         public int? CourseId { get; set; }
-        public string? CourseName { get; set; } // Example: To include course name if needed
+        public string? CourseName { get; set; } 
         public string? ExamTitle { get; set; }
         public string? ExamType { get; set; }
         public int? TotalMarks { get; set; }

@@ -14,8 +14,7 @@ namespace StudentSync.Data.ViewModels
         public string? Username { get; set; }
 
         public string? Password { get; set; }
-        public string ProfileImageUrl { get; set; } // To display the image URL
-        public IFormFile ProfileImage { get; set; } // For file upload
+
 
     }
 }

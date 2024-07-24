@@ -55,22 +55,7 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader();
         });
 });
-//builder.Services.AddAuthentication(config =>
-//{
-//    config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-//            .AddJwtBearer(config =>
-//            {
-//                config.RequireHttpsMetadata = false;
-//                config.SaveToken = true;
-//                config.TokenValidationParameters = new TokenValidationParameters
-//                {
-//                    ValidateIssuerSigningKey = true,
-//                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
-//                    ValidateIssuer = false,
-//                    ValidateAudience = false
-//                };
-//            });
+
 
 builder.Services.AddHttpContextAccessor();  
 

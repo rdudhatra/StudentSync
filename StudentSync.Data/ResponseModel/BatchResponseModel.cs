@@ -8,7 +8,7 @@ namespace StudentSync.Data.ResponseModel
         public string BatchCode { get; set; }
         public string BatchTime { get; set; }
         public int? BatchCourseId { get; set; }
-        public string CourseName { get; set; } // Include the Course object
+        public string CourseName { get; set; } 
         public string FacultyName { get; set; }
         public bool IsActive { get; set; }
         public string Remarks { get; set; }

@@ -17,7 +17,7 @@ namespace StudentSync.Data.ViewModels
         public string Username { get; set; }
 
         [Required]
-        [DataType(DataType.Password)]
+        [DataType(DataType.Password)]  
         public string Password { get; set; }
 
         [Required]

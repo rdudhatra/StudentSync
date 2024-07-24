@@ -23,7 +23,7 @@ namespace StudentSync.ApiControllers
             _batchService = batchService;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("GetAll")] 
         public async Task<IActionResult> GetAll()
         {
             try

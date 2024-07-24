@@ -47,6 +47,14 @@ namespace StudentSync.Controllers
                     var result = await response.Content.ReadAsStringAsync();
                     var message = JsonSerializer.Deserialize<ApiResponse<string>>(result);
 
+                    Response.Cookies.Append("CurrentUsername", model.Username, new Microsoft.AspNetCore.Http.CookieOptions
+                    {
+                        Expires = DateTimeOffset.UtcNow.AddMonths(12), 
+                        HttpOnly = true, 
+                        Secure = true, 
+                        SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict 
+                    });
+
                     TempData["SuccessMessage"] = message.Data;
                     return RedirectToAction("Login");
                 }
@@ -85,7 +93,6 @@ namespace StudentSync.Controllers
                     // Debug output
                     Console.WriteLine($"Token received: {result}");
 
-                    // Parse the JSON response to extract the token
                     using (var document = JsonDocument.Parse(result))
                     {
                         var root = document.RootElement;
@@ -93,31 +100,36 @@ namespace StudentSync.Controllers
                         {
                             var token = tokenElement.GetString();
 
-                            // Handle null or empty token response
                             if (string.IsNullOrEmpty(token))
                             {
                                 ModelState.AddModelError(string.Empty, "Token received from server is null or empty.");
                                 return View("~/Views/AuthLogin/Index.cshtml", model);
                             }
 
-                            // Format token as "bearer <token_value>"   
                             var formattedToken = $"{token}";
 
-                            // Store token in cookie
                             Response.Cookies.Append("AuthToken", formattedToken, new Microsoft.AspNetCore.Http.CookieOptions
                             {
-                                Expires = DateTimeOffset.UtcNow.AddMonths(12), // Set cookie expiration as needed
-                                HttpOnly = true, // Ensures the cookie is accessible only through HTTP requests
-                                Secure = true, // Ensures the cookie is only sent over HTTPS if your site is HTTPS
-                                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict // Protects against cross-site request forgery
+                                Expires = DateTimeOffset.UtcNow.AddMonths(12), 
+                                HttpOnly = true, 
+                                Secure = true,
+                                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict 
                             });
 
-                            // Debug output
+                            var username = model.Username;
+
+                            Response.Cookies.Append("CurrentUsername", username, new Microsoft.AspNetCore.Http.CookieOptions
+                            {
+                                Expires = DateTimeOffset.UtcNow.AddMonths(12), 
+                                HttpOnly = true, 
+                                Secure = true, 
+                                SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict 
+                            });
                             Console.WriteLine("Token stored in cookie.");
 
                             TempData["SuccessMessage"] = "Login successful.";
 
-                            return RedirectToAction("Index", "Home"); // Replace with your desired redirect action
+                            return RedirectToAction("Index", "Home"); 
                         }
                         else
                         {
@@ -128,7 +140,7 @@ namespace StudentSync.Controllers
                 }
                 catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid credentials"); // Show a generic error message for unauthorized access
+                    ModelState.AddModelError(string.Empty, "Invalid credentials"); 
                 }
                 catch (Exception ex)
                 {
@@ -139,33 +151,7 @@ namespace StudentSync.Controllers
             return View("~/Views/AuthLogin/Index.cshtml", model);
         }
 
-
-
-
-
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Logout()
-        //{
-        //    try
-        //    {
-        //        var response = await _httpClient.PostAsync("Auth/logout", null); // No content needed for logout
-        //        response.EnsureSuccessStatusCode();
-
-        //        var result = await response.Content.ReadAsStringAsync();
-        //        var message = JsonSerializer.Deserialize<ApiResponse<string>>(result);
-
-        //        TempData["SuccessMessage"] = message.Data;
-        //        return RedirectToAction("Login");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
-        //    }
-
-        //    return RedirectToAction("Index", "Home");
-        //}
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -173,7 +159,6 @@ namespace StudentSync.Controllers
         {
             try
             {
-                // Retrieve the token from the cookie or other secure storage
                 var token = Request.Cookies["AuthToken"];
 
                 if (string.IsNullOrEmpty(token))
@@ -191,7 +176,6 @@ namespace StudentSync.Controllers
                 var result = await response.Content.ReadAsStringAsync();
                 var message = JsonSerializer.Deserialize<ApiResponse<string>>(result);
 
-                // Remove the authentication cookie
                 Response.Cookies.Delete("AuthToken");
 
                 TempData["SuccessMessage"] = message.Data;
@@ -204,7 +188,7 @@ namespace StudentSync.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-       
+
 
     }
 }

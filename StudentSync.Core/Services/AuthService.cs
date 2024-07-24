@@ -39,7 +39,7 @@ namespace StudentSync.Core.Services
                 {
                     Email = model.Email,
                     Username = model.Username,
-                    Password = model.Password // Note: Hash the password before storing
+                    Password = model.Password 
                 };
 
                 _context.Users.Add(user);
@@ -63,7 +63,15 @@ namespace StudentSync.Core.Services
 
                 if (user != null && user.Password == model.Password)
                 {
-                    await SignInAsync(user);
+                    if(user.Username ==  model.Username) 
+                    {
+                        await SignInAsync(user);
+                    }
+                    else
+                    {
+                        return Result.Fail("Invalid UserName.");
+                    }
+                    
                 }
                 else
                 {
@@ -77,6 +85,7 @@ namespace StudentSync.Core.Services
                 return Result.Fail($"An error occurred during login: {ex.Message}");
             }
         }
+
 
         public async Task<IResult> LogoutAsync()
         {
@@ -128,7 +137,6 @@ namespace StudentSync.Core.Services
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Email, user.Email)
-                    // Add other claims as needed
                 };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -138,7 +146,6 @@ namespace StudentSync.Core.Services
             }
             catch (Exception ex)
             {
-                // Handle or log the exception as needed
                 throw new InvalidOperationException("An error occurred during sign-in.", ex);
             }
         }

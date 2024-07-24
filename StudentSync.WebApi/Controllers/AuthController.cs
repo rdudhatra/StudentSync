@@ -70,32 +70,6 @@ namespace StudentSync.WebApi.Controllers
             }
         }
 
-        [HttpPost("admin-login")]
-        public async Task<IActionResult> AdminLogin(LoginViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var result = await _authService.AdminLoginAsync(model);
-                if (result.Succeeded)
-                {
-                    return Ok(new { Message = "Admin login successful." });
-                }
-                else
-                {
-                    return BadRequest(result.HttpResponseMessage);
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Error = $"An error occurred: {ex.Message}" });
-            }
-        }
-
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {

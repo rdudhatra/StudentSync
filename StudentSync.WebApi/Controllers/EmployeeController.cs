@@ -118,19 +118,6 @@ namespace StudentSync.ApiControllers
             }
         }
 
-        [HttpGet("SearchByName")]
-        public async Task<IActionResult> SearchByName(string name)
-        {
-            try
-            {
-                var employees = await _employeeService.SearchEmployeesByNameAsync(name);
-                return Ok(employees);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception occurred: {ex.Message}");
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+     
     }
 }
