@@ -65,6 +65,11 @@ namespace StudentSync.Core.Services
         {
             return await _context.GetStudentAssessmentById(id);
         }
+
+        public async Task<int> GetTotalStudentAssessmentsAsync()
+        {
+            return await _context.StudentAssessments.CountAsync(); 
+        }
     }
 
 }

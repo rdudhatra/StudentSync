@@ -18,6 +18,10 @@ namespace StudentSync.Core.Services
         {
             _context = context;
         }
+        public async Task<int> GetTotalCourseExamsAsync()
+        {
+            return await _context.CourseExams.CountAsync();
+        }
         public List<CourseExam> GetAllCourseExamIds()
         {
             return _context.CourseExams.ToList();

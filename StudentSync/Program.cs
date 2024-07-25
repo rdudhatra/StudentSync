@@ -31,9 +31,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();  
 
 builder.Services.AddScoped<IHttpService, HttpService>();
-builder.Services.AddScoped<IProfileService, ProfileService>();
-
-
 
 
 builder.Services.AddCors(options =>

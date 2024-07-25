@@ -141,7 +141,7 @@ namespace StudentSync.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("Delete/{id}")]
+        [HttpPost("DeleteConfirmed/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var response = await _httpService.Delete($"CourseExam/Delete/{id}");

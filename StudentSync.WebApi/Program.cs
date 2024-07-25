@@ -121,6 +121,8 @@ builder.Services.AddScoped<IStudentInstallmentService, StudentInstallmentService
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 builder.Services.AddScoped<IInquiryService, InquiryService>();
 builder.Services.AddScoped<IInquiryFollowUpService, InquiryFollowUpService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+
 
 builder.Services.AddDbContext<StudentSyncDbContext>(options =>
        options.UseSqlServer(builder.Configuration.GetConnectionString("StudentSyncCon"),

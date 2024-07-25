@@ -15,6 +15,8 @@ namespace StudentSync.Core.Services.Interface
         Task DeleteStudentAssessment(int studentAssessmentId);
         Task<IEnumerable<StudentAssessmentResponseModel>> GetAllStudentAssessments();
         Task<StudentAssessment> GetStudentAssessmentById(int id);
+        Task<int> GetTotalStudentAssessmentsAsync();
+
     }
 
 }

@@ -16,6 +16,8 @@ namespace StudentSync.Core.Services.Interface
         Task UpdateBatchAsync(Batch batch);
         Task DeleteBatchAsync(int id);
         List<Batch> GetAllBatchesIdsAsync();
+        Task<int> GetTotalBatchesAsync();
+
 
     }
 }

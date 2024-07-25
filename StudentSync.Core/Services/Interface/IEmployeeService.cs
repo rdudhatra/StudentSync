@@ -14,6 +14,7 @@ namespace StudentSync.Core.Services.Interface
         Task<IResult> DeleteEmployeeAsync(int id);
         Task<IResult<IEnumerable<Employee>>> SearchEmployeesByNameAsync(string name);
 
+        Task<int> GetTotalEmployeesAsync();
 
     }
 }

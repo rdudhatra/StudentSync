@@ -24,7 +24,10 @@ namespace StudentSync.Core.Services
             return _context.Enrollments.ToList();
         }
 
-        
+        public async Task<int> GetTotalEnrollmentsAsync()
+        {
+            return await _context.Enrollments.CountAsync();
+        }
 
         public async Task<IEnumerable<EnrollmentResponseModel>> GetAllEnrollments()
         {

@@ -15,5 +15,7 @@ namespace StudentSync.Core.Services.Interface
         Task AddStudentAttendance(StudentAttendance studentAttendance);
         Task UpdateStudentAttendance(StudentAttendance studentAttendance);
         Task DeleteStudentAttendance(int id);
+        Task<int> GetTotalStudentAttendanceAsync();
+
     }
 }

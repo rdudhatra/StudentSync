@@ -100,5 +100,10 @@ namespace StudentSync.Core.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<int> GetTotalCourseFeesAsync()
+        {
+            return await _context.CourseFees.CountAsync(); // Assuming Amount is a property in CourseFees
+        }
     }
 }

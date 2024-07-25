@@ -67,5 +67,9 @@ namespace StudentSync.Core.Services
                 .ToListAsync();
             return Result<IEnumerable<Employee>>.Success(employees);
         }
+        public async Task<int> GetTotalEmployeesAsync()
+        {
+            return await _context.Employees.CountAsync();
+        }
     }
 }

@@ -20,7 +20,10 @@ namespace StudentSync.Core.Services
         {
             _context = context;
         }
-
+        public async Task<int> GetTotalBatchesAsync()
+        {
+            return await _context.Batches.CountAsync();
+        }
         public List<Batch> GetAllBatchesIdsAsync()
         {
             return _context.Batches.ToList();

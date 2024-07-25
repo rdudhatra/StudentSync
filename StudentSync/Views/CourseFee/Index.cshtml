@@ -116,6 +116,7 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -230,27 +231,10 @@
                     toastr.error('Error saving course fee.');
                 }
             });
-        }
+        } 
+       
 
-        // Function to delete CourseFee via AJAX
-        function onDeleteCourseFeeClick(id) {
-            $('#deleteConfirmationModal').modal('show');
 
-            $('#deleteConfirmationModal').on('click', '.btn-danger', function () {
-                $.ajax({
-                    url: "/CourseFee/Delete/" + id,
-                    type: "POST",
-                    success: function (response) {
-                        $('#deleteConfirmationModal').modal('hide');
-                        toastr.success('Course fee deleted successfully.');
-                        dataTable.ajax.reload();
-                    },
-                    error: function (response) {
-                        toastr.error('Error deleting course fee.');
-                    }
-                });
-            });
-        }
         function closeModal() {
             $('#addEditCourseFeeModal').modal('hide'); // Hide the modal using jQuery
             $('#deleteConfirmationModal').modal('hide');
@@ -311,7 +295,7 @@
                 url: "/CourseFee/Delete/" + id,
                 type: "POST",
                 success: function (response) {
-                    toastr.success(response.message);
+                    toastr.success('Course fee deleted successfully.');
                     $('#deleteConfirmationModal').modal('hide');
                     dataTable.ajax.reload();
                 },

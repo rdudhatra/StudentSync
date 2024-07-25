@@ -72,6 +72,9 @@ namespace StudentSync.Core.Services
             return Result<IEnumerable<Course>>.Success(courses);
         }
 
-        
+        public async Task<int> GetTotalCoursesAsync()
+        {
+            return await _context.Courses.CountAsync();
+        }
     }
 }

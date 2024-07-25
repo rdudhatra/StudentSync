@@ -40,7 +40,10 @@ namespace StudentSync.Core.Services
 
             return attendances;
         }
-
+        public async Task<int> GetTotalStudentAttendanceAsync()
+        {
+            return await _context.StudentAttendances.CountAsync(); 
+        }
         public async Task<StudentAttendance> GetStudentAttendanceById(int id)
         {
             var result = await _context.StudentAttendances.FromSqlRaw("EXEC GetStudentAttendanceById @Id = {0}", id).ToListAsync();
