@@ -128,6 +128,10 @@
             "hideMethod": "fadeOut"
         };
 
+        function closeModal() {
+            $('#addEditCourseModal').modal('hide'); // Hide the modal using jQuery
+            $('#deleteConfirmationModal').modal('hide');
+        }
         // Function to display validation message
         function displayValidationMessage(message, inputElement) {
             var parentDiv = inputElement.closest('.form-group');
