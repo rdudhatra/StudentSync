@@ -27,6 +27,7 @@ namespace StudentSync.Core.Services
                 Email = user.Email,
                 Username = user.Username,
                 Password = user.Password,
+                ProfileImage = user.ProfileImage
 
             };
         }
@@ -39,6 +40,7 @@ namespace StudentSync.Core.Services
                 user.Email = model.Email;
                 user.Username = model.Username;
                 user.Password = model.Password; // Ensure proper hashing and security here
+                user.ProfileImage = model.ProfileImage;
 
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();

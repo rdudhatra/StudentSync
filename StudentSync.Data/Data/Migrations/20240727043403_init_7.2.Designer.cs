@@ -12,8 +12,8 @@ using StudentSync.Data.Data;
 namespace StudentSync.Data.Data.Migrations
 {
     [DbContext(typeof(StudentSyncDbContext))]
-    [Migration("20240723114107_initial_8.4")]
-    partial class initial_84
+    [Migration("20240727043403_init_7.2")]
+    partial class init_72
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -593,6 +593,7 @@ namespace StudentSync.Data.Data.Migrations
             modelBuilder.Entity("StudentSync.Data.Models.User", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -608,7 +609,8 @@ namespace StudentSync.Data.Data.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProfileImageUrl")
+                    b.Property<string>("ProfileImage")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoleId")

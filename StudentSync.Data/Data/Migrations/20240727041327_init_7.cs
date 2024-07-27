@@ -5,14 +5,14 @@
 namespace StudentSync.Data.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial_83 : Migration
+    public partial class init_7 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
                 name: "CourseName",
-                table: "Inquiries");
+                table: "Batches");
         }
 
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace StudentSync.Data.Data.Migrations
         {
             migrationBuilder.AddColumn<string>(
                 name: "CourseName",
-                table: "Inquiries",
+                table: "Batches",
                 type: "nvarchar(max)",
                 nullable: true);
         }

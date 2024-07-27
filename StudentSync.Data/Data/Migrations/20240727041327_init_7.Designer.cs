@@ -12,8 +12,8 @@ using StudentSync.Data.Data;
 namespace StudentSync.Data.Data.Migrations
 {
     [DbContext(typeof(StudentSyncDbContext))]
-    [Migration("20240718085344_Initial_8.1")]
-    partial class Initial_81
+    [Migration("20240727041327_init_7")]
+    partial class init_7
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -297,9 +297,6 @@ namespace StudentSync.Data.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -352,9 +349,6 @@ namespace StudentSync.Data.Data.Migrations
 
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CourseName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");

@@ -12,8 +12,8 @@ using StudentSync.Data.Data;
 namespace StudentSync.Data.Data.Migrations
 {
     [DbContext(typeof(StudentSyncDbContext))]
-    [Migration("20240718090735_Initial_8.3")]
-    partial class Initial_83
+    [Migration("20240727041816_init_7.1")]
+    partial class init_71
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
