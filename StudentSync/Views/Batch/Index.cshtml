@@ -181,9 +181,9 @@
 
             function getAllCourses() {
                 $.ajax({
-                    url: '/Course/GetAllCourseIds', // Adjust URL to match your controller route
+                    url: '/Course/GetAllCourseIds', 
                     type: 'GET',
-                    dataType: 'json',
+                    dataType: 'json', 
                     success: function (data) {
                         if (Array.isArray(data) && data.length > 0) {
                             var options = '<option value="">Select Course</option>';
@@ -197,7 +197,7 @@
                         }
                     },
                     error: function (xhr, status, error) {
-                        toastr.error('Error fetching Courses: ' + error);
+                        toastr.error('Error fetching Courses: ' + error); 
                         console.error('Error fetching Courses:', xhr.responseText);
                     }
                 });
@@ -209,7 +209,7 @@
             getAllBatchesIds();
 
             function getAllBatchesIds() {
-                $.ajax({
+                $.ajax({ 
                     url: '/Batch/GetAllBatchesIds', // Adjust URL as per your controller route
                     type: 'GET',
                     dataType: 'json',
@@ -305,7 +305,7 @@
                 $('#deleteConfirmationModal').modal('show');
             }
             function closeModal() {
-                $('#addEditBatchModal').modal('hide'); // Hide the modal using jQuery
+                $('#addEditBatchModal').modal('hide'); b
                 $('#deleteConfirmationModal').modal('hide');
             }
 

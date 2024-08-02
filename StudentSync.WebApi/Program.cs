@@ -26,7 +26,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddCookie(options =>
 {
-    options.Cookie.Name = "StudentSyncAuthCookie"; // Cookie name
+    options.Cookie.Name = "StudentSyncBlazorAuthCookie"; // Cookie name
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Cookie expiration time
     options.SlidingExpiration = true; // Renew expiration time with each request
 })

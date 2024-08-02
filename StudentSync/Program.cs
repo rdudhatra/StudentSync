@@ -22,7 +22,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
            options.LogoutPath = "/Auth/Logout";         
        });
 builder.Services.AddAuthorization();
-
+ 
 
 // Add services to the container.
 builder.Services.AddControllers();
