@@ -150,33 +150,17 @@ namespace StudentSync.Controllers
 
             return View("~/Views/AuthLogin/Index.cshtml", model);
         }
-
-        
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             try
             {
-                var token = Request.Cookies["AuthToken"];
-
-                if (string.IsNullOrEmpty(token))
-                {
-                    ModelState.AddModelError(string.Empty, "No token found for logout.");
-                    return RedirectToAction("Index", "Home");
-                }
-
-                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "token/logout");
-                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-                var response = await _httpClient.SendAsync(requestMessage);
+                var response = await _httpClient.PostAsync("Auth/logout", null); // No content needed for logout
                 response.EnsureSuccessStatusCode();
 
                 var result = await response.Content.ReadAsStringAsync();
                 var message = JsonSerializer.Deserialize<ApiResponse<string>>(result);
-
-                Response.Cookies.Delete("AuthToken");
 
                 TempData["SuccessMessage"] = message.Data;
                 return RedirectToAction("Login");
@@ -188,6 +172,43 @@ namespace StudentSync.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Logout()
+        //{
+        //    try
+        //    {
+        //        var token = Request.Cookies["AuthToken"];
+
+        //        if (string.IsNullOrEmpty(token))
+        //        {
+        //            ModelState.AddModelError(string.Empty, "No token found for logout.");
+        //            return RedirectToAction("Index", "Home");
+        //        }
+
+        //        var requestMessage = new HttpRequestMessage(HttpMethod.Post, "token/logout");
+        //        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        //        var response = await _httpClient.SendAsync(requestMessage);
+        //        response.EnsureSuccessStatusCode();
+
+        //        var result = await response.Content.ReadAsStringAsync();
+        //        var message = JsonSerializer.Deserialize<ApiResponse<string>>(result);
+
+        //        Response.Cookies.Delete("AuthToken");
+
+        //        TempData["SuccessMessage"] = message.Data;
+        //        return RedirectToAction("Login");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+        //    }
+
+        //    return RedirectToAction("Index", "Home");
+        //}
 
 
     }
