@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentSync.Data.Models;
 using StudentSync.Data.ResponseModel;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace StudentSync.Web.Controllers
 {
+    [Authorize]  
     [Route("Batch")]
     public class BatchController : Controller
     {

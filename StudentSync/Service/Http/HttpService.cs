@@ -231,6 +231,7 @@ namespace StudentSync.Service.Http
                 }
 
                 httpResponseMessage = await _httpClient.SendAsync(request, cancellationToken);
+                
                 return httpResponseMessage;
             }
             catch (OperationCanceledException)

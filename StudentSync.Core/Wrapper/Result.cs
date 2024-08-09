@@ -13,6 +13,7 @@ namespace StudentSync.Core.Wrapper
         public List<string> Messages { get; set; } = new();
 
         public bool Succeeded { get; set; }
+
         public HttpResponseMessage HttpResponseMessage { get; set; }
 
         public static IResult Fail()

@@ -8,6 +8,7 @@ using StudentSync.Service.Http;
 using StudentSync.Web.Controllers;
 using StudentSync.Core.Services.Interface;
 using StudentSync.Core.Services;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +20,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
        .AddCookie(options =>
        {
            options.LoginPath = "/Auth/Login";
-           options.LogoutPath = "/Auth/Logout";         
+           options.AccessDeniedPath = "/Auth/AccessDenied";  // Optional for handling access denial
+
+           //options.LogoutPath = "/Auth/Logout";         
        });
-builder.Services.AddAuthorization();
- 
+builder.Services.AddAuthorization(options =>
+{
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 // Add services to the container.
 builder.Services.AddControllers();

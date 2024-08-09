@@ -8,6 +8,7 @@ using StudentSync.Data.Data;
 using StudentSync.Data.Models;
 using StudentSync.Data.ViewModels;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace StudentSync.Core.Services
 {
@@ -54,7 +55,6 @@ namespace StudentSync.Core.Services
                 return Result.Fail($"An error occurred during registration: {ex.Message}");
             }
         }
-
         public async Task<IResult> LoginAsync(LoginViewModel model)
         {
             try
@@ -63,28 +63,65 @@ namespace StudentSync.Core.Services
 
                 if (user != null && user.Password == model.Password)
                 {
-                    if(user.Username ==  model.Username) 
+                    if (!string.IsNullOrEmpty(user.Username) && user.Username == model.Username)
                     {
-                        await SignInAsync(user);
+                        var userData = new
+                        {
+                            Email = user.Email,
+                            Username = user.Username
+                        };
+
+                        // Serialize userData to JSON
+                        var jsonResponse = JsonSerializer.Serialize(userData);
+                        return Result.Success($"Login successful. {jsonResponse}");
                     }
                     else
                     {
-                        return Result.Fail("Invalid UserName.");
+                        return Result.Fail("Invalid Username.");
                     }
-                    
                 }
                 else
                 {
                     return Result.Fail("Invalid email or password.");
                 }
-
-                return Result.Success("Login successful.");
             }
             catch (Exception ex)
             {
                 return Result.Fail($"An error occurred during login: {ex.Message}");
             }
         }
+
+        //public async Task<IResult> LoginAsync(LoginViewModel model)
+        //{
+        //    try
+        //    {
+        //        var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
+
+        //        if (user != null && user.Password == model.Password)
+        //        {
+        //            await SignInAsync(user);
+        //            //if (user.Username ==  model.Username) 
+        //            //{
+
+        //            //}
+        //            //else
+        //            //{
+        //            //    return Result.Fail("Invalid UserName.");
+        //            //}
+
+        //        }
+        //        else
+        //        {
+        //            return Result.Fail("Invalid email or password.");
+        //        }
+
+        //        return Result.Success("Login successful.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Result.Fail($"An error occurred during login: {ex.Message}");
+        //    }
+        //}
 
 
         public async Task<IResult> LogoutAsync()

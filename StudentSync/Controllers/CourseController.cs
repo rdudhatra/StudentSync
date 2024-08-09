@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StudentSync.Data.Models;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace StudentSync.Web.Controllers
 {
+    [Authorize]
     [Route("Course")]
     public class CourseController : Controller
     {

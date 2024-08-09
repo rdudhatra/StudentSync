@@ -38,6 +38,8 @@ namespace StudentSync.WebApi.Controllers
 
                     if (result.Succeeded)
                     {
+                        //var user = result.Data; // Get the user data from result
+
                         var authClaims = new List<Claim>
                         {
                             new Claim(ClaimTypes.Name, model.Email), // Adjust based on your user model

@@ -27,7 +27,7 @@ namespace StudentSync.Web.Controllers
 
             if (string.IsNullOrEmpty(userName))
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Auth");
             }
             // Print the current username for debugging purposes
             System.Diagnostics.Debug.WriteLine($"Current username: {userName}");
